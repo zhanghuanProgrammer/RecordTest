@@ -65,7 +65,7 @@
             }
             if ([model.viewId isEqualToString:view.layerDirector] && model.type == type) {
                 model.parameters = parameters;
-                NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
+//                NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
                 [self saveOperationQueue];
                 return;
             }
@@ -78,17 +78,21 @@
     model.view = NSStringFromClass(view.class);
     [[RTOperationQueue shareInstance].operationQueue addObject:model];
     [self saveOperationQueue];
-    NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
+//    NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
 }
 
 + (void)saveOperationQueue{
-    return;
+    if (!IsRecord) {
+        return;
+    }
     [ZHSaveDataToFMDB insertDataWithData:[RTOperationQueue shareInstance].operationQueue WithIdentity:@"operationQueue"];
-    NSLog(@"%@",@"保存成功!");
+//    NSLog(@"%@",@"保存成功!");
 }
 
 + (void)runOperationQueue{
-//    return;
+    if (!IsRunRecord) {
+        return;
+    }
     NSMutableArray *operationQueue = [NSMutableArray arrayWithArray:[ZHSaveDataToFMDB selectDataWithIdentity:@"operationQueue"]];
     if (![RTOperationQueue shareInstance].curOperationModel) {
         [RTOperationQueue shareInstance].curOperationModel = [operationQueue popFirstObject];

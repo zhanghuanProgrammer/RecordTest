@@ -33,8 +33,6 @@ typedef void (^AspectAfterBlock)(id target, SEL sel, NSArray *args, NSTimeInterv
 + (id<AspectToken>)aspect_hookSelector:(SEL)selector
                            withOptions:(AspectOptions)options
                             usingBlock:(id)block
-                                before:(AspectBeforeBlock) before
-                                 after:(AspectAfterBlock) after
                                  error:(NSError **)error;
 
 - (id<AspectToken>)aspect_hookSelector:(SEL)selector

@@ -1,8 +1,8 @@
 
-#import "UIView+LayerIndex.h"
+#import "UIView+RTLayerIndex.h"
 #import <objc/runtime.h>
 
-@implementation UIView (LayerIndex)
+@implementation UIView (RTLayerIndex)
 
 static const int UIView_LayerIndex;
 static const int UIView_LayerDirector;
@@ -40,7 +40,7 @@ static const int UIView_CurViewController;
 
 @end
 
-@implementation UITableViewCell (LayerIndex)
+@implementation UITableViewCell (RTLayerIndex)
 
 static const int UITableViewCell_IndexPath;
 
@@ -54,7 +54,7 @@ static const int UITableViewCell_IndexPath;
 
 @end
 
-@implementation UICollectionViewCell (LayerIndex)
+@implementation UICollectionViewCell (RTLayerIndex)
 
 static const int UICollectionViewCell_IndexPath;
 

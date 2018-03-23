@@ -201,12 +201,13 @@ return @(val); \
 @interface AspectBlockInstance : NSObject
 
 @property (strong, nonatomic) NSMutableDictionary *blockCache;
+@property (strong, nonatomic) NSMutableDictionary *aspectCache;
 
 + (instancetype)sharedAspectBlockInstance;
 
 - (void)setAMLBlock:(AspectBlock *)block forKey:(NSString *)aKey;
 
-- (AspectBlock *)blockWithTarget:(id)target;
+- (AspectBlock *)blockWithTarget:(id)target sel:(SEL)sel;
 
 @end
 
@@ -218,6 +219,7 @@ return @(val); \
     dispatch_once(&onceToken, ^{
         _sharedAspectBlockInstance = [[self alloc] init];
         _sharedAspectBlockInstance.blockCache = [NSMutableDictionary dictionary];
+        _sharedAspectBlockInstance.aspectCache = [NSMutableDictionary dictionary];
     });
     return _sharedAspectBlockInstance;
 }
@@ -228,15 +230,16 @@ return @(val); \
     }
 }
 
-- (AspectBlock *)blockWithTarget:(id)target {
+- (AspectBlock *)blockWithTarget:(id)target sel:(SEL)sel{
     Class class = [target class];
-    AspectBlock *block = [self.blockCache objectForKey:NSStringFromClass(class)];
+    NSString *key = [NSString stringWithFormat:@"%p-%@",target,NSStringFromSelector(sel)];
+    AspectBlock *block = [self.blockCache objectForKey:key];
     while (block == nil) {
         class = [class superclass];
         if (class == nil) {
             break;
         }
-        block = [self.blockCache objectForKey:NSStringFromClass(class)];
+        block = [self.blockCache objectForKey:key];
     }
     return block;
 }
@@ -332,14 +335,7 @@ static NSString *const AspectsMessagePrefix = @"aspects_";
 + (id<AspectToken>)aspect_hookSelector:(SEL)selector
                            withOptions:(AspectOptions)options
                             usingBlock:(id)block
-                                before:(AspectBeforeBlock) before
-                                 after:(AspectAfterBlock) after
                                  error:(NSError **)error {
-    AspectBlock *aspectBlock = [[AspectBlock alloc] init];
-    aspectBlock.targetClassName = NSStringFromClass(self.class);
-    aspectBlock.before = before;
-    aspectBlock.after = after;
-    [[AspectBlockInstance sharedAspectBlockInstance] setAMLBlock:aspectBlock forKey:aspectBlock.targetClassName];
     return aspect_add((id)self, selector, options, block, error);
 }
 
@@ -350,11 +346,15 @@ static NSString *const AspectsMessagePrefix = @"aspects_";
                                 before:(AspectBeforeBlock) before
                                  after:(AspectAfterBlock) after
                                  error:(NSError **)error {
+    if ([AspectBlockInstance sharedAspectBlockInstance].aspectCache[[NSString stringWithFormat:@"%p-%@",self,NSStringFromSelector(selector)]]){
+        return nil;
+    }
     AspectBlock *aspectBlock = [[AspectBlock alloc] init];
-    aspectBlock.targetClassName = NSStringFromClass(self.class);
+    aspectBlock.targetClassName = [NSString stringWithFormat:@"%p-%@",self,NSStringFromSelector(selector)];
     aspectBlock.before = before;
     aspectBlock.after = after;
     [[AspectBlockInstance sharedAspectBlockInstance] setAMLBlock:aspectBlock forKey:aspectBlock.targetClassName];
+    [[AspectBlockInstance sharedAspectBlockInstance].aspectCache setObject:@"" forKey:[NSString stringWithFormat:@"%p-%@",self,NSStringFromSelector(selector)]];
     return aspect_add(self, selector, options, block, error);
 }
 
@@ -744,7 +744,7 @@ static void __ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self, SEL
         do {
             if ((respondsToAlias = [klass instancesRespondToSelector:aliasSelector])) {
                 deep++;
-                AspectBlock *block = [[AspectBlockInstance sharedAspectBlockInstance] blockWithTarget:invocation.target];
+                AspectBlock *block = [[AspectBlockInstance sharedAspectBlockInstance] blockWithTarget:invocation.target sel:originalSelector];
                 [block rundBefore:invocation.target sel:originalSelector args:argList deep:deep];
                 NSDate *start = [NSDate date];
                 [invocation invoke];

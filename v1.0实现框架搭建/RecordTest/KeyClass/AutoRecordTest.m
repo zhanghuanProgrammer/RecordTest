@@ -16,6 +16,9 @@
 }
 
 - (void)autoRecord{
+    if (!Run) {
+        return;
+    }
     self.isRuning=YES;
     [[KVOAllView new] kvoAllView];
     
