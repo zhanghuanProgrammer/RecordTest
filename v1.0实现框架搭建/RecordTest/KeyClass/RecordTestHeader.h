@@ -7,8 +7,9 @@
 #import "Aspects.h"
 #import "UIView+RTLayerIndex.h"
 #import "RTOperationQueue.h"
+#import "RTCommandList.h"
 
-#define Run 0
+#define Run 1
 
 #define IsRecord 1
 #define IsRunRecord !IsRecord

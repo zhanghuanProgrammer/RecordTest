@@ -1,6 +1,7 @@
 
 #import "AutoRecordTest.h"
 #import "RecordTestHeader.h"
+#import "RTCommandList.h"
 
 @implementation AutoRecordTest
 
@@ -14,6 +15,16 @@
             [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
             SuspendBall *suspendBall = [SuspendBall suspendBallWithFrame:CGRectMake(0, 64, 50, 50) delegate:_sharedObject subBallImageArray:@[@"SuspendBall_down",@"SuspendBall_downmore",@"SuspendBall_list",@"SuspendBall_reback",@"SuspendBall_set"]];
             [[UIApplication sharedApplication].keyWindow addSubview:suspendBall];
+            RTCommandList *list = [[RTCommandList alloc]initInKeyWindowWithFrame:CGRectMake(0, suspendBall.maxY, 200, 12*10)];
+            list.draggable = NO;
+            for (NSInteger i=0; i<20; i++) {
+                [list.dataArr addObject:@"RTCommandList 1"];
+                [list.dataArr addObject:@"RTCommandList 2"];
+                [list.dataArr addObject:@"RTCommandList 3"];
+            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                list.curRow = 5;
+            });
         }
     });
     return _sharedObject;
@@ -37,7 +48,9 @@
     switch (tag) {
         case 0:break;
         case 1:break;
-        case 2:break;
+        case 2:{
+            [RTCommandList shareInstance].hidden = ![RTCommandList shareInstance].hidden;
+        }break;
         case 3:break;
         case 4:break;
         default:

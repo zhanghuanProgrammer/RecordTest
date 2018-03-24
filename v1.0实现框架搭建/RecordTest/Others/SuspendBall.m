@@ -1,5 +1,9 @@
 
 #import "SuspendBall.h"
+#import "RecordTestHeader.h"
+
+#define KScreenWidth [UIScreen mainScreen].bounds.size.width
+#define KScreenHeight [UIScreen mainScreen].bounds.size.height
 
 /*** 分类方法  ***/
 @interface UIView (Extension)
@@ -61,6 +65,11 @@
     CGRect frame = self.frame;
     frame.origin.y = lhz_y;
     self.frame = frame;
+    if (self.lhz_centerY > KScreenHeight/2.0) {
+        [RTCommandList shareInstance].y = self.lhz_y - [RTCommandList shareInstance].height;
+    }else{
+        [RTCommandList shareInstance].y = self.lhz_y + self.lhz_height;
+    }
 }
 
 - (CGFloat)lhz_centerX
@@ -73,6 +82,11 @@
     CGPoint center = self.center;
     center.x = lhz_centerX;
     self.center = center;
+    if (lhz_centerX > KScreenWidth /2.0) {
+        [RTCommandList shareInstance].x = KScreenWidth - [RTCommandList shareInstance].width;
+    }else{
+        [RTCommandList shareInstance].x = 0;
+    }
 }
 
 
@@ -86,6 +100,11 @@
     CGPoint center = self.center;
     center.y = lhz_centerY;
     self.center = center;
+    if (self.lhz_centerY > KScreenHeight/2.0) {
+        [RTCommandList shareInstance].y = self.lhz_y - [RTCommandList shareInstance].height;
+    }else{
+        [RTCommandList shareInstance].y = self.lhz_y + self.lhz_height;
+    }
 }
 @end
 
@@ -97,8 +116,6 @@
 static CGFloat fullButtonWidth    = 50;
 static CGFloat btnBigImageWidth   = 32;
 static CGFloat btnSmallImageWidth = 30;
-#define KScreenWidth [UIScreen mainScreen].bounds.size.width
-#define KScreenHeight [UIScreen mainScreen].bounds.size.height
 
 #pragma mark - initialization
 - (instancetype)initWithFrame:(CGRect)frame
@@ -150,7 +167,6 @@ static CGFloat btnSmallImageWidth = 30;
 {
     _imageNameGroup = imageNameGroup;
     _functionMenu = nil;
-    
 }
 
 - (void)setSuperBallBackColor:(UIColor *)superBallBackColor
@@ -186,9 +202,9 @@ static CGFloat btnSmallImageWidth = 30;
                 }];
             }
             
-            if (point.y < 64 + fullButtonWidth / 2) {
+            if (point.y < fullButtonWidth / 2) {
                 [UIView animateWithDuration:0.5 animations:^{
-                    self.lhz_y = 64;
+                    self.lhz_y = 0;
                 }];
             }
             
