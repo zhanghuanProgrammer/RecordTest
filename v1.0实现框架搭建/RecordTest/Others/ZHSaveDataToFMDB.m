@@ -140,6 +140,7 @@ static FMDatabase *dataBase;
     }
     return temp;
 }
+
 + (NSString *)deCode:(NSString *)text{
     NSMutableString *temp=[NSMutableString string];
     NSInteger lenth=text.length;
@@ -156,4 +157,5 @@ static FMDatabase *dataBase;
         [temp appendFormat:@"%C",[text characterAtIndex:lenth-1]];
     return temp;
 }
+
 @end

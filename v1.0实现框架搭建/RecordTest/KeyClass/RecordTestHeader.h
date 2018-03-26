@@ -8,6 +8,10 @@
 #import "UIView+RTLayerIndex.h"
 #import "RTOperationQueue.h"
 #import "RTCommandList.h"
+#import "JohnAlertManager.h"
+#import "RTInteraction.h"
+#import "UIViewController+RT.h"
+#import "RTTopVC.h"
 
 #define Run 1
 

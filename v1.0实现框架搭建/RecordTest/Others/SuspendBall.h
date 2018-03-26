@@ -13,6 +13,8 @@ typedef void(^FunctionClickAction)(UIButton *);
 
 @interface SuspendBall : UIButton
 
++ (SuspendBall *)shareInstance;
+
 + (instancetype)suspendBallWithFrame:(CGRect)ballFrame delegate:(id<SuspendBallDelegte>)delegate subBallImageArray:(NSArray *)imageArray;
 
 
@@ -50,5 +52,8 @@ typedef void(^FunctionClickAction)(UIButton *);
 @property (nonatomic, weak) id<SuspendBallDelegte> delegate;
 
 - (void)suspendBallShow;
+
+- (void)setImage:(NSString *)imageName index:(NSInteger)index;
+- (void)setBadge:(NSString *)badge index:(NSInteger)index;
 
 @end

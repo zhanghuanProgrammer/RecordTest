@@ -2,12 +2,10 @@
 #import <Foundation/Foundation.h>
 #import "SuspendBall.h"
 
-@interface AutoRecordTest : NSObject <SuspendBallDelegte>
-
-@property (nonatomic,assign)BOOL isRuning;
+@interface AutoRecordTest : NSObject
 
 + (AutoRecordTest *)shareInstance;
 
-- (void)autoRecord;
+- (void)run;
 
 @end

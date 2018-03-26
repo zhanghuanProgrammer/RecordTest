@@ -110,6 +110,7 @@
 
 @interface SuspendBall ()
 @property (nonatomic,strong)NSMutableArray *badges;
+@property (nonatomic,strong)NSMutableArray *buttons;
 @end
 
 @implementation SuspendBall
@@ -117,16 +118,28 @@ static CGFloat fullButtonWidth    = 50;
 static CGFloat btnBigImageWidth   = 32;
 static CGFloat btnSmallImageWidth = 30;
 
++ (SuspendBall *)shareInstance{
+    static dispatch_once_t pred = 0;
+    __strong static SuspendBall *_sharedObject = nil;
+    dispatch_once(&pred, ^{
+        _sharedObject = [[SuspendBall alloc] init];
+    });
+    return _sharedObject;
+}
+
 #pragma mark - initialization
-- (instancetype)initWithFrame:(CGRect)frame
+
+- (instancetype)init
 {
-    if (self = [super initWithFrame:frame]) {
+    if (self = [super init]) {
         [self initialization];
+        self.badges = [NSMutableArray array];
+        self.buttons = [NSMutableArray array];
         self.layer.cornerRadius = fullButtonWidth / 2;
         self.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.6];
         [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_home"] wantSize:CGSizeMake(btnBigImageWidth, btnBigImageWidth)] forState:0];
         [self addTarget:self action:@selector(suspendBallShow) forControlEvents:UIControlEventTouchUpInside];
-        
+
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveSuspend:)];
         [self addGestureRecognizer:pan];
         [self suspendBallShow];
@@ -136,7 +149,7 @@ static CGFloat btnSmallImageWidth = 30;
 
 + (instancetype)suspendBallWithFrame:(CGRect)ballFrame delegate:(id<SuspendBallDelegte>)delegate subBallImageArray:(NSArray *)imageArray
 {
-    SuspendBall *suspendBall = [[SuspendBall alloc] init];
+    SuspendBall *suspendBall = [SuspendBall shareInstance];
     suspendBall.frame = ballFrame;
     suspendBall.delegate = delegate;
     suspendBall.imageNameGroup = imageArray;
@@ -213,6 +226,27 @@ static CGFloat btnSmallImageWidth = 30;
             
         default:
             break;
+    }
+}
+
+- (void)setImage:(NSString *)imageName index:(NSInteger)index{
+    index ++;//因为第一个也算进去了
+    if (self.buttons.count > index) {
+        
+        UIButton *functionBtn = self.buttons[index];
+        if (index==1) {//这个图标没给好,给大了,所以这里调整一下
+            [functionBtn setImage:[self resizeImage:[UIImage imageNamed:imageName] wantSize:CGSizeMake(btnSmallImageWidth-6, btnSmallImageWidth-6)] forState:UIControlStateNormal];
+        }else{
+            [functionBtn setImage:[self resizeImage:[UIImage imageNamed:imageName] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:UIControlStateNormal];
+        }
+    }
+}
+
+- (void)setBadge:(NSString *)badge index:(NSInteger)index{
+    index ++;//因为第一个也算进去了
+    if (self.badges.count > index) {
+        UILabel *badgeLabel = self.badges[index];
+        badgeLabel.text = badge;
     }
 }
 
@@ -345,6 +379,7 @@ static CGFloat btnSmallImageWidth = 30;
             functionBtn.tag = i;
             [functionBtn addTarget:self action:@selector(menuBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
             [_functionMenu addSubview:functionBtn];
+            [self.buttons addObject:functionBtn];
             
             UILabel *badge = [[UILabel alloc]initWithFrame:CGRectMake(functionBtn.lhz_x, functionBtn.lhz_y, fullButtonWidth, 10)];
             badge.backgroundColor = [UIColor clearColor];
@@ -352,6 +387,7 @@ static CGFloat btnSmallImageWidth = 30;
             badge.textAlignment = NSTextAlignmentCenter;
             badge.font = [UIFont systemFontOfSize:10];
             [_functionMenu addSubview:badge];
+            [self.badges addObject:badge];
         }
     }
     return _functionMenu;

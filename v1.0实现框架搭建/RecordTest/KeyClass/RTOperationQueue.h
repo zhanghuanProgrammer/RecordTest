@@ -16,14 +16,31 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 
 @end
 
+@interface RTIdentify : NSObject
+
+@property (nonatomic,copy)NSString *identify;
+@property (nonatomic,copy)NSString *forVC;
+
+- (instancetype)initWithIdentify:(NSString *)identify forVC:(NSString *)forVC;
+
+@end
+
 @interface RTOperationQueue : NSObject
 
-@property (nonatomic,strong)RTOperationQueueModel *curOperationModel;
+@property (nonatomic,copy)NSString *forVC;
+@property (nonatomic,assign)BOOL isRecord;
 
 + (RTOperationQueue *)shareInstance;
++ (void)startOrStopRecord;
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat;
 
-+ (void)saveOperationQueue;
-+ (void)runOperationQueue;
++ (BOOL)saveOperationQueue:(RTIdentify *)identify;
++ (NSMutableDictionary *)getOperationQueue:(RTIdentify *)identify;
++ (void)deleteOperationQueue:(RTIdentify *)identify;
++ (BOOL)reChanggeOperationQueue:(RTIdentify *)identify;
++ (BOOL)isExsitOperationQueue:(RTIdentify *)identify;
+
++ (NSArray *)allIdentifyModels;
++ (NSArray *)allIdentifyModelsForVC:(NSString *)vc;
 
 @end

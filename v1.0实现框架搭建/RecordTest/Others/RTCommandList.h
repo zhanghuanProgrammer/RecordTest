@@ -11,6 +11,7 @@
 
 @property (nonatomic,strong)NSMutableArray *dataArr;
 @property (nonatomic,strong)UITableView *tableView;
+@property (nonatomic,strong)UILabel *curCommand;
 @property (nonatomic,assign)NSInteger curRow;
 @property (nonatomic) BOOL draggable;
 @property (nonatomic) BOOL autoDocking;

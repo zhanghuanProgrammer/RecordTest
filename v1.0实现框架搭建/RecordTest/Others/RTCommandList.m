@@ -47,10 +47,10 @@
         
         UILabel *curCommand = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 12)];
         curCommand.textColor = [UIColor redColor];
-        curCommand.text = @"当前执行的命令为:爱神的箭卡";
         curCommand.font = [UIFont systemFontOfSize:12];
         [self addSubview:curCommand];
         curCommand.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        self.curCommand = curCommand;
         
         UITableView *tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 12, frame.size.width, frame.size.height-12)];
         [self addSubview:tableView];
@@ -259,7 +259,7 @@
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
         [cell.imageView cornerRadius];
         cell.textLabel.textColor = [UIColor whiteColor];
-        cell.textLabel.font = [UIFont systemFontOfSize:12];
+        cell.textLabel.font = [UIFont systemFontOfSize:10];
         cell.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
     }
     NSString *text = self.dataArr[indexPath.row];
