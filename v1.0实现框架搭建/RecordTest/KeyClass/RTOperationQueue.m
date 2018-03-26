@@ -7,6 +7,15 @@
 
 @implementation RTOperationQueueModel
 
+- (instancetype)copyNew{
+    RTOperationQueueModel *copy = [RTOperationQueueModel new];
+    copy.view = self.view;
+    copy.viewId = self.viewId;
+    copy.parameters = self.parameters;
+    copy.type = self.type;
+    return copy;
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder{
     [aCoder encodeObject:self.viewId forKey:@"viewId"];
     [aCoder encodeObject:self.view forKey:@"view"];
@@ -25,7 +34,36 @@
 }
 
 - (NSString *)description{
-    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,@(self.type),self.parameters];
+    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,[self typeString],[self parameterString]];
+}
+
+- (NSString *)debugDescription{
+    return [NSString stringWithFormat:@"%@-%@-%@",self.view,[self typeString],[self parameterString]];
+}
+
+- (NSString *)parameterString{
+    if (self.parameters) {
+        NSMutableString *string = [NSMutableString string];
+        for (id obj in self.parameters) {
+            [string appendFormat:@"%@ ",obj];
+        }
+        return string;
+    }
+    return @"";
+}
+
+- (NSString *)typeString{
+    switch (self.type) {
+        case RTOperationQueueTypeEvent: case RTOperationQueueTypeTableViewCellTap:
+            return @"控件点击";
+            break;
+        case RTOperationQueueTypeScroll:
+            return @"滚动";
+            break;
+        default:
+            break;
+    }
+    return @"unknow";
 }
 
 @end
@@ -80,6 +118,7 @@
     if (!isRecord) {
         [[SuspendBall shareInstance]setImage:@"SuspendBall_startrecord" index:3];
         [self.operationQueue removeAllObjects];
+        [[RTCommandList shareInstance] initData];
     }else{
         [[SuspendBall shareInstance]setImage:@"SuspendBall_stoprecord" index:3];
     }
@@ -121,6 +160,9 @@
             if ([model.viewId isEqualToString:view.layerDirector] && model.type == type) {
                 model.parameters = parameters;
 //                NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
+                if (model.type != RTOperationQueueTypeScroll) {
+                    [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"%@",[model debugDescription]] dismissAfter:1 styleName:JDStatusBarStyleSuccess];
+                }
                 return;
             }
         }
@@ -131,6 +173,9 @@
     model.parameters = parameters;
     model.view = NSStringFromClass(view.class);
     [[RTOperationQueue shareInstance].operationQueue addObject:model];
+    if (model.type != RTOperationQueueTypeScroll) {
+        [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"%@",[model debugDescription]] dismissAfter:1 styleName:JDStatusBarStyleSuccess];
+    }
 //    NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
 }
 
@@ -155,7 +200,7 @@
     return YES;
 }
 
-+ (NSMutableDictionary *)getOperationQueue:(RTIdentify *)identify{
++ (NSMutableArray *)getOperationQueue:(RTIdentify *)identify{
     NSMutableDictionary *operationQueues = [self operationQueues];
     return operationQueues[[identify description]];
 }
@@ -204,11 +249,12 @@
 }
 
 + (NSArray *)allIdentifyModelsForVC:(NSString *)vc{
+    if(vc.length <= 0)return nil;
     NSArray *allIdentifyModels = [self allIdentifyModels];
     NSMutableArray *filters = [NSMutableArray arrayWithCapacity:allIdentifyModels.count];
     for (RTIdentify *identify in allIdentifyModels) {
         if ([identify.forVC isEqualToString:vc]) {
-            [filters addObject:identify.forVC];
+            [filters addObject:identify];
         }
     }
     return filters;

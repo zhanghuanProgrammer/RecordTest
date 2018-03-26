@@ -12,6 +12,7 @@
 #import "RTInteraction.h"
 #import "UIViewController+RT.h"
 #import "RTTopVC.h"
+#import "ZHStatusBarNotification.h"
 
 #define Run 1
 

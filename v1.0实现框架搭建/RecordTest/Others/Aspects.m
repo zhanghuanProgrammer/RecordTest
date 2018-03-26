@@ -768,7 +768,7 @@ static void __ASPECTS_ARE_BEING_CALLED__(__unsafe_unretained NSObject *self, SEL
         if ([self respondsToSelector:originalForwardInvocationSEL]) {
             ((void( *)(id, SEL, NSInvocation *))objc_msgSend)(self, originalForwardInvocationSEL, invocation);
         }else {
-            [self doesNotRecognizeSelector:invocation.selector];
+//            [self doesNotRecognizeSelector:invocation.selector];
         }
     }
     

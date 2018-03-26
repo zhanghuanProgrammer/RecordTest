@@ -1,10 +1,49 @@
 
 #import "RTCommandList.h"
-
+#import "RTCommandListVCCellModel.h"
+#import "RecordTestHeader.h"
 
 #define RC_WAITING_KEYWINDOW_AVAILABLE 0.f
 #define RC_AUTODOCKING_ANIMATE_DURATION 0.2f
 #define RC_DOUBLE_TAP_TIME_INTERVAL 0.16f
+
+
+@interface RTCommandListTableViewCell : UITableViewCell
+@property (nonatomic,strong)UIImageView *hintImg;
+@property (nonatomic,strong)UILabel *hintLabel;
+@property (nonatomic,weak)RTCommandListVCCellModel *dataModel;
+@end
+
+@implementation RTCommandListTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.selectionStyle=UITableViewCellSelectionStyleNone;
+        self.hintImg = [[UIImageView alloc]initWithFrame:CGRectMake(5, 4, 5, 5)];
+        [self.contentView addSubview:self.hintImg];
+        [self.hintImg cornerRadius];
+        self.hintLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, [UIScreen mainScreen].bounds.size.width - 20, 12)];
+        self.hintLabel.textColor = [UIColor whiteColor];
+        self.hintLabel.font = [UIFont systemFontOfSize:10];
+        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        [self.contentView addSubview:self.hintLabel];
+    }
+    return self;
+}
+
+- (void)refreshUI:(RTCommandListVCCellModel *)dataModel{
+    _dataModel = dataModel;
+    if (dataModel.identify) {
+        self.hintLabel.text = [dataModel.identify debugDescription];
+    }else if (dataModel.operationModel){
+        self.hintLabel.text = [dataModel.operationModel debugDescription];
+    }
+    self.hintImg.backgroundColor = (dataModel.indexPath.row == [RTCommandList shareInstance].curRow) ? [UIColor greenColor] : [UIColor clearColor];
+    self.hintLabel.textColor = (dataModel.indexPath.row == [RTCommandList shareInstance].curRow) ? [UIColor greenColor] : [UIColor whiteColor];
+    self.hintImg.image = [UIImage imageNamed:(dataModel.indexPath.row < [RTCommandList shareInstance].curRow) ? @"SuspendBall_stoprecord" : @"SuspendBall_startrecord"];
+}
+
+@end
 
 @implementation RTCommandList
 
@@ -58,6 +97,7 @@
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         tableView.delegate = self;
         tableView.dataSource = self;
+        [tableView registerClass:[RTCommandListTableViewCell class] forCellReuseIdentifier:@"RTCommandListCell"];
         self.tableView = tableView;
         self.tableView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
     }
@@ -252,20 +292,14 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static  NSString *cellIdtifier=@"RTCommandListCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdtifier];
+    static NSString *cellIdtifier=@"RTCommandListCell";
+    RTCommandListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdtifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdtifier];
-        cell.selectionStyle=UITableViewCellSelectionStyleNone;
-        [cell.imageView cornerRadius];
-        cell.textLabel.textColor = [UIColor whiteColor];
-        cell.textLabel.font = [UIFont systemFontOfSize:10];
-        cell.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        cell = [[RTCommandListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdtifier];
     }
-    NSString *text = self.dataArr[indexPath.row];
-    cell.textLabel.text = text;
-    cell.imageView.backgroundColor = (indexPath.row == self.curRow) ? [UIColor greenColor] : [UIColor clearColor];
-    cell.textLabel.textColor = (indexPath.row == self.curRow) ? [UIColor greenColor] : [UIColor whiteColor];
+    RTCommandListVCCellModel *model = self.dataArr[indexPath.row];
+    model.indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
+    [cell refreshUI:model];
     return cell;
 }
 
@@ -273,18 +307,62 @@
     return 12;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView  deselectRowAtIndexPath:indexPath animated:YES];
-}
-
 - (void)reloadData{
     [self.tableView reloadData];
+}
+
+- (void)initData{
+    if (self.isRunOperationQueue) return;
+    [self.dataArr removeAllObjects];
+    self.curCommand.text = [NSString stringWithFormat:@"当前控制器:%@",[RTTopVC shareInstance].topVC];
+    self.draggable = NO;
+    NSArray *identifys = [RTOperationQueue allIdentifyModelsForVC:[RTTopVC shareInstance].topVC];
+    for (RTIdentify *identify in identifys) {
+        RTCommandListVCCellModel *model = [RTCommandListVCCellModel new];
+        model.identify = [RTIdentify new];
+        model.identify.forVC = identify.forVC;
+        model.identify.identify = identify.identify;
+        [self.dataArr addObject:model];
+    }
+    [self reloadData];
+    [RTCommandList shareInstance].curRow = 0;
+    static BOOL isTimerRun = NO;
+    if (!isTimerRun) {
+        isTimerRun = YES;
+        [self timer];
+    }
+}
+
+- (void)timer{
+    static NSString *curTopVC;
+    if (![[RTTopVC shareInstance].topVC isEqualToString:curTopVC]) {
+        [self initData];
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self timer];
+    });
+}
+
+- (void)setOperationQueue:(RTIdentify *)identify{
+    self.isRunOperationQueue = YES;
+    self.curCommand.text = [NSString stringWithFormat:@"%@",[identify debugDescription]];
+    [self.dataArr removeAllObjects];
+    NSArray *operationQueues = [RTOperationQueue getOperationQueue:identify];
+    for (RTOperationQueueModel *model in operationQueues) {
+        RTCommandListVCCellModel *modelTemp = [RTCommandListVCCellModel new];
+        modelTemp.operationModel = [model copyNew];
+        [self.dataArr addObject:modelTemp];
+    }
+    [self reloadData];
+    [RTCommandList shareInstance].curRow = 0;
 }
 
 - (void)setCurRow:(NSInteger)row{
     _curRow = row;
     [self.tableView reloadData];
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:(UITableViewScrollPositionTop) animated:YES];
+    if (self.dataArr.count > row) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0] atScrollPosition:(UITableViewScrollPositionTop) animated:YES];
+    }
 }
 
 @end

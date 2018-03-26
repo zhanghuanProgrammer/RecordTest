@@ -1,5 +1,7 @@
 
 #import <UIKit/UIKit.h>
+
+@class RTIdentify;
 #define RC_DB_VERSION @"0.2"
 @interface RTCommandList : UIView <UITableViewDelegate,UITableViewDataSource>
 {
@@ -13,6 +15,7 @@
 @property (nonatomic,strong)UITableView *tableView;
 @property (nonatomic,strong)UILabel *curCommand;
 @property (nonatomic,assign)NSInteger curRow;
+@property (nonatomic) BOOL isRunOperationQueue;
 @property (nonatomic) BOOL draggable;
 @property (nonatomic) BOOL autoDocking;
 
@@ -37,5 +40,7 @@
 + (void)removeAllFromView:(id)superView;
 
 - (void)reloadData;
+- (void)initData;
+- (void)setOperationQueue:(RTIdentify *)identify;
 
 @end

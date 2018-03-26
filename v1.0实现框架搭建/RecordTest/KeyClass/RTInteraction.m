@@ -3,6 +3,7 @@
 #import "RecordTestHeader.h"
 #import "RTCommandList.h"
 #import "ZHAlertAction.h"
+#import "RTCommandListVCViewController.h"
 
 @interface RTInteraction ()<SuspendBallDelegte>
 
@@ -23,15 +24,17 @@
     SuspendBall *suspendBall = [SuspendBall suspendBallWithFrame:CGRectMake(0, 64, 50, 50) delegate:self subBallImageArray:@[@"SuspendBall_down",@"SuspendBall_downmore",@"SuspendBall_list",@"SuspendBall_startrecord",@"SuspendBall_set"]];
     [[UIApplication sharedApplication].keyWindow addSubview:suspendBall];
     RTCommandList *list = [[RTCommandList alloc]initInKeyWindowWithFrame:CGRectMake(0, suspendBall.maxY, 200, 12*10)];
-    list.curCommand.text = @"与该控制器相关的可执行测试列表:";
-    list.draggable = NO;
-    NSArray *arr = [RTOperationQueue allIdentifyModels];
-    for (RTIdentify *identify in arr) {
-        [list.dataArr addObject:[identify debugDescription]];
-    }
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        list.curRow = 5;
-//    });
+    [list initData];
+    __weak typeof(list)weakList=list;
+    list.tapBlock = ^(RTCommandList *view) {
+        RTCommandListVCViewController *vc = [RTCommandListVCViewController new];
+        vc.title = weakList.curCommand.text;
+        [vc.dataArr addObjectsFromArray:weakList.dataArr];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+        vc.nav = nav;
+        [[UIApplication sharedApplication].keyWindow addSubview:nav.view];
+        [[UIViewController getCurrentVC]addChildViewController:nav];
+    };
 }
 
 #pragma mark - SuspendBallDelegte

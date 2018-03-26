@@ -123,6 +123,9 @@ static CGFloat btnSmallImageWidth = 30;
     __strong static SuspendBall *_sharedObject = nil;
     dispatch_once(&pred, ^{
         _sharedObject = [[SuspendBall alloc] init];
+        fullButtonWidth    = KScreenWidth/375.0*50;
+        btnBigImageWidth   = KScreenWidth/375.0*32;
+        btnSmallImageWidth = KScreenWidth/375.0*30;
     });
     return _sharedObject;
 }

@@ -14,6 +14,8 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 @property (nonatomic,assign)RTOperationQueueType type;
 @property (nonatomic,strong)NSArray *parameters;
 
+- (instancetype)copyNew;
+
 @end
 
 @interface RTIdentify : NSObject
@@ -35,7 +37,7 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat;
 
 + (BOOL)saveOperationQueue:(RTIdentify *)identify;
-+ (NSMutableDictionary *)getOperationQueue:(RTIdentify *)identify;
++ (NSMutableArray *)getOperationQueue:(RTIdentify *)identify;
 + (void)deleteOperationQueue:(RTIdentify *)identify;
 + (BOOL)reChanggeOperationQueue:(RTIdentify *)identify;
 + (BOOL)isExsitOperationQueue:(RTIdentify *)identify;
