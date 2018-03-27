@@ -35,15 +35,15 @@
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
         vc.nav = nav;
         [[UIApplication sharedApplication].keyWindow addSubview:nav.view];
-        [[UIViewController getCurrentVC]addChildViewController:nav];
+        [[UIViewController getCurrentVC] addChildViewController:nav];
     };
 }
 
 #pragma mark - SuspendBallDelegte
 - (void)suspendBall:(UIButton *)subBall didSelectTag:(NSInteger)tag{
     switch (tag) {
-        case 0:[[RTCommandList shareInstance] nextStep];break;
-        case 1:[[RTCommandList shareInstance] nextSteps];break;
+        case 0:[[RTCommandList shareInstance] runStep];break;
+        case 1:[[RTCommandList shareInstance] nextStep];break;
         case 2:{
             [RTCommandList shareInstance].hidden = ![RTCommandList shareInstance].hidden;
         }break;

@@ -75,11 +75,17 @@
 
 - (NSString *)typeString{
     switch (self.type) {
-        case RTOperationQueueTypeEvent: case RTOperationQueueTypeTableViewCellTap:
+        case RTOperationQueueTypeEvent:
             return @"Click";
             break;
         case RTOperationQueueTypeScroll:
             return @"Scroll";
+            break;
+        case RTOperationQueueTypeTap:
+            return @"Tap";
+            break;
+        case RTOperationQueueTypeTableViewCellTap:
+            return @"CellTap";
             break;
         default:
             break;

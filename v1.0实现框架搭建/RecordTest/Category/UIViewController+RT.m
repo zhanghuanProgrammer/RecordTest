@@ -17,8 +17,7 @@
     UIWindow * window = [[UIApplication sharedApplication] keyWindow];
     if(!window)return nil;
     //app默认windowLevel是UIWindowLevelNormal，如果不是，找到UIWindowLevelNormal的
-    if (window.windowLevel != UIWindowLevelNormal)
-    {
+    if (window.windowLevel != UIWindowLevelNormal){
         NSArray *windows = [[UIApplication sharedApplication] windows];
         for(UIWindow * tmpWin in windows)
         {
@@ -31,7 +30,6 @@
     }
     id  nextResponder = nil;
     UIViewController *appRootVC=window.rootViewController;
-    
     //    如果是present上来的appRootVC.presentedViewController 不为nil
     if (appRootVC.presentedViewController) {
         nextResponder = appRootVC.presentedViewController;
@@ -57,7 +55,9 @@
     }else{
         result = nextResponder;
     }
-    
+    if (!result) {
+        return [[UIApplication sharedApplication] keyWindow].rootViewController;
+    }
     return result;
 }
 

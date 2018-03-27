@@ -65,16 +65,24 @@
 }
 
 - (BOOL)isExsitVC:(NSString *)vc{
+    BOOL result = NO;
     for (int i = 0; i < [UIApplication sharedApplication].windows.count; i++) {
         UIWindow *window = [UIApplication sharedApplication].windows[i];
         if (window.subviews.count > 0) {
-            return [self dumpView:window isExsitVC:vc];
+            if ([self dumpView:window isExsitVC:vc]) {
+                result = YES;
+                break;
+            }
         }
     }
-    return NO;
+    return result;
 }
 
 - (BOOL)dumpView:(UIView *)aView isExsitVC:(NSString *)vc{
+    BOOL result = NO;
+    if(!aView.curViewController || aView.curViewController.length<=0){
+        aView.curViewController=NSStringFromClass([aView getViewController].class);
+    }
     if (aView.curViewController.length == vc.length) {
         if ([aView.curViewController isEqualToString:vc]) {
             return YES;
@@ -82,9 +90,12 @@
     }
     //继续递归遍历
     for (UIView *view in [aView subviews]){
-        return [self dumpView:view isExsitVC:vc];
+        if ([self dumpView:view isExsitVC:vc]) {
+            result = YES;
+            break;
+        }
     }
-    return NO;
+    return result;
 }
 
 

@@ -1,6 +1,8 @@
 #import "RTCommandListVCViewController.h"
 #import "RTCommandListVCTableViewCell.h"
 #import "RTCommandList.h"
+#import "ZHAlertAction.h"
+#import "RecordTestHeader.h"
 
 @interface RTCommandListVCViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -38,6 +40,7 @@
 - (void)backAction{
     [self.nav.view removeFromSuperview];
     [self.nav removeFromParentViewController];
+    [[RTDisPlayAllView new]disPlayAllView];
 }
 
 - (void)stopAction{
@@ -81,6 +84,59 @@
         [[RTCommandList shareInstance]setOperationQueue:model.identify];
     }
     [self backAction];
+}
+///**是否可以编辑*/
+//- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+//    return YES;
+//}
+///**编辑风格*/
+//- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+//    return UITableViewCellEditingStyleDelete;
+//}
+///**设置编辑的控件  删除*/
+//- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    //设置删除按钮
+//    UITableViewRowAction *deleteRowAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+//
+//        [self.dataArr removeObjectAtIndex:indexPath.row];
+//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationAutomatic)];
+//
+////
+////        NSString *title = @"";
+////        if ([RTCommandList shareInstance].isRunOperationQueue) title = @"是否删除该单条目录?";
+////        else title = @"是否删除该测试录制?";
+////        NSLog(@"%@",[[UIApplication sharedApplication] keyWindow].rootViewController);
+////        [ZHAlertAction alertWithTitle:title withMsg:nil addToViewController:[[UIApplication sharedApplication] keyWindow].rootViewController ActionSheet:NO otherButtonBlocks:@[^{
+////        },^{
+////
+////        }] otherButtonTitles:@[@"删除",@"取消"]];
+//
+//    }];
+//    return @[deleteRowAction];
+//}
+
+/**是否可以编辑*/
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    if (indexPath.row==self.dataArr.count) {
+        return NO;
+    }
+    return YES;
+}
+
+/**编辑风格*/
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleDelete;
+}
+
+/**设置编辑的控件  删除,置顶,收藏*/
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    //设置删除按钮
+    UITableViewRowAction *deleteRowAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+        [self.dataArr removeObjectAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationAutomatic)];
+    }];
+    return  @[deleteRowAction];
 }
 
 @end

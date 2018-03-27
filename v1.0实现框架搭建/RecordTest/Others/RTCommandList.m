@@ -379,44 +379,34 @@
     }
 }
 
-- (void)nextStep{
+- (BOOL)runStep{
     if (self.isRunOperationQueue) {
         if (self.dataArr.count > _curRow) {
             RTCommandListVCCellModel *model = self.dataArr[_curRow];
             RTOperationQueueModel *operationQueue = model.operationModel;
-            NSLog(@"目标😄:%@",operationQueue.viewId);
-            [[RTDisPlayAllView new] disPlayAllView];
             UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
             if (targetView) {
                 if ([targetView runOperation:operationQueue]) {
                     model.runResultType = OperationRunResultTypeRunSuccess;
+                    [ZHStatusBarNotification showWithStatus:@"执行成功" dismissAfter:1 styleName:JDStatusBarStyleSuccess];
+                    self.curRow++;
+                    return YES;
                 }else{
                     model.runResultType = OperationRunResultTypeFailure;
+                    [ZHStatusBarNotification showWithStatus:@"执行失败" dismissAfter:1 styleName:JDStatusBarStyleError];
                 }
-                [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"找到控件!"];
             }else{
                 model.runResultType = OperationRunResultTypeFailure;
-                [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"没找到控件!"];
+                [ZHStatusBarNotification showWithStatus:@"没找到控件,请重试!" dismissAfter:1 styleName:JDStatusBarStyleWarning];
             }
-            self.curRow++;
         }
     }
+    return NO;
 }
 
-- (void)nextSteps{
-    if (self.isRunOperationQueue) {
-        if (self.dataArr.count > _curRow) {
-            RTCommandListVCCellModel *model = self.dataArr[_curRow];
-            RTOperationQueueModel *operationQueue = model.operationModel;
-            NSLog(@"目标😄:%@",operationQueue.viewId);
-            [[RTDisPlayAllView new] disPlayAllView];
-            UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
-            if (targetView) {
-                [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"找到控件!"];
-            }else{
-                [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"没找到控件!"];
-            }
-        }
+- (void)nextStep{
+    if (![self runStep]) {
+        self.curRow++;
     }
 }
 

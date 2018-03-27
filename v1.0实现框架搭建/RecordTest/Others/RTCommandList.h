@@ -43,7 +43,7 @@
 - (void)initData;
 - (void)setOperationQueue:(RTIdentify *)identify;
 
+- (BOOL)runStep;
 - (void)nextStep;
-- (void)nextSteps;
 
 @end
