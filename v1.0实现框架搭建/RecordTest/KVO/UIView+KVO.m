@@ -20,10 +20,19 @@
                         for (ZHGestureRecognizerTargetAndAction *targetAction in allTargetAndAction) {
                             if (targetAction.target && [targetAction.target respondsToSelector:targetAction.action]) {
                                 id target = targetAction.target;
+                                __weak typeof(ges.view)weakView=ges.view;
                                 [target aspect_hookSelector:targetAction.action withOptions:AspectPositionAfter usingBlock:^{
                                 } before:nil after:^(id target, SEL sel, NSArray *args, NSTimeInterval interval, int deep, id retValue) {
                                     NSLog(@"%@",@"👌Tap evevnt");
-                                    [RTOperationQueue addOperation:self type:(RTOperationQueueTypeTap) parameters:@[NSStringFromSelector(sel)] repeat:YES];
+                                    UIView *view = weakView;
+                                    if (args.count>0) {
+                                        id obj = args[0];
+                                        if([obj isKindOfClass:[UIGestureRecognizer class]]){
+                                            UIGestureRecognizer *gesTemp = (UIGestureRecognizer *)obj;
+                                            view = gesTemp.view;
+                                        }
+                                    }
+                                    [RTOperationQueue addOperation:view type:(RTOperationQueueTypeTap) parameters:@[NSStringFromSelector(sel)] repeat:YES];
                                 } error:nil];
                             }
                         }

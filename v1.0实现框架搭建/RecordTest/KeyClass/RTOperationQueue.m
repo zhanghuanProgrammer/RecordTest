@@ -36,13 +36,13 @@
     return self;
 }
 
-- (NSString *)description{
-    return [NSString stringWithFormat:@"%@-%@-%@",self.vc,[self typeString],[self parameterString]];
-}
-
 //- (NSString *)description{
-//    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,[self typeString],[self parameterString]];
+//    return [NSString stringWithFormat:@"%@-%@-%@",self.vc,[self typeString],[self parameterString]];
 //}
+
+- (NSString *)description{
+    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,[self typeString],[self parameterString]];
+}
 
 - (NSString *)debugDescription{
     return [NSString stringWithFormat:@"%@-%@-%@",self.view,[self typeString],[self parameterString]];

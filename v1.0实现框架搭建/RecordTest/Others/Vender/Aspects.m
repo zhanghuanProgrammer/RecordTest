@@ -343,8 +343,8 @@ static NSString *const AspectsMessagePrefix = @"aspects_";
 - (id<AspectToken>)aspect_hookSelector:(SEL)selector
                            withOptions:(AspectOptions)options
                             usingBlock:(id)block
-                                before:(AspectBeforeBlock) before
-                                 after:(AspectAfterBlock) after
+                                before:(AspectBeforeBlock)before
+                                 after:(AspectAfterBlock)after
                                  error:(NSError **)error {
     if ([AspectBlockInstance sharedAspectBlockInstance].aspectCache[[NSString stringWithFormat:@"%p-%@",self,NSStringFromSelector(selector)]]){
         return nil;

@@ -1,10 +1,19 @@
 
 #import "KVOAllView.h"
 #import "RecordTestHeader.h"
+#import "RTRepearDictionary.h"
+
+@interface KVOAllView ()
+
+@property (nonatomic,strong)RTRepearDictionary *repearDictionary;
+
+@end
 
 @implementation KVOAllView
 
 - (void)kvoAllView{
+    self.repearDictionary = nil;
+    self.repearDictionary = [RTRepearDictionary new];
     for (int i = 0; i < [UIApplication sharedApplication].windows.count; i++) {
         UIWindow *window = [UIApplication sharedApplication].windows[i];
         if (window.subviews.count > 0) {
@@ -24,7 +33,6 @@
     NSString *superViewLayerDirector = fatherView.layerDirector;
     if(superViewLayerDirector.length<=0) superViewLayerDirector=@"";
     if ([aView isKindOfClass:[UITableViewCell class]]) {
-        
         UITableViewCell *cell = (UITableViewCell *)aView;
         layerDirector=[superViewLayerDirector stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-section-%zd-row-%zd",[cell class],cell.indexPath.section,cell.indexPath.row]];
     }else if ([aView isKindOfClass:[UICollectionViewCell class]]){
@@ -33,7 +41,8 @@
     }else{
         layerDirector=[superViewLayerDirector stringByAppendingPathComponent:NSStringFromClass([aView class])];
     }
-    aView.layerDirector=layerDirector;
+    NSString *layerDirectorTemp = [self.repearDictionary setValue:@"" forKey:layerDirector];
+    aView.layerDirector=layerDirectorTemp;
     
 //    printf("%s\n",[aView.layerDirector UTF8String]);
     
