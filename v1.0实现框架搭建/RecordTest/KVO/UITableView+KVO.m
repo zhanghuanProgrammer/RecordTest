@@ -27,7 +27,8 @@
     self.isKVO = YES;
 }
 
-- (void)runOperation:(RTOperationQueueModel *)model{
+- (BOOL)runOperation:(RTOperationQueueModel *)model{
+    BOOL result = NO;
     if (model) {
         if (model.viewId.length == self.layerDirector.length) {
             if ([model.viewId isEqualToString:self.layerDirector]) {
@@ -37,6 +38,7 @@
                         if ([delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
                             @try {
                                 [delegate tableView:self didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:[model.parameters[1] integerValue] inSection:[model.parameters[0] integerValue]]];
+                                result = YES;
                             } @catch (NSException *exception) {
                                 //捕获异常
                             } @finally {
@@ -48,7 +50,10 @@
             }
         }
     }
-    [super runOperation:model];
+    if ([super runOperation:model]) {
+        result = YES;
+    }
+    return result;
 }
 
 @end

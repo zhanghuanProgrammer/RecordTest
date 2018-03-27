@@ -152,23 +152,28 @@
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"开始录制!"];
         [RTOperationQueue shareInstance].forVC = [NSString stringWithFormat:@"%@",[RTTopVC shareInstance].topVC];
     }else{//结束录制
+        [RTOperationQueue shareInstance].isStopRecordTemp = YES;
         [ZHAlertAction alertWithTitle:@"是否保存?" withMsg:nil addToViewController:[UIViewController getCurrentVC] ActionSheet:NO otherButtonBlocks:@[^{
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [ZHAlertAction showOneTextEntryAlertTitle:@"请命名" withMsg:@"唯一标识符" addToViewController:[UIViewController getCurrentVC] withCancleBlock:nil withOkBlock:^(NSString *str) {
+                [ZHAlertAction showOneTextEntryAlertTitle:@"请命名" withMsg:@"唯一标识符" addToViewController:[UIViewController getCurrentVC] withCancleBlock:^{
+                    [RTOperationQueue shareInstance].isStopRecordTemp = NO;
+                } withOkBlock:^(NSString *str) {
                     RTIdentify *identify = [[RTIdentify alloc] initWithIdentify:str forVC:[RTOperationQueue shareInstance].forVC];
                     if ([RTOperationQueue saveOperationQueue:identify]) {
                         [RTOperationQueue shareInstance].isRecord = NO;
                     }
+                    [RTOperationQueue shareInstance].isStopRecordTemp = NO;
                 } cancelButtonTitle:@"取消" OkButtonTitle:@"确定" onePlaceHold:@"唯一标识符"];
             });
         },^{
             [RTOperationQueue shareInstance].isRecord = NO;
+            [RTOperationQueue shareInstance].isStopRecordTemp = NO;
         }] otherButtonTitles:@[@"保存",@"取消"]];
     }
 }
 
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat{
-    if (!IsRecord && [RTOperationQueue shareInstance].isRecord) {
+    if (!IsRecord || (![RTOperationQueue shareInstance].isRecord) || ([RTOperationQueue shareInstance].isStopRecordTemp)) {
         return;
     }
     if(view.layerDirector.length <= 0) return;
@@ -177,16 +182,9 @@
         for (NSInteger i = operationQueue.count - 1; i >= 0; i--) {
             RTOperationQueueModel *model = operationQueue[i];
             if (model.type != type) {
-                continue;
+                break;
             }
             if ([model.viewId isEqualToString:view.layerDirector] && model.type == type) {
-//                if (model.type == RTOperationQueueTypeScroll){
-//                    CGPoint point1 = [[model.parameters firstObject] CGPointValue];
-//                    CGPoint point2 = [[parameters firstObject] CGPointValue];
-//                    if (CGPointEqualToPoint(point1, point2)) {
-//                        return;//不添加了,一模一样
-//                    }
-//                }
                 model.parameters = parameters;
                 NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
                 if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {

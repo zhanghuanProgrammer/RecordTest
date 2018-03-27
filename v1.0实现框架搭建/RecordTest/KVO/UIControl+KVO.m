@@ -34,7 +34,8 @@
     self.isKVO = YES;
 }
 
-- (void)runOperation:(RTOperationQueueModel *)model{
+- (BOOL)runOperation:(RTOperationQueueModel *)model{
+    BOOL result = NO;
     if (model) {
         if (model.viewId.length == self.layerDirector.length) {
             if ([model.viewId isEqualToString:self.layerDirector]) {
@@ -47,6 +48,7 @@
                         for (id target in allTargets) {
                             if (target && [target respondsToSelector:ori_sel]) {
                                 [self sendActionsForControlEvents:UIControlEventAllEvents];
+                                result = YES;
                                 break;
                             }
                         }
@@ -55,6 +57,10 @@
             }
         }
     }
+    if ([super runOperation:model]) {
+        result = YES;
+    }
+    return result;
 }
 
 @end

@@ -27,6 +27,7 @@
         self.hintLabel.font = [UIFont systemFontOfSize:10];
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         [self.contentView addSubview:self.hintLabel];
+        self.hintImg.image = [UIImage imageNamed:@"SuspendBall_startrecord"];
     }
     return self;
 }
@@ -38,9 +39,22 @@
     }else if (dataModel.operationModel){
         self.hintLabel.text = [dataModel.operationModel debugDescription];
     }
-    self.hintImg.backgroundColor = (dataModel.indexPath.row == [RTCommandList shareInstance].curRow) ? [UIColor greenColor] : [UIColor clearColor];
-    self.hintLabel.textColor = (dataModel.indexPath.row == [RTCommandList shareInstance].curRow) ? [UIColor greenColor] : [UIColor whiteColor];
-    self.hintImg.image = [UIImage imageNamed:(dataModel.indexPath.row < [RTCommandList shareInstance].curRow) ? @"SuspendBall_stoprecord" : @"SuspendBall_startrecord"];
+    switch (dataModel.runResultType) {
+        case OperationRunResultTypeNoRun:
+            self.hintImg.backgroundColor = [UIColor whiteColor];
+            self.hintLabel.textColor = [UIColor whiteColor];
+            break;
+        case OperationRunResultTypeRunSuccess:
+            self.hintImg.backgroundColor = [UIColor greenColor];
+            self.hintLabel.textColor = [UIColor greenColor];
+            break;
+        case OperationRunResultTypeFailure:
+            self.hintImg.backgroundColor = [UIColor redColor];
+            self.hintLabel.textColor = [UIColor redColor];
+            break;
+        default:
+            break;
+    }
 }
 
 @end
@@ -374,9 +388,14 @@
             [[RTDisPlayAllView new] disPlayAllView];
             UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
             if (targetView) {
-                [targetView runOperation:operationQueue];
+                if ([targetView runOperation:operationQueue]) {
+                    model.runResultType = OperationRunResultTypeRunSuccess;
+                }else{
+                    model.runResultType = OperationRunResultTypeFailure;
+                }
                 [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"找到控件!"];
             }else{
+                model.runResultType = OperationRunResultTypeFailure;
                 [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"没找到控件!"];
             }
             self.curRow++;

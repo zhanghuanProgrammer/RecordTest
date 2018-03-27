@@ -5,6 +5,6 @@
 @interface UIView (KVO)
 
 - (void)kvo;
-- (void)runOperation:(RTOperationQueueModel *)model;
+- (BOOL)runOperation:(RTOperationQueueModel *)model;
 
 @end

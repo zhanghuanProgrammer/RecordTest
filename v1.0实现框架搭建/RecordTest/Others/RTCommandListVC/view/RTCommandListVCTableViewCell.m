@@ -19,9 +19,22 @@
     }else if (dataModel.operationModel){
         self.hintLabel.text = [dataModel.operationModel debugDescription];
     }
-    self.hintImg.backgroundColor = (dataModel.indexPath.row == [RTCommandList shareInstance].curRow) ? [UIColor greenColor] : [UIColor clearColor];
-    self.hintLabel.textColor = (dataModel.indexPath.row == [RTCommandList shareInstance].curRow) ? [UIColor greenColor] : [UIColor whiteColor];
-    self.hintImg.image = [UIImage imageNamed:(dataModel.indexPath.row < [RTCommandList shareInstance].curRow) ? @"SuspendBall_stoprecord" : @"SuspendBall_startrecord"];
+    switch (dataModel.runResultType) {
+        case OperationRunResultTypeNoRun:
+            self.hintImg.backgroundColor = [UIColor whiteColor];
+            self.hintLabel.textColor = [UIColor whiteColor];
+            break;
+        case OperationRunResultTypeRunSuccess:
+            self.hintImg.backgroundColor = [UIColor greenColor];
+            self.hintLabel.textColor = [UIColor greenColor];
+            break;
+        case OperationRunResultTypeFailure:
+            self.hintImg.backgroundColor = [UIColor redColor];
+            self.hintLabel.textColor = [UIColor redColor];
+            break;
+        default:
+            break;
+    }
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
@@ -35,6 +48,7 @@
         self.hintLabel.font = [UIFont systemFontOfSize:14];
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         [self.contentView addSubview:self.hintLabel];
+        self.hintImg.image = [UIImage imageNamed:@"SuspendBall_startrecord"];
     }
     return self;
 }

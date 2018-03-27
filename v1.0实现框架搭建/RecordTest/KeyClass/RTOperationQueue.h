@@ -34,6 +34,7 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 
 @property (nonatomic,copy)NSString *forVC;
 @property (nonatomic,assign)BOOL isRecord;
+@property (nonatomic,assign)BOOL isStopRecordTemp;
 
 + (RTOperationQueue *)shareInstance;
 + (void)startOrStopRecord;

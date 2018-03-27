@@ -25,17 +25,23 @@
     self.isKVO = YES;
 }
 
-- (void)runOperation:(RTOperationQueueModel *)model{
+- (BOOL)runOperation:(RTOperationQueueModel *)model{
+    BOOL result = NO;
     if (model) {
         if (model.viewId.length == self.layerDirector.length) {
             if ([model.viewId isEqualToString:self.layerDirector]) {
                 if (model.type == RTOperationQueueTypeTextChange) {
                     NSString *text = model.parameters[0];
                     self.text = text;
+                    result = YES;
                 }
             }
         }
     }
+    if ([super runOperation:model]) {
+        result = YES;
+    }
+    return result;
 }
 
 @end

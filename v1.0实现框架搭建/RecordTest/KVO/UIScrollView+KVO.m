@@ -23,7 +23,8 @@
     self.isKVO = YES;
 }
 
-- (void)runOperation:(RTOperationQueueModel *)model{
+- (BOOL)runOperation:(RTOperationQueueModel *)model{
+    BOOL result = NO;
     if (model) {
         if (model.viewId.length == self.layerDirector.length) {
             if ([model.viewId isEqualToString:self.layerDirector]) {
@@ -33,10 +34,15 @@
                         NSLog(@"%@",@"滚动的位置 超出 可滚动的区域");
                     }
                     [self setContentOffset:point animated:YES];
+                    result = YES;
                 }
             }
         }
     }
+    if ([super runOperation:model]) {
+        result = YES;
+    }
+    return result;
 }
 
 @end

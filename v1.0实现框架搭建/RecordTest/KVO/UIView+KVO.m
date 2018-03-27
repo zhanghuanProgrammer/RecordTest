@@ -35,7 +35,8 @@
     self.isKVO = YES;
 }
 
-- (void)runOperation:(RTOperationQueueModel *)model{
+- (BOOL)runOperation:(RTOperationQueueModel *)model{
+    BOOL result = NO;
     if (model) {
         if (model.viewId.length == self.layerDirector.length) {
             if ([model.viewId isEqualToString:self.layerDirector]) {
@@ -51,6 +52,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                                             [targetAction.target performSelector:targetAction.action withObject:ges];
+                                            result = YES;
 #pragma clang diagnostic pop
                                         }
                                     }
@@ -62,6 +64,7 @@
             }
         }
     }
+    return result;
 }
 
 @end
