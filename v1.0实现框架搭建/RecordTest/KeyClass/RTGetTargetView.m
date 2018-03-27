@@ -12,13 +12,15 @@
 @implementation RTGetTargetView
 
 - (UIView *)getTargetView:(NSString *)viewId{
+    UIView *target = nil;
     for (int i = 0; i < [UIApplication sharedApplication].windows.count; i++) {
         UIWindow *window = [UIApplication sharedApplication].windows[i];
         if (window.subviews.count > 0) {
-            return [self dumpView:window viewId:viewId];
+            target = [self dumpView:window viewId:viewId];
+            if(target) return target;
         }
     }
-    return nil;
+    return target;
 }
 
 - (UIView *)dumpView:(UIView *)aView viewId:(NSString *)viewId{
@@ -28,10 +30,12 @@
         }
     }
     //继续递归遍历
+    UIView *target = nil;
     for (UIView *view in [aView subviews]){
-        return [self dumpView:view viewId:viewId];
+        target = [self dumpView:view viewId:viewId];
+        if(target) return target;
     }
-    return nil;
+    return target;
 }
 
 @end

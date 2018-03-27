@@ -365,4 +365,40 @@
     }
 }
 
+- (void)nextStep{
+    if (self.isRunOperationQueue) {
+        if (self.dataArr.count > _curRow) {
+            RTCommandListVCCellModel *model = self.dataArr[_curRow];
+            RTOperationQueueModel *operationQueue = model.operationModel;
+            NSLog(@"目标😄:%@",operationQueue.viewId);
+            [[RTDisPlayAllView new] allEventView];
+            UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
+            if (targetView) {
+                [targetView runOperation:operationQueue];
+                [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"找到控件!"];
+            }else{
+                [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"没找到控件!"];
+            }
+            self.curRow++;
+        }
+    }
+}
+
+- (void)nextSteps{
+    if (self.isRunOperationQueue) {
+        if (self.dataArr.count > _curRow) {
+            RTCommandListVCCellModel *model = self.dataArr[_curRow];
+            RTOperationQueueModel *operationQueue = model.operationModel;
+            NSLog(@"目标😄:%@",operationQueue.viewId);
+            [[RTDisPlayAllView new] allEventView];
+            UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
+            if (targetView) {
+                [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"找到控件!"];
+            }else{
+                [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"没找到控件!"];
+            }
+        }
+    }
+}
+
 @end

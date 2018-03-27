@@ -13,6 +13,8 @@
 #import "UIViewController+RT.h"
 #import "RTTopVC.h"
 #import "ZHStatusBarNotification.h"
+#import "RTGetTargetView.h"
+#import "RTDisPlayAllView.h"
 
 #define Run 1
 

@@ -1,9 +1,10 @@
 
 #import <UIKit/UIKit.h>
+@class RTOperationQueueModel;
 
 @interface UIView (KVO)
 
 - (void)kvo;
-- (void)runOperation;
+- (void)runOperation:(RTOperationQueueModel *)model;
 
 @end

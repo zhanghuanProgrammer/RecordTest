@@ -16,7 +16,6 @@
 - (void)kvoView:(UIView *)aView fatherView:(UIView *)fatherView atIndent:(int)indent layerDirector:(NSString *)layerDirector{
     
     [aView kvo];
-    [aView runOperation];
     
     //记录所在第几个嵌套层,用于方便排序
     aView.layerIndex=indent;
@@ -45,6 +44,8 @@
 }
 
 - (void)dumpView:(UIView *)aView fatherView:(UIView *)fatherView atIndent:(int)indent layerDirector:(NSString *)layerDirector{
+    
+    if (aView.isNoNeedKVO) return;
     
     //获取记录相关信息
     [self kvoView:aView fatherView:fatherView atIndent:indent layerDirector:layerDirector];

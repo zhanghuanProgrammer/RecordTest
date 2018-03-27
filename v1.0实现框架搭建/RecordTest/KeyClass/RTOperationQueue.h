@@ -3,14 +3,17 @@
 
 typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
     RTOperationQueueTypeEvent,
+    RTOperationQueueTypeTap,
     RTOperationQueueTypeScroll,
     RTOperationQueueTypeTableViewCellTap,
+    RTOperationQueueTypeTextChange,
 };
 
 @interface RTOperationQueueModel : NSObject <NSCoding>
 
 @property (nonatomic,copy)NSString *viewId;
 @property (nonatomic,copy)NSString *view;
+@property (nonatomic,copy)NSString *vc;
 @property (nonatomic,assign)RTOperationQueueType type;
 @property (nonatomic,strong)NSArray *parameters;
 

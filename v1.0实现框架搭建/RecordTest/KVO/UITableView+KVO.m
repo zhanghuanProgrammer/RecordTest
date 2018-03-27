@@ -11,7 +11,6 @@
     if (KVO_Scroll) {
         [RACObserve(self, contentOffset) subscribeNext:^(id x) {
             [RTOperationQueue addOperation:self type:(RTOperationQueueTypeScroll) parameters:@[x] repeat:NO];
-            // NSLog(@"%@",@"👌tableView scrolling");
         }];
     }
     if (KVO_tableView_didSelectRowAtIndexPath) {
@@ -33,7 +32,6 @@
     if (model) {
         if (model.viewId.length == self.layerDirector.length) {
             if ([model.viewId isEqualToString:self.layerDirector]) {
-                [self cornerRadiusWithFloat:0 borderColor:[UIColor redColor] borderWidth:10];
                 if (model.type == RTOperationQueueTypeScroll) {
                     CGPoint point = [model.parameters[0] CGPointValue];
                     if (!CGRectContainsPoint(CGRectMake(0, 0, self.contentSize.width, self.contentSize.height), point)) {

@@ -23,7 +23,9 @@
 - (void)startInteraction{
     SuspendBall *suspendBall = [SuspendBall suspendBallWithFrame:CGRectMake(0, 64, 50, 50) delegate:self subBallImageArray:@[@"SuspendBall_down",@"SuspendBall_downmore",@"SuspendBall_list",@"SuspendBall_startrecord",@"SuspendBall_set"]];
     [[UIApplication sharedApplication].keyWindow addSubview:suspendBall];
+    suspendBall.isNoNeedKVO = YES;
     RTCommandList *list = [[RTCommandList alloc]initInKeyWindowWithFrame:CGRectMake(0, suspendBall.maxY, 200, 12*10)];
+    list.isNoNeedKVO = YES;
     [list initData];
     __weak typeof(list)weakList=list;
     list.tapBlock = ^(RTCommandList *view) {
@@ -40,8 +42,8 @@
 #pragma mark - SuspendBallDelegte
 - (void)suspendBall:(UIButton *)subBall didSelectTag:(NSInteger)tag{
     switch (tag) {
-        case 0:[JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"导出成功!"];break;
-        case 1:break;
+        case 0:[[RTCommandList shareInstance] nextStep];break;
+        case 1:[[RTCommandList shareInstance] nextSteps];break;
         case 2:{
             [RTCommandList shareInstance].hidden = ![RTCommandList shareInstance].hidden;
         }break;

@@ -13,6 +13,7 @@
     copy.viewId = self.viewId;
     copy.parameters = self.parameters;
     copy.type = self.type;
+    copy.vc = self.vc;
     return copy;
 }
 
@@ -21,6 +22,7 @@
     [aCoder encodeObject:self.view forKey:@"view"];
     [aCoder encodeObject:self.parameters forKey:@"parameters"];
     [aCoder encodeInteger:self.type forKey:@"type"];
+    [aCoder encodeObject:self.vc forKey:@"vc"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder{
@@ -29,13 +31,18 @@
         self.view = [aDecoder decodeObjectForKey:@"view"];
         self.parameters = [aDecoder decodeObjectForKey:@"parameters"];
         self.type = [aDecoder decodeIntegerForKey:@"type"];
+        self.vc = [aDecoder decodeObjectForKey:@"vc"];
     }
     return self;
 }
 
 - (NSString *)description{
-    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,[self typeString],[self parameterString]];
+    return [NSString stringWithFormat:@"%@-%@-%@",self.vc,[self typeString],[self parameterString]];
 }
+
+//- (NSString *)description{
+//    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,[self typeString],[self parameterString]];
+//}
 
 - (NSString *)debugDescription{
     return [NSString stringWithFormat:@"%@-%@-%@",self.view,[self typeString],[self parameterString]];
@@ -52,13 +59,27 @@
     return @"";
 }
 
+//- (NSString *)typeString{
+//    switch (self.type) {
+//        case RTOperationQueueTypeEvent: case RTOperationQueueTypeTableViewCellTap:
+//            return @"控件点击";
+//            break;
+//        case RTOperationQueueTypeScroll:
+//            return @"滚动";
+//            break;
+//        default:
+//            break;
+//    }
+//    return @"unknow";
+//}
+
 - (NSString *)typeString{
     switch (self.type) {
         case RTOperationQueueTypeEvent: case RTOperationQueueTypeTableViewCellTap:
-            return @"控件点击";
+            return @"Click";
             break;
         case RTOperationQueueTypeScroll:
-            return @"滚动";
+            return @"Scroll";
             break;
         default:
             break;
@@ -159,8 +180,8 @@
             }
             if ([model.viewId isEqualToString:view.layerDirector] && model.type == type) {
                 model.parameters = parameters;
-//                NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
-                if (model.type != RTOperationQueueTypeScroll) {
+                NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
+                if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {
                     [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"%@",[model debugDescription]] dismissAfter:1 styleName:JDStatusBarStyleSuccess];
                 }
                 return;
@@ -172,11 +193,12 @@
     model.viewId = view.layerDirector;
     model.parameters = parameters;
     model.view = NSStringFromClass(view.class);
+    model.vc = [view curViewController];
     [[RTOperationQueue shareInstance].operationQueue addObject:model];
-    if (model.type != RTOperationQueueTypeScroll) {
+    if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {
         [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"%@",[model debugDescription]] dismissAfter:1 styleName:JDStatusBarStyleSuccess];
     }
-//    NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
+    NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
 }
 
 + (NSMutableDictionary *)operationQueues{
