@@ -15,6 +15,7 @@
 #import "ZHStatusBarNotification.h"
 #import "RTGetTargetView.h"
 #import "RTDisPlayAllView.h"
+#import "UIScrollView+RT.h"
 
 #define Run 1
 

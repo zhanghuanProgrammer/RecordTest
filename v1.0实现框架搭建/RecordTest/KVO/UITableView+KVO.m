@@ -8,15 +8,11 @@
     if (self.isKVO) {
         return;
     }
-    if (KVO_Scroll) {
-        [RACObserve(self, contentOffset) subscribeNext:^(id x) {
-            [RTOperationQueue addOperation:self type:(RTOperationQueueTypeScroll) parameters:@[x] repeat:NO];
-        }];
-    }
     if (KVO_tableView_didSelectRowAtIndexPath) {
         if (self.delegate) {
             id delegate= self.delegate;
             [delegate aspect_hookSelector:@selector(tableView:didSelectRowAtIndexPath:) withOptions:AspectPositionAfter usingBlock:^{
+                
             } before:nil after:^(id target, SEL sel, NSArray *args, NSTimeInterval interval, int deep, id retValue) {
                 UITableView *tableView = args[0];
                 NSIndexPath *indexPath = args[1];
@@ -25,6 +21,9 @@
             } error:nil];
         }
     }
+    if (KVO_Super) {
+        [super kvo];
+    }
     self.isKVO = YES;
 }
 
@@ -32,13 +31,6 @@
     if (model) {
         if (model.viewId.length == self.layerDirector.length) {
             if ([model.viewId isEqualToString:self.layerDirector]) {
-                if (model.type == RTOperationQueueTypeScroll) {
-                    CGPoint point = [model.parameters[0] CGPointValue];
-                    if (!CGRectContainsPoint(CGRectMake(0, 0, self.contentSize.width, self.contentSize.height), point)) {
-                        NSLog(@"%@",@"滚动的位置 超出 可滚动的区域");
-                    }
-                    [self setContentOffset:point animated:YES];
-                }
                 if (model.type == RTOperationQueueTypeTableViewCellTap) {
                     if (self.delegate) {
                         id delegate= self.delegate;
@@ -56,6 +48,7 @@
             }
         }
     }
+    [super runOperation:model];
 }
 
 @end

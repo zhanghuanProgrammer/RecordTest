@@ -142,6 +142,7 @@
         [[RTCommandList shareInstance] initData];
     }else{
         [[SuspendBall shareInstance]setImage:@"SuspendBall_stoprecord" index:3];
+        [self.operationQueue removeAllObjects];
     }
 }
 
@@ -176,9 +177,16 @@
         for (NSInteger i = operationQueue.count - 1; i >= 0; i--) {
             RTOperationQueueModel *model = operationQueue[i];
             if (model.type != type) {
-                break;
+                continue;
             }
             if ([model.viewId isEqualToString:view.layerDirector] && model.type == type) {
+//                if (model.type == RTOperationQueueTypeScroll){
+//                    CGPoint point1 = [[model.parameters firstObject] CGPointValue];
+//                    CGPoint point2 = [[parameters firstObject] CGPointValue];
+//                    if (CGPointEqualToPoint(point1, point2)) {
+//                        return;//不添加了,一模一样
+//                    }
+//                }
                 model.parameters = parameters;
                 NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
                 if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {

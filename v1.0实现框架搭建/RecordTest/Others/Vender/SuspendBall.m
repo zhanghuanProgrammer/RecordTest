@@ -363,9 +363,11 @@ static CGFloat btnSmallImageWidth = 30;
     if (!_functionMenu) {
         
         _functionMenu = [[UIView alloc] init];
+        _functionMenu.isKVO = YES;
 
         for (int i = 0; i < self.imageNameGroup.count; i++) {
             UIButton *functionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            functionBtn.isNoNeedKVO = YES;
             if (i==1) {//这个图标没给好,给大了,所以这里调整一下
                 [functionBtn setImage:[self resizeImage:[UIImage imageNamed:self.imageNameGroup[i]] wantSize:CGSizeMake(btnSmallImageWidth-6, btnSmallImageWidth-6)] forState:UIControlStateNormal];
             }else{
@@ -385,6 +387,7 @@ static CGFloat btnSmallImageWidth = 30;
             [self.buttons addObject:functionBtn];
             
             UILabel *badge = [[UILabel alloc]initWithFrame:CGRectMake(functionBtn.lhz_x, functionBtn.lhz_y, fullButtonWidth, 10)];
+            badge.isNoNeedKVO = YES;
             badge.backgroundColor = [UIColor clearColor];
             badge.textColor = [UIColor redColor];
             badge.textAlignment = NSTextAlignmentCenter;

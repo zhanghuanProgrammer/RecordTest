@@ -11,6 +11,7 @@
 
 #import "ZHStatusBarLayoutMarginHelper.h"
 #import "ZHStatusBarNotification.h"
+#import "UIView+RT.h"
 
 @interface ZHStatusBarStyle (Hidden)
 + (NSArray*)allDefaultStyleIdentifier;
@@ -245,7 +246,7 @@
       self.topBar.transform = CGAffineTransformIdentity;
     }];
   }
-
+    self.topBar.isNoNeedKVO = YES;
   return self.topBar;
 }
 

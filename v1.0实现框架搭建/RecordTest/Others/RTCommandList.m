@@ -371,7 +371,7 @@
             RTCommandListVCCellModel *model = self.dataArr[_curRow];
             RTOperationQueueModel *operationQueue = model.operationModel;
             NSLog(@"目标😄:%@",operationQueue.viewId);
-            [[RTDisPlayAllView new] allEventView];
+            [[RTDisPlayAllView new] disPlayAllView];
             UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
             if (targetView) {
                 [targetView runOperation:operationQueue];
@@ -390,7 +390,7 @@
             RTCommandListVCCellModel *model = self.dataArr[_curRow];
             RTOperationQueueModel *operationQueue = model.operationModel;
             NSLog(@"目标😄:%@",operationQueue.viewId);
-            [[RTDisPlayAllView new] allEventView];
+            [[RTDisPlayAllView new] disPlayAllView];
             UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
             if (targetView) {
                 [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"找到控件!"];
