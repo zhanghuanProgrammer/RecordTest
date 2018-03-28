@@ -414,6 +414,14 @@
                 model.runResultType = OperationRunResultTypeFailure;
                 [ZHStatusBarNotification showWithStatus:@"没找到控件,请重试!" dismissAfter:1 styleName:JDStatusBarStyleWarning];
             }
+        }else{
+            if(self.dataArr.count > 0){
+                [ZHStatusBarNotification showWithStatus:@"已执行完毕" dismissAfter:1 styleName:JDStatusBarStyleSuccess];
+            }else{
+                [ZHStatusBarNotification showWithStatus:@"该执行为空" dismissAfter:1 styleName:JDStatusBarStyleSuccess];
+            }
+            [RTCommandList shareInstance].isRunOperationQueue = NO;
+            [[RTCommandList shareInstance] initData];
         }
     }
     return NO;
