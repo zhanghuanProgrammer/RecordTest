@@ -58,6 +58,10 @@
     if (!result) {
         return [[UIApplication sharedApplication] keyWindow].rootViewController;
     }
+    if ([result isKindOfClass:[UIWindow class]]) {
+        UIWindow *window = (UIWindow *)result;
+        return window.rootViewController;
+    }
     return result;
 }
 

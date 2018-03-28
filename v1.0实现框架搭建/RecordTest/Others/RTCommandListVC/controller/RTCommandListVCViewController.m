@@ -68,7 +68,7 @@
                 }
                 if (indexs.count>0){
                     [RTOperationQueue deleteOperationQueueModelIndexs:indexs forIdentify:[RTCommandList shareInstance].operationQueueIdentify];
-                    [[RTCommandList shareInstance] setOperationQueueIdentify:[RTCommandList shareInstance].operationQueueIdentify];
+                    [[RTCommandList shareInstance] setOperationQueue:[RTCommandList shareInstance].operationQueueIdentify];
                 }
             }else{
                 NSMutableArray *identifys = [NSMutableArray array];

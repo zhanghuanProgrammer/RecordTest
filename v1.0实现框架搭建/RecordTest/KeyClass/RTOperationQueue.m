@@ -165,6 +165,11 @@
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"开始录制!"];
         [RTOperationQueue shareInstance].forVC = [NSString stringWithFormat:@"%@",[RTTopVC shareInstance].topVC];
     }else{//结束录制
+        if([RTOperationQueue shareInstance].operationQueue.count<=0){
+            [RTOperationQueue shareInstance].isRecord = NO;
+            [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"录制为空!"];
+            return;
+        }
         [RTOperationQueue shareInstance].isStopRecordTemp = YES;
         [ZHAlertAction alertWithTitle:@"是否保存?" withMsg:nil addToViewController:[UIViewController getCurrentVC] ActionSheet:NO otherButtonBlocks:@[^{
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
