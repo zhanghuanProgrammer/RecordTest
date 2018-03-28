@@ -33,7 +33,8 @@
             NSString* className = NSStringFromClass([[info instance] class]);
             self.topVC = className;
             [self.vcStack addObject:className];
-            [[RTCommandList shareInstance]initData];
+            [[RTCommandList shareInstance] initData];
+            [[KVOAllView new] kvoAllView];
         } error:NULL];
         
         [UIViewController aspect_hookSelector:@selector(viewDidDisappear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {

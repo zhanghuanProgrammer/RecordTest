@@ -200,6 +200,7 @@
     if (!IsRecord || (![RTOperationQueue shareInstance].isRecord) || ([RTOperationQueue shareInstance].isStopRecordTemp)) {
         return;
     }
+//    [[RTDisPlayAllView new] disPlayAllView];
     if(view.layerDirector.length <= 0) return;
     if (repeat == NO) {
         NSArray *operationQueue = [RTOperationQueue shareInstance].operationQueue;

@@ -329,7 +329,6 @@
     if (self.isRunOperationQueue) return;
     [self.dataArr removeAllObjects];
     self.curCommand.text = [NSString stringWithFormat:@"当前控制器:%@",[RTTopVC shareInstance].topVC];
-//    [[RTDisPlayAllView new] disPlayAllView];
     self.draggable = NO;
     NSArray *identifys = [RTOperationQueue allIdentifyModelsForVC:[RTTopVC shareInstance].topVC];
     for (RTIdentify *identify in identifys) {
