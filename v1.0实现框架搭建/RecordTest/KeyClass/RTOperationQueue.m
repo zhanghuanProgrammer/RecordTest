@@ -106,6 +106,13 @@
     return self;
 }
 
+- (instancetype)copyNew{
+    RTIdentify *copy = [RTIdentify new];
+    copy.identify = self.identify;
+    copy.forVC = self.forVC;
+    return copy;
+}
+
 - (NSString *)description{
     return [NSString stringWithFormat:@"%@_&^_^&_%@",self.identify,self.forVC];
 }
@@ -238,15 +245,55 @@
     NSMutableDictionary *operationQueues = [self operationQueues];
     return operationQueues[[identify description]];
 }
-
++ (void)deleteOperationQueueModelIndexs:(NSArray *)indexs forIdentify:(RTIdentify *)identify{
+    NSMutableDictionary *operationQueues = [self operationQueues];
+    NSMutableArray *operationModels = operationQueues[[identify description]];
+    BOOL isSuccess = NO;
+    if (operationModels) {
+        NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+        for (NSNumber *num in indexs) {
+            NSInteger index = [num integerValue];
+            if (operationModels.count > index) {
+                [indexSet addIndex:index];
+            }
+        }
+        if (indexSet.count>0) {
+            isSuccess = YES;
+            [operationModels removeObjectsAtIndexes:indexSet];
+        }
+    }
+    if (isSuccess) {
+        [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"删除成功!"];
+        [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+    }else{
+        [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"删除下标不存在!"];
+    }
+}
 + (void)deleteOperationQueue:(RTIdentify *)identify{
     NSMutableDictionary *operationQueues = [self operationQueues];
     if (operationQueues[[identify description]]) {
         [operationQueues removeObjectForKey:[identify description]];
-        [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"保存成功!"];
+        [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"删除成功!"];
+        [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
     }else{
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"删除对象不存在!"];
     }
+}
++ (void)deleteOperationQueues:(NSArray *)identifys{
+    NSMutableDictionary *operationQueues = [self operationQueues];
+    NSInteger count = 0;
+    for (RTIdentify *identify in identifys) {
+        if (operationQueues[[identify description]]) {
+            [operationQueues removeObjectForKey:[identify description]];
+            count ++;
+        }
+    }
+    if (count == identifys.count) {
+        [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"删除成功!"];
+    }else{
+        [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:[NSString stringWithFormat:@"成功删除了%zd个,%zd个不存在!",count,identifys.count - count]];
+    }
+    [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
 }
 
 + (BOOL)reChanggeOperationQueue:(RTIdentify *)identify{

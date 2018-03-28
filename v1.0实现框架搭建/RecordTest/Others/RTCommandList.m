@@ -333,9 +333,7 @@
     NSArray *identifys = [RTOperationQueue allIdentifyModelsForVC:[RTTopVC shareInstance].topVC];
     for (RTIdentify *identify in identifys) {
         RTCommandListVCCellModel *model = [RTCommandListVCCellModel new];
-        model.identify = [RTIdentify new];
-        model.identify.forVC = identify.forVC;
-        model.identify.identify = identify.identify;
+        model.identify = [identify copyNew];
         [self.dataArr addObject:model];
     }
     [self reloadData];
@@ -357,8 +355,14 @@
     });
 }
 
+- (void)setIsRunOperationQueue:(BOOL)isRunOperationQueue{
+    _isRunOperationQueue = isRunOperationQueue;
+    if(!isRunOperationQueue) self.operationQueueIdentify = nil;
+}
+
 - (void)setOperationQueue:(RTIdentify *)identify{
     self.isRunOperationQueue = YES;
+    self.operationQueueIdentify = [identify copyNew];
     self.curCommand.text = [NSString stringWithFormat:@"%@",[identify debugDescription]];
     [self.dataArr removeAllObjects];
     NSArray *operationQueues = [RTOperationQueue getOperationQueue:identify];

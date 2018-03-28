@@ -3,9 +3,11 @@
 #import "RTCommandList.h"
 #import "ZHAlertAction.h"
 #import "RecordTestHeader.h"
+#import "RTPublicFooterButtonView.h"
+#import "DXAlertView.h"
 
 @interface RTCommandListVCViewController ()<UITableViewDataSource,UITableViewDelegate>
-
+@property (nonatomic,assign)BOOL isEdit;
 @end
 
 @implementation RTCommandListVCViewController
@@ -19,7 +21,7 @@
 
 - (void)viewDidLoad{
 	[super viewDidLoad];
-    self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:(UITableViewStylePlain)];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height-64) style:(UITableViewStylePlain)];
     [self.tableView registerClass:[RTCommandListVCTableViewCell class] forCellReuseIdentifier:@"RTCommandListVCTableViewCell"];
     [self.view addSubview:self.tableView];
 	self.tableView.delegate=self;
@@ -28,25 +30,111 @@
     self.edgesForExtendedLayout=UIRectEdgeNone;
     
     [TabBarAndNavagation setLeftBarButtonItemTitle:@"<返回" TintColor:[UIColor blackColor] target:self action:@selector(backAction)];
-    if (self.dataArr.count>0) {
-        RTCommandListVCCellModel *model = [self.dataArr firstObject];
-        if (model.operationModel) {
-            [TabBarAndNavagation setRightBarButtonItemTitle:@"停止" TintColor:[UIColor redColor] target:self action:@selector(stopAction)];
-        }
+    [TabBarAndNavagation setRightBarButtonItemTitle:@"批量" TintColor:[UIColor redColor] target:self action:@selector(editAction)];
+    if ([RTCommandList shareInstance].isRunOperationQueue) {
+        self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"停止" withTarget:self withSelector:@selector(stopAction)];
     }
     self.navigationController.navigationBar.translucent = NO;
+}
+
+- (void)delete{
+    BOOL isHaveSelect = NO;
+    for (RTCommandListVCCellModel *model in self.dataArr) {
+        if (model.isSelect) {
+            isHaveSelect = YES;
+        }
+    }
+    if(!isHaveSelect)return;
+    
+    NSString *title = @"";
+    if ([RTCommandList shareInstance].isRunOperationQueue) title = @"是否删除选中的命令行?";
+    else title = @"是否删除选中的测试录制?";
+    DXAlertView *alertView = [[DXAlertView alloc] initWithTitle:@"提示" message:title cancelBtnTitle:@"取消" otherBtnTitle:@"确定"];
+    alertView.block = ^(NSInteger index) {
+        if (index == 1) {
+            NSMutableArray *selects = [NSMutableArray array];
+            for (RTCommandListVCCellModel *model in self.dataArr) {
+                if (model.isSelect) {
+                    [selects addObject:model];
+                }
+            }
+            if ([RTCommandList shareInstance].isRunOperationQueue) {
+                NSMutableArray *indexs = [NSMutableArray array];
+                for (NSInteger i=0; i<self.dataArr.count; i++) {
+                    RTCommandListVCCellModel *model = self.dataArr[i];
+                    if (model.isSelect) {
+                        [indexs addObject:[NSNumber numberWithInteger:i]];
+                    }
+                }
+                if (indexs.count>0){
+                    [RTOperationQueue deleteOperationQueueModelIndexs:indexs forIdentify:[RTCommandList shareInstance].operationQueueIdentify];
+                    [[RTCommandList shareInstance] setOperationQueueIdentify:[RTCommandList shareInstance].operationQueueIdentify];
+                }
+            }else{
+                NSMutableArray *identifys = [NSMutableArray array];
+                for (RTCommandListVCCellModel *model in selects) {
+                    if (model.identify) {
+                        [identifys addObject:model.identify];
+                    }
+                }
+                if(identifys.count>0){
+                    [RTOperationQueue deleteOperationQueues:identifys];
+                }
+            }
+            [self.dataArr removeObjectsInArray:selects];
+            [self.tableView reloadData];
+        }
+    };
+    [alertView show];
 }
 
 - (void)backAction{
     [self.nav.view removeFromSuperview];
     [self.nav removeFromParentViewController];
-    [[RTDisPlayAllView new]disPlayAllView];
 }
 
 - (void)stopAction{
     [RTCommandList shareInstance].isRunOperationQueue = NO;
     [[RTCommandList shareInstance] initData];
     [self backAction];
+}
+
+- (void)run{
+    
+}
+
+- (void)allSelect{
+    for (RTCommandListVCCellModel *model in self.dataArr) {
+        model.isSelect = YES;
+    }
+    if ([RTCommandList shareInstance].isRunOperationQueue) {
+        self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"删除" withTarget:self withSelector:@selector(delete)];
+    }else{
+        self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
+    }
+    [self.tableView reloadData];
+}
+
+- (void)editAction{
+    self.isEdit = !self.isEdit;
+    for (RTCommandListVCCellModel *model in self.dataArr) {
+        model.isShowSelect = self.isEdit;
+        if (!self.isEdit) model.isSelect = NO;
+    }
+    if ([RTCommandList shareInstance].isRunOperationQueue) {
+        if (self.isEdit) {
+            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"全选" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(allSelect) withRightSelector:@selector(delete)];
+        }else{
+            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"停止" withTarget:self withSelector:@selector(stopAction)];
+        }
+    }else{
+        if (self.isEdit) {
+            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"全选" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(allSelect) withRightSelector:@selector(delete)];
+        }else{
+            self.tableView.tableHeaderView=nil;
+        }
+    }
+    [self.tableView reloadData];
 }
 
 #pragma mark - TableViewDelegate实现的方法:
@@ -78,65 +166,22 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
     RTCommandListVCCellModel *model=self.dataArr[indexPath.row];
-    if (model.operationModel) {
-        [RTCommandList shareInstance].curRow = indexPath.row;
-    }else if (model.identify) {
-        [[RTCommandList shareInstance]setOperationQueue:model.identify];
+    if (self.isEdit) {
+        model.isSelect = !model.isSelect;
+        if ([RTCommandList shareInstance].isRunOperationQueue) {
+            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"删除" withTarget:self withSelector:@selector(delete)];
+        }else{
+            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
+        }
+        [self.tableView reloadData];
+    }else{
+        if (model.operationModel) {
+            [RTCommandList shareInstance].curRow = indexPath.row;
+        }else if (model.identify) {
+            [[RTCommandList shareInstance]setOperationQueue:model.identify];
+        }
+        [self backAction];
     }
-    [self backAction];
-}
-///**是否可以编辑*/
-//- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-//    return YES;
-//}
-///**编辑风格*/
-//- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-//    return UITableViewCellEditingStyleDelete;
-//}
-///**设置编辑的控件  删除*/
-//- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    //设置删除按钮
-//    UITableViewRowAction *deleteRowAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-//
-//        [self.dataArr removeObjectAtIndex:indexPath.row];
-//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationAutomatic)];
-//
-////
-////        NSString *title = @"";
-////        if ([RTCommandList shareInstance].isRunOperationQueue) title = @"是否删除该单条目录?";
-////        else title = @"是否删除该测试录制?";
-////        NSLog(@"%@",[[UIApplication sharedApplication] keyWindow].rootViewController);
-////        [ZHAlertAction alertWithTitle:title withMsg:nil addToViewController:[[UIApplication sharedApplication] keyWindow].rootViewController ActionSheet:NO otherButtonBlocks:@[^{
-////        },^{
-////
-////        }] otherButtonTitles:@[@"删除",@"取消"]];
-//
-//    }];
-//    return @[deleteRowAction];
-//}
-
-/**是否可以编辑*/
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    if (indexPath.row==self.dataArr.count) {
-        return NO;
-    }
-    return YES;
-}
-
-/**编辑风格*/
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
-    return UITableViewCellEditingStyleDelete;
-}
-
-/**设置编辑的控件  删除,置顶,收藏*/
-- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    //设置删除按钮
-    UITableViewRowAction *deleteRowAction=[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-        [self.dataArr removeObjectAtIndex:indexPath.row];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationAutomatic)];
-    }];
-    return  @[deleteRowAction];
 }
 
 @end

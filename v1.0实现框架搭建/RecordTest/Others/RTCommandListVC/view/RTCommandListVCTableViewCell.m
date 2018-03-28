@@ -4,6 +4,7 @@
 @interface RTCommandListVCTableViewCell ()
 
 @property (nonatomic,strong)UIImageView *hintImg;
+@property (nonatomic,strong)UIImageView *selectImg;
 @property (nonatomic,strong)UILabel *hintLabel;
 
 @property (nonatomic,weak)RTCommandListVCCellModel *dataModel;
@@ -35,6 +36,10 @@
         default:
             break;
     }
+    self.selectImg.hidden = !dataModel.isShowSelect;
+    if (dataModel.isShowSelect) {
+        self.selectImg.image = dataModel.isSelect ? [UIImage imageNamed:@"RTCommandListSelect"] : [UIImage imageNamed:@"RTCommandListNoSelect"];
+    }
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
@@ -49,6 +54,9 @@
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         [self.contentView addSubview:self.hintLabel];
         self.hintImg.image = [UIImage imageNamed:@"SuspendBall_startrecord"];
+        self.selectImg = [[UIImageView alloc]initWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width - 20, 12, 15, 15)];
+        [self.contentView addSubview:self.selectImg];
+        [self.selectImg cornerRadius];
     }
     return self;
 }

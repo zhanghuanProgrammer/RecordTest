@@ -26,6 +26,8 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 @property (nonatomic,copy)NSString *identify;
 @property (nonatomic,copy)NSString *forVC;
 
+- (instancetype)copyNew;
+
 - (instancetype)initWithIdentify:(NSString *)identify forVC:(NSString *)forVC;
 
 @end
@@ -43,6 +45,8 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 + (BOOL)saveOperationQueue:(RTIdentify *)identify;
 + (NSMutableArray *)getOperationQueue:(RTIdentify *)identify;
 + (void)deleteOperationQueue:(RTIdentify *)identify;
++ (void)deleteOperationQueues:(NSArray *)identifys;
++ (void)deleteOperationQueueModelIndexs:(NSArray *)indexs forIdentify:(RTIdentify *)identify;
 + (BOOL)reChanggeOperationQueue:(RTIdentify *)identify;
 + (BOOL)isExsitOperationQueue:(RTIdentify *)identify;
 

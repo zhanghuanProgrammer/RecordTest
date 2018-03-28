@@ -16,6 +16,7 @@
 @property (nonatomic,strong)UILabel *curCommand;
 @property (nonatomic,assign)NSInteger curRow;
 @property (nonatomic) BOOL isRunOperationQueue;
+@property (nonatomic,strong)RTIdentify *operationQueueIdentify;
 @property (nonatomic) BOOL draggable;
 @property (nonatomic) BOOL autoDocking;
 
