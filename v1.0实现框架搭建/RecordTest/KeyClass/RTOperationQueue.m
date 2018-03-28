@@ -154,6 +154,7 @@
         [self.operationQueue removeAllObjects];
         [[RTCommandList shareInstance] initData];
         [RTCommandList shareInstance].alpha = 1;
+        [SuspendBall shareInstance].showFunction = NO;
         [[SuspendBall shareInstance] suspendBallShow];
     }else{
         [[SuspendBall shareInstance]setImage:@"SuspendBall_stoprecord" index:3];

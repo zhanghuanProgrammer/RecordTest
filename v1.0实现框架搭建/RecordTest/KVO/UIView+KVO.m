@@ -49,7 +49,7 @@
     if (model) {
         if (model.viewId.length == self.layerDirector.length) {
             if ([model.viewId isEqualToString:self.layerDirector]) {
-                if (model.type == RTOperationQueueTypeEvent) {
+                if (model.type == RTOperationQueueTypeTap) {
                     NSArray *gestureRecognizers=self.gestureRecognizers;
                     if (gestureRecognizers.count>0) {
                         for (UIGestureRecognizer *ges in gestureRecognizers) {
