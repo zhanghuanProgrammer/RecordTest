@@ -232,6 +232,10 @@ static CGFloat btnSmallImageWidth = 30;
     }
 }
 
+- (void)setHomeImage:(NSString *)imageName{
+    [self setImage:[self resizeImage:[UIImage imageNamed:imageName] wantSize:CGSizeMake(btnBigImageWidth, btnBigImageWidth)] forState:0];
+}
+
 - (void)setImage:(NSString *)imageName index:(NSInteger)index{
     index ++;//因为第一个也算进去了
     if (self.buttons.count > index) {
@@ -242,6 +246,16 @@ static CGFloat btnSmallImageWidth = 30;
         }else{
             [functionBtn setImage:[self resizeImage:[UIImage imageNamed:imageName] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:UIControlStateNormal];
         }
+    }
+}
+- (void)setEnable:(BOOL)enable index:(NSInteger)index hide:(BOOL)hide{
+    index ++;//因为第一个也算进去了
+    if (self.buttons.count > index) {
+        
+        UIButton *functionBtn = self.buttons[index];
+        functionBtn.enabled = enable;
+        functionBtn.alpha = enable ? 1 : 0.5;
+        functionBtn.hidden = hide;
     }
 }
 
@@ -259,6 +273,10 @@ static CGFloat btnSmallImageWidth = 30;
     
     __weak typeof(self) weakSelf = self;
     if (_showFunction == NO) {
+        if ([RTOperationQueue shareInstance].isRecord) {
+            [RTOperationQueue startOrStopRecord];
+            return;
+        }
         self.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.6];
         [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_back"] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:0];
         _showFunction = YES;

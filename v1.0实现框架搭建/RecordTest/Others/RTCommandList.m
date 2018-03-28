@@ -358,12 +358,23 @@
 - (void)setIsRunOperationQueue:(BOOL)isRunOperationQueue{
     _isRunOperationQueue = isRunOperationQueue;
     if(!isRunOperationQueue) self.operationQueueIdentify = nil;
+    if (isRunOperationQueue) {
+        [[SuspendBall shareInstance] setEnable:YES index:0 hide:NO];
+        [[SuspendBall shareInstance] setEnable:YES index:1 hide:NO];
+        [[SuspendBall shareInstance] setEnable:NO index:3 hide:YES];
+        [[SuspendBall shareInstance] setEnable:NO index:4 hide:YES];
+    }else{
+        [[SuspendBall shareInstance] setEnable:NO index:0 hide:NO];
+        [[SuspendBall shareInstance] setEnable:NO index:1 hide:NO];
+        [[SuspendBall shareInstance] setEnable:YES index:3 hide:NO];
+        [[SuspendBall shareInstance] setEnable:YES index:4 hide:NO];
+    }
 }
 
 - (void)setOperationQueue:(RTIdentify *)identify{
     self.isRunOperationQueue = YES;
     self.operationQueueIdentify = [identify copyNew];
-    self.curCommand.text = [NSString stringWithFormat:@"%@",[identify debugDescription]];
+    self.curCommand.text = [NSString stringWithFormat:@"正在执行:%@",[identify debugDescription]];
     [self.dataArr removeAllObjects];
     NSArray *operationQueues = [RTOperationQueue getOperationQueue:identify];
     for (RTOperationQueueModel *model in operationQueues) {
@@ -408,10 +419,14 @@
     return NO;
 }
 
-- (void)nextStep{
-    if (![self runStep]) {
-        self.curRow++;
+- (BOOL)nextStep{
+    if (self.isRunOperationQueue){
+        if (![self runStep]) {
+            self.curRow++;
+            return YES;
+        }
     }
+    return NO;
 }
 
 @end

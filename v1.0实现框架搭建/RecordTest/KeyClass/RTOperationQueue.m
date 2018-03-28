@@ -153,9 +153,14 @@
         [[SuspendBall shareInstance]setImage:@"SuspendBall_startrecord" index:3];
         [self.operationQueue removeAllObjects];
         [[RTCommandList shareInstance] initData];
+        [RTCommandList shareInstance].alpha = 1;
+        [[SuspendBall shareInstance] suspendBallShow];
     }else{
         [[SuspendBall shareInstance]setImage:@"SuspendBall_stoprecord" index:3];
         [self.operationQueue removeAllObjects];
+        [RTCommandList shareInstance].alpha = 0;
+        [[SuspendBall shareInstance] suspendBallShow];
+        [[SuspendBall shareInstance]setHomeImage:@"SuspendBall_stoprecord"];
     }
 }
 

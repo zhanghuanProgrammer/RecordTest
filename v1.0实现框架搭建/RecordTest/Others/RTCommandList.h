@@ -32,7 +32,6 @@
 
 + (RTCommandList *)shareInstance;
 - (id)initInKeyWindowWithFrame:(CGRect)frame;
-
 - (BOOL)isDragging;
 
 + (NSString *)version;
@@ -45,6 +44,6 @@
 - (void)setOperationQueue:(RTIdentify *)identify;
 
 - (BOOL)runStep;
-- (void)nextStep;
+- (BOOL)nextStep;
 
 @end

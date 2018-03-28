@@ -25,6 +25,7 @@
     [[UIApplication sharedApplication].keyWindow addSubview:suspendBall];
     suspendBall.isNoNeedKVO = YES;
     RTCommandList *list = [[RTCommandList alloc]initInKeyWindowWithFrame:CGRectMake(0, suspendBall.maxY, 200, 12*10)];
+    list.isRunOperationQueue = NO;
     list.isNoNeedKVO = YES;
     [list initData];
     __weak typeof(list)weakList=list;
@@ -42,8 +43,20 @@
 #pragma mark - SuspendBallDelegte
 - (void)suspendBall:(UIButton *)subBall didSelectTag:(NSInteger)tag{
     switch (tag) {
-        case 0:[[RTCommandList shareInstance] runStep];break;
-        case 1:[[RTCommandList shareInstance] nextStep];break;
+        case 0:{
+            if ([RTCommandList shareInstance].isRunOperationQueue) {
+                [[RTCommandList shareInstance] runStep];
+            }else{
+                [ZHStatusBarNotification showWithStatus:@"没有正在执行的操作队列" dismissAfter:1 styleName:JDStatusBarStyleError];
+            }
+        }break;
+        case 1:{
+            if ([RTCommandList shareInstance].isRunOperationQueue) {
+                [[RTCommandList shareInstance] nextStep];
+            }else{
+                [ZHStatusBarNotification showWithStatus:@"没有正在执行的操作队列" dismissAfter:1 styleName:JDStatusBarStyleError];
+            }
+        }break;
         case 2:{
             [RTCommandList shareInstance].hidden = ![RTCommandList shareInstance].hidden;
         }break;

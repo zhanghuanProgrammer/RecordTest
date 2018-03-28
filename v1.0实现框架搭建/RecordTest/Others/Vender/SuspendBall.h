@@ -53,7 +53,9 @@ typedef void(^FunctionClickAction)(UIButton *);
 
 - (void)suspendBallShow;
 
+- (void)setHomeImage:(NSString *)imageName;
 - (void)setImage:(NSString *)imageName index:(NSInteger)index;
+- (void)setEnable:(BOOL)enable index:(NSInteger)index hide:(BOOL)hide;
 - (void)setBadge:(NSString *)badge index:(NSInteger)index;
 
 @end

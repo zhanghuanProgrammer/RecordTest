@@ -110,7 +110,7 @@
     if ([RTCommandList shareInstance].isRunOperationQueue) {
         self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"删除" withTarget:self withSelector:@selector(delete)];
     }else{
-        self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
+        self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"自动运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
     }
     [self.tableView reloadData];
 }
@@ -171,7 +171,7 @@
         if ([RTCommandList shareInstance].isRunOperationQueue) {
             self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"删除" withTarget:self withSelector:@selector(delete)];
         }else{
-            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
+            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"自动运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
         }
         [self.tableView reloadData];
     }else{
