@@ -25,6 +25,7 @@
             [self dumpView:window layerIndex:0];
         }
     }
+    NSLog(@"%@",@"😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄");
     NSLog(@"Log Window Director:\n%@",self.outstring);
 }
 

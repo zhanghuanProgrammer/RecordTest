@@ -16,6 +16,7 @@
 #import "RTGetTargetView.h"
 #import "RTDisPlayAllView.h"
 #import "UIScrollView+RT.h"
+#import "UIView+Frame.h"
 
 #define Run 1
 

@@ -85,7 +85,9 @@
     }
     if (aView.curViewController.length == vc.length) {
         if ([aView.curViewController isEqualToString:vc]) {
-            return YES;
+            if ([self viewIsCanShowInWindow:aView]) {
+                return YES;
+            }
         }
     }
     //继续递归遍历
@@ -98,6 +100,16 @@
     return result;
 }
 
+- (BOOL)viewIsCanShowInWindow:(UIView *)view{
+    CGRect rect = [view rectIntersectionInWindow];// 获取 该view与window 交叉的 Rect
+    if (!(CGRectIsEmpty(rect) || CGRectIsNull(rect))) {
+        CGRect canShowFrame = [view canShowFrameRecursive];
+        if (!(CGRectIsEmpty(canShowFrame) || CGRectIsNull(canShowFrame))){
+            return YES;
+        }
+    }
+    return NO;
+}
 
 @end
 
