@@ -64,10 +64,21 @@
             [RTOperationQueue startOrStopRecord];//开始录制 结束录制
         }break;
         case 4:{
+            UIImage *image = [[RTViewHierarchy new] snap];
+            NSLog(@"%@",image);
+            UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
+            imageView.frame = [UIScreen mainScreen].bounds;
+            imageView.backgroundColor = [UIColor redColor];
+            [[UIApplication sharedApplication].keyWindow addSubview:imageView];
+            [imageView addUITapGestureRecognizerWithTarget:self withAction:@selector(remove:)];
         }break;
         default:
             break;
     }
+}
+
+- (void)remove:(UITapGestureRecognizer *)ges{
+    [ges.view removeFromSuperview];
 }
 
 @end
