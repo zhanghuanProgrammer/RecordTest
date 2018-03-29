@@ -3,6 +3,6 @@
 
 @interface RTViewHierarchy : NSObject
 
-- (UIImage *)snap;
+- (UIImage *)snap:(UIView *)highlightView;
 
 @end

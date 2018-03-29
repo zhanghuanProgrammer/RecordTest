@@ -64,8 +64,7 @@
             [RTOperationQueue startOrStopRecord];//开始录制 结束录制
         }break;
         case 4:{
-            UIImage *image = [[RTViewHierarchy new] snap];
-            NSLog(@"%@",image);
+            UIImage *image = [[RTViewHierarchy new] snap:subBall];
             UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
             imageView.frame = [UIScreen mainScreen].bounds;
             imageView.backgroundColor = [UIColor redColor];
