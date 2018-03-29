@@ -3,6 +3,8 @@
 #import "UIView+Frame.h"
 
 #define WINSIZE [UIScreen mainScreen].bounds.size
+#define AlphaBackcolor 0.65
+
 
 @interface RAYNewFunctionGuideVC ()
 /// 上方的黑色透明背景View
@@ -98,7 +100,7 @@
 - (UIView *)topView {
     if (!_topView) {
         _topView = [[UIView alloc] init];
-        _topView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _topView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:AlphaBackcolor];
         [self.view addSubview:_topView];
     }
     return _topView;
@@ -107,7 +109,7 @@
 - (UIView *)leftView {
     if (!_leftView) {
         _leftView = [[UIView alloc] init];
-        _leftView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _leftView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:AlphaBackcolor];
         [self.view addSubview:_leftView];
     }
     return _leftView;
@@ -116,7 +118,7 @@
 - (UIView *)rightView {
     if (!_rightView) {
         _rightView = [[UIView alloc] init];
-        _rightView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _rightView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:AlphaBackcolor];
         [self.view addSubview:_rightView];
     }
     return _rightView;
@@ -125,7 +127,7 @@
 - (UIView *)bottomView {
     if (!_bottomView) {
         _bottomView = [[UIView alloc] init];
-        _bottomView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
+        _bottomView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:AlphaBackcolor];
         [self.view addSubview:_bottomView];
     }
     return _bottomView;

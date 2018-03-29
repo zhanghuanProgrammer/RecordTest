@@ -6,4 +6,7 @@
 + (RTInteraction *)shareInstance;
 - (void)startInteraction;
 
+- (void)showAll;
+- (void)hideAll;
+
 @end
