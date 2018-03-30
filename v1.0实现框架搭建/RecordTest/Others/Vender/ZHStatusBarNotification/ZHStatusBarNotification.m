@@ -246,7 +246,8 @@
       self.topBar.transform = CGAffineTransformIdentity;
     }];
   }
-    self.topBar.isNoNeedKVO = YES;
+  self.topBar.isNoNeedKVO = self.topBar.isNoNeedSnap = YES;
+    
   return self.topBar;
 }
 

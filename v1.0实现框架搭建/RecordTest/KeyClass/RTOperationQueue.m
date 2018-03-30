@@ -229,7 +229,7 @@
     model.parameters = parameters;
     model.view = NSStringFromClass(view.class);
     model.vc = [view curViewController];
-    model.imagePath = [RTOperationImage saveOperationImage:[[RTViewHierarchy new] snap:view] compressionQuality:0];
+    model.imagePath = [RTOperationImage saveOperationImage:[[RTViewHierarchy new] snap:view type:type] compressionQuality:0];
     [[RTOperationQueue shareInstance].operationQueue addObject:model];
     if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {
         [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"%@",[model debugDescription]] dismissAfter:1 styleName:JDStatusBarStyleSuccess];

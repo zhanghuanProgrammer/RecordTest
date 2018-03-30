@@ -13,12 +13,12 @@
             id delegate= self.delegate;
             [delegate aspect_hookSelector:@selector(tableView:didSelectRowAtIndexPath:) withOptions:AspectPositionAfter usingBlock:^{
                 
-            } before:nil after:^(id target, SEL sel, NSArray *args, NSTimeInterval interval, int deep, id retValue) {
+            } before:^(id target, SEL sel, NSArray *args, int deep) {
                 UITableView *tableView = args[0];
                 NSIndexPath *indexPath = args[1];
                 [RTOperationQueue addOperation:tableView type:(RTOperationQueueTypeTableViewCellTap) parameters:@[@(indexPath.section),@(indexPath.row)] repeat:YES];
                 NSLog(@"%@",@"👌tableView:didSelectRowAtIndexPath:");
-            } error:nil];
+            } after:nil error:nil];
         }
     }
     if (KVO_Super) {

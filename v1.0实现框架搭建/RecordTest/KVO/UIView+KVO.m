@@ -22,7 +22,7 @@
                                 id target = targetAction.target;
                                 __weak typeof(ges.view)weakView=ges.view;
                                 [target aspect_hookSelector:targetAction.action withOptions:AspectPositionAfter usingBlock:^{
-                                } before:nil after:^(id target, SEL sel, NSArray *args, NSTimeInterval interval, int deep, id retValue) {
+                                } before:^(id target, SEL sel, NSArray *args, int deep) {
                                     NSLog(@"%@",@"👌Tap evevnt");
                                     UIView *view = weakView;
                                     if (args.count>0) {
@@ -33,7 +33,7 @@
                                         }
                                     }
                                     [RTOperationQueue addOperation:view type:(RTOperationQueueTypeTap) parameters:@[NSStringFromSelector(sel)] repeat:YES];
-                                } error:nil];
+                                } after:nil error:nil];
                             }
                         }
                     }

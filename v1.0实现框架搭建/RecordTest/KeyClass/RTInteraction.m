@@ -24,10 +24,10 @@
 - (void)startInteraction{
     SuspendBall *suspendBall = [SuspendBall suspendBallWithFrame:CGRectMake(0, 64, 50, 50) delegate:self subBallImageArray:@[@"SuspendBall_down",@"SuspendBall_downmore",@"SuspendBall_list",@"SuspendBall_startrecord",@"SuspendBall_set"]];
     [[UIApplication sharedApplication].keyWindow addSubview:suspendBall];
-    suspendBall.isNoNeedKVO = YES;
+    suspendBall.isNoNeedKVO = suspendBall.isNoNeedSnap = YES;
     RTCommandList *list = [[RTCommandList alloc]initInKeyWindowWithFrame:CGRectMake(0, suspendBall.maxY, 200, 12*10)];
     list.isRunOperationQueue = NO;
-    list.isNoNeedKVO = YES;
+    list.isNoNeedKVO = list.isNoNeedSnap = YES;
     [list initData];
     __weak typeof(list)weakList=list;
     list.tapBlock = ^(RTCommandList *view) {

@@ -7,6 +7,7 @@
 #import "RTCommandList.h"
 #import "RAYNewFunctionGuideVC.h"
 #import "SuspendBall.h"
+#import "UIView+RT.h"
 
 #if !__has_feature(objc_arc)
 #error add -fobjc-arc to compiler flags
@@ -32,34 +33,31 @@
 - (UIImage *)renderImageFromView:(UIView *)view{
     UIImage *img;
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0.0);
-    BOOL result = [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:NO];
-    if (!result) {
-        @try {
-            [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-        } @catch (NSException *exception) {
-            //捕获异常
-        } @finally {
-            //这里一定执行，无论你异常与否
-        }
+    @try {
+        [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
+    } @catch (NSException *exception) {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        if (context) [view.layer renderInContext:context];
+    } @finally {
     }
     img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return img;
 }
 
-- (UIImage *)snap:(UIView *)highlightView{
+- (UIImage *)snap:(UIView *)highlightView type:(RTOperationQueueType)type{
     UIView *backView = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.holders = nil;
     self.holders = [NSMutableArray arrayWithCapacity:100];
     
-    [SuspendBall shareInstance].alpha = 0;
     for (int i = 0; i < [UIApplication sharedApplication].windows.count; i++) {
         UIWindow *window = [UIApplication sharedApplication].windows[i];
         if (window.subviews.count > 0) {
+            [self dumpView:window hide:YES];
             [self renderImageFromWindow:window];
+            [self dumpView:window hide:NO];
         }
     }
-    [SuspendBall shareInstance].alpha = 1;
     
     for (RTViewImageHolder *h in _holders) {
         UIImageView *imgV = [[UIImageView alloc] initWithImage:h.image];
@@ -78,7 +76,7 @@
         CGRect rect = [highlightView rectIntersectionInWindow];// 获取 该view与window 交叉的 Rect
         if (!(CGRectIsEmpty(rect) || CGRectIsNull(rect))) {
             RAYNewFunctionGuideVC *vc = [RAYNewFunctionGuideVC new];
-            vc.titleGuide = @"新增功能";
+            vc.titleGuide = [self typeString:type];
             vc.frameGuide = rect;
             vc.view.frame = backView.bounds;
             [backView addSubview:vc.view];
@@ -88,11 +86,42 @@
     return snapImage;
 }
 
+- (NSString *)typeString:(RTOperationQueueType)type{
+    switch (type) {
+        case RTOperationQueueTypeEvent:
+            return @"Click";
+            break;
+        case RTOperationQueueTypeScroll:
+            return @"Scroll";
+            break;
+        case RTOperationQueueTypeTap:
+            return @"Tap";
+            break;
+        case RTOperationQueueTypeTableViewCellTap:
+            return @"CellTap";
+            break;
+        default:
+            break;
+    }
+    return @"unknow";
+}
+
 - (void)renderImageFromWindow:(UIView *)aView{
     RTViewImageHolder *holder = [[RTViewImageHolder alloc] init];
     holder.image = [self renderImageFromView:aView];
     holder.rect = [aView rectIntersectionInWindow];// 获取 该view与window 交叉的 Rect
     [_holders addObject:holder];
+}
+
+- (void)dumpView:(UIView *)aView hide:(BOOL)hide{
+    if (aView.isNoNeedSnap) {
+        aView.hidden = hide;
+        return;
+    }
+    //继续递归遍历
+    for (UIView *view in [aView subviews]){
+        [self dumpView:view hide:hide];
+    }
 }
 
 @end

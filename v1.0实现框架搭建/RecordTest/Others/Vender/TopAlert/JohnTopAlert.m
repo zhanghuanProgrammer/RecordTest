@@ -52,7 +52,7 @@
 
 #pragma mark - 基础设置
 - (void)createAlert{
-    self.isNoNeedKVO = YES;
+    self.isNoNeedKVO = self.isNoNeedSnap = YES;
     //设置提示图
     self.backgroundColor = [UIColor colorWithHexString:@"3691D1"];
     UIImageView *alertIMGV = [[UIImageView alloc]initWithFrame:CGRectMake(10, 20 +(self.frame.size.height - 40)/ 2 , 20, 20)];

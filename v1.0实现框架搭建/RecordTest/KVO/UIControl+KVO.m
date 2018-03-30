@@ -19,7 +19,7 @@
                     if (target && [target respondsToSelector:sel]) {
                         __weak typeof(self)weakSelf=self;
                         [target aspect_hookSelector:sel withOptions:AspectPositionAfter usingBlock:^{
-                        } before:nil after:^(id target, SEL sel, NSArray *args, NSTimeInterval interval, int deep, id retValue) {
+                        } before:^(id target, SEL sel, NSArray *args, int deep) {
                             UIView *view = weakSelf;
                             if (args.count>0) {
                                 id obj = args[0];
@@ -29,7 +29,7 @@
                             }
                             NSLog(@"%@ - %@ : %@",@"👌Control evevnt",target,NSStringFromSelector(sel));
                             [RTOperationQueue addOperation:view type:(RTOperationQueueTypeEvent) parameters:@[NSStringFromSelector(sel)] repeat:YES];
-                        } error:nil];
+                        } after:nil error:nil];
                     }
                 }
             }
