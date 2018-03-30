@@ -19,6 +19,7 @@
 #import "UIView+Frame.h"
 #import "RTViewHierarchy.h"
 #import "RTOperationImage.h"
+#import "RTAutoRun.h"
 
 #define Run 1
 

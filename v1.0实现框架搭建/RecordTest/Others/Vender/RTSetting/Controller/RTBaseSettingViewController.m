@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    self.edgesForExtendedLayout = UIRectEdgeNone;
     _allGroups = [NSMutableArray array];
 }
 
@@ -62,7 +63,7 @@
 #pragma mark 返回每一组的header标题
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section{
     RTSettingGroup* group = _allGroups[section];
-    return group.header;
+    return [NSString stringWithFormat:@"控制器:%@",group.header];
 }
 #pragma mark 返回每一组的footer标题
 - (NSString*)tableView:(UITableView*)tableView titleForFooterInSection:(NSInteger)section{
@@ -71,7 +72,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 20;
+    return 30;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{

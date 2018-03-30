@@ -100,7 +100,20 @@
 }
 
 - (void)run{
-    
+    BOOL isHaveSelect = NO;
+    for (RTCommandListVCCellModel *model in self.dataArr) {
+        if (model.isSelect) {
+            isHaveSelect = YES;
+        }
+    }
+    if(!isHaveSelect) return;
+    for (RTCommandListVCCellModel *model in self.dataArr) {
+        if (model.isSelect) {
+            [[RTAutoRun shareInstance].autoRunQueue addObject:[model.identify copyNew]];
+        }
+    }
+    [[RTAutoRun shareInstance] start];
+    [self backAction];
 }
 
 - (void)allSelect{

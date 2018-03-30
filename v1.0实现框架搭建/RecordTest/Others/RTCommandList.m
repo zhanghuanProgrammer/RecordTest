@@ -394,7 +394,11 @@
     }
 }
 
-- (BOOL)runStep{
+- (BOOL)runStep:(BOOL)isAuto{
+    static int runFailure = 0;
+    static BOOL isAutoStatic = NO;
+    BOOL result = NO;
+    isAutoStatic = isAuto;
     if (self.isRunOperationQueue) {
         if (self.dataArr.count > _curRow) {
             RTCommandListVCCellModel *model = self.dataArr[_curRow];
@@ -405,14 +409,21 @@
                     model.runResultType = OperationRunResultTypeRunSuccess;
                     [ZHStatusBarNotification showWithStatus:@"执行成功" dismissAfter:1 styleName:JDStatusBarStyleSuccess];
                     self.curRow++;
-                    return YES;
+                    runFailure = 0;
+                    result = YES;
                 }else{
                     model.runResultType = OperationRunResultTypeFailure;
-                    [ZHStatusBarNotification showWithStatus:@"执行失败" dismissAfter:1 styleName:JDStatusBarStyleError];
+                    runFailure ++;
+                    [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"执行失败 次数:%d/10",runFailure] dismissAfter:1 styleName:JDStatusBarStyleError];
                 }
             }else{
                 model.runResultType = OperationRunResultTypeFailure;
-                [ZHStatusBarNotification showWithStatus:@"没找到控件,请重试!" dismissAfter:1 styleName:JDStatusBarStyleWarning];
+                runFailure ++;
+                [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"没找到控件 次数:%d/10",runFailure] dismissAfter:1 styleName:JDStatusBarStyleWarning];
+            }
+            if (runFailure >= 10) {//执行10次还是失败,说明这句命令是真的不能执行了,或者是因为网络问题,实在加载不出来对应的控件了,这个是用来自动运行的
+                runFailure = 0;
+                self.curRow++;
             }
         }else{
             if(self.dataArr.count > 0){
@@ -423,13 +434,18 @@
             [RTCommandList shareInstance].isRunOperationQueue = NO;
             [[RTCommandList shareInstance] initData];
         }
+        if (isAutoStatic) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self runStep:isAuto];
+            });
+        }
     }
-    return NO;
+    return result;
 }
 
 - (BOOL)nextStep{
     if (self.isRunOperationQueue){
-        if (![self runStep]) {
+        if (![self runStep:NO]) {
             self.curRow++;
             return YES;
         }

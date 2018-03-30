@@ -46,7 +46,7 @@
     switch (tag) {
         case 0:{
             if ([RTCommandList shareInstance].isRunOperationQueue) {
-                [[RTCommandList shareInstance] runStep];
+                [[RTCommandList shareInstance] runStep:NO];
             }else{
                 [ZHStatusBarNotification showWithStatus:@"没有正在执行的操作队列" dismissAfter:1 styleName:JDStatusBarStyleError];
             }
