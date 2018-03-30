@@ -56,4 +56,15 @@
     return result;
 }
 
+- (UIView *)targetViewWithOperation:(RTOperationQueueModel *)model{
+    if (model.type == RTOperationQueueTypeTableViewCellTap) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[model.parameters[1] integerValue] inSection:[model.parameters[0] integerValue]];
+        UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
+        if (cell) {
+            return cell;
+        }
+    }
+    return self;
+}
+
 @end

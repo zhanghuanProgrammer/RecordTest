@@ -6,5 +6,6 @@
 
 - (void)kvo;
 - (BOOL)runOperation:(RTOperationQueueModel *)model;
+- (UIView *)targetViewWithOperation:(RTOperationQueueModel *)model;
 
 @end

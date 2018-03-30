@@ -76,4 +76,8 @@
     return result;
 }
 
+- (UIView *)targetViewWithOperation:(RTOperationQueueModel *)model{
+    return self;
+}
+
 @end
