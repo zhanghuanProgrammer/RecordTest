@@ -65,25 +65,12 @@
             [RTOperationQueue startOrStopRecord];//开始录制 结束录制
         }break;
         case 4:{
-//            UIImage *image = [[RTViewHierarchy new] snap:subBall];
-//            NSData *imageData = UIImageJPEGRepresentation(image,0);
-//            NSLog(@"图片大小%@",@(imageData.length/1024.0));
-//            UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageWithData:imageData]];
-//            imageView.frame = [UIScreen mainScreen].bounds;
-//            imageView.backgroundColor = [UIColor redColor];
-//            [[UIApplication sharedApplication].keyWindow addSubview:imageView];
-//            [imageView addUITapGestureRecognizerWithTarget:self withAction:@selector(remove:)];
-            
             [self hideAll];
             [[UIViewController getCurrentVC] presentViewController:[[UINavigationController alloc] initWithRootViewController:[RTSetMainViewController new]] animated:YES completion:nil];
         }break;
         default:
             break;
     }
-}
-
-- (void)remove:(UITapGestureRecognizer *)ges{
-    [ges.view removeFromSuperview];
 }
 
 - (void)showAll{

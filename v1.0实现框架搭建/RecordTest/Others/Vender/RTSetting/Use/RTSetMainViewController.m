@@ -4,6 +4,7 @@
 #import "RTSettingViewController.h"
 #import "RecordTestHeader.h"
 #import "RTAllRecordVC.h"
+#import "RTPlaybackViewController.h"
 
 @interface RTSetMainViewController ()<RTSlideSwitchDelegate>
 @property (nonatomic,strong)RTSegmentedSlideSwitch *slideSwitch;
@@ -16,20 +17,21 @@
      [TabBarAndNavagation setLeftBarButtonItemTitle:@"<返回" TintColor:[UIColor blackColor] target:self action:@selector(backAction)];
     
     NSMutableArray *viewControllers = [NSMutableArray new];
-    NSArray *titles = @[@"运行结果",@"所有录制",@"运行结果",@"设置"];
     
     RTAllRecordVC *allRecord_vc = [RTAllRecordVC new];
     allRecord_vc.title = @"所有录制";
     [viewControllers addObject:allRecord_vc];
     [self addChildViewController:allRecord_vc];
     
+    RTPlaybackViewController *playback_vc = [RTPlaybackViewController new];
+    playback_vc.title = @"运行回放";
+    [viewControllers addObject:playback_vc];
+    [self addChildViewController:playback_vc];
     
     RTSettingViewController *set_vc = [RTSettingViewController new];
     set_vc.title = @"设置";
     [viewControllers addObject:set_vc];
     [self addChildViewController:set_vc];
-    
-    
     
     _slideSwitch = [[RTSegmentedSlideSwitch alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     _slideSwitch.delegate = self;

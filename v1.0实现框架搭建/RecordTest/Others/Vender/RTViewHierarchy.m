@@ -6,6 +6,7 @@
 #import "SuspendBall.h"
 #import "RTCommandList.h"
 #import "RAYNewFunctionGuideVC.h"
+#import "SuspendBall.h"
 
 #if !__has_feature(objc_arc)
 #error add -fobjc-arc to compiler flags
@@ -23,7 +24,6 @@
 
 @interface RTViewHierarchy ()
 @property (nonatomic, retain) NSMutableArray *holders;
-@property (nonatomic,strong)RAYNewFunctionGuideVC *guideVC;
 @end
 
 @implementation RTViewHierarchy
@@ -52,13 +52,14 @@
     self.holders = nil;
     self.holders = [NSMutableArray arrayWithCapacity:100];
     
+    [SuspendBall shareInstance].alpha = 0;
     for (int i = 0; i < [UIApplication sharedApplication].windows.count; i++) {
         UIWindow *window = [UIApplication sharedApplication].windows[i];
         if (window.subviews.count > 0) {
-            [self dumpView:window highlight:YES highlightView:highlightView];
             [self renderImageFromWindow:window];
         }
     }
+    [SuspendBall shareInstance].alpha = 1;
     
     for (RTViewImageHolder *h in _holders) {
         UIImageView *imgV = [[UIImageView alloc] initWithImage:h.image];
@@ -73,11 +74,18 @@
         imgV.frame = r;
         imgV.layer.backgroundColor = [UIColor clearColor].CGColor;
     }
-    if (self.guideVC) {
-        self.guideVC.view.frame = backView.bounds;
-        [backView addSubview:self.guideVC.view];
+    if (highlightView) {
+        CGRect rect = [highlightView rectIntersectionInWindow];// 获取 该view与window 交叉的 Rect
+        if (!(CGRectIsEmpty(rect) || CGRectIsNull(rect))) {
+            RAYNewFunctionGuideVC *vc = [RAYNewFunctionGuideVC new];
+            vc.titleGuide = @"新增功能";
+            vc.frameGuide = rect;
+            vc.view.frame = backView.bounds;
+            [backView addSubview:vc.view];
+        }
     }
-    return [self renderImageFromView:backView];
+    UIImage *snapImage = [self renderImageFromView:backView];
+    return snapImage;
 }
 
 - (void)renderImageFromWindow:(UIView *)aView{
@@ -85,27 +93,6 @@
     holder.image = [self renderImageFromView:aView];
     holder.rect = [aView rectIntersectionInWindow];// 获取 该view与window 交叉的 Rect
     [_holders addObject:holder];
-}
-
-- (void)dumpView:(UIView *)aView highlight:(BOOL)highlight highlightView:(UIView *)highlightView{
-    if (self.guideVC) {
-        return;
-    }
-    if ([aView isEqual:highlightView]) {
-        CGRect rect = [aView rectIntersectionInWindow];// 获取 该view与window 交叉的 Rect
-        if (!(CGRectIsEmpty(rect) || CGRectIsNull(rect))) {
-            RAYNewFunctionGuideVC *vc = [RAYNewFunctionGuideVC new];
-            vc.titleGuide = @"新增功能";
-            vc.frameGuide = rect;
-            vc.targetView = aView;
-            self.guideVC = vc;
-            return;
-        }
-    }
-    for (int i = 0; i < aView.subviews.count; i++) {
-        UIView *v = aView.subviews[i];
-        [self dumpView:v highlight:highlight highlightView:highlightView];
-    }
 }
 
 @end

@@ -18,6 +18,7 @@
 #import "UIScrollView+RT.h"
 #import "UIView+Frame.h"
 #import "RTViewHierarchy.h"
+#import "RTOperationImage.h"
 
 #define Run 1
 

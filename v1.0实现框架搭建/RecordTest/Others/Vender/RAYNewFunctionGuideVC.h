@@ -12,6 +12,5 @@
 
 @property (nonatomic, copy) NSString *titleGuide;
 @property (nonatomic, assign) CGRect frameGuide;
-@property (nonatomic,weak)UIView *targetView;
 
 @end

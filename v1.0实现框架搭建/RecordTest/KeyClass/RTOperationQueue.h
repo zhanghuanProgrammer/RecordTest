@@ -14,6 +14,7 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 @property (nonatomic,copy)NSString *viewId;
 @property (nonatomic,copy)NSString *view;
 @property (nonatomic,copy)NSString *vc;
+@property (nonatomic,copy)NSString *imagePath;
 @property (nonatomic,assign)RTOperationQueueType type;
 @property (nonatomic,strong)NSArray *parameters;
 
@@ -52,5 +53,6 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 
 + (NSArray *)allIdentifyModels;
 + (NSArray *)allIdentifyModelsForVC:(NSString *)vc;
++ (NSArray *)alloperationQueueModels;
 
 @end

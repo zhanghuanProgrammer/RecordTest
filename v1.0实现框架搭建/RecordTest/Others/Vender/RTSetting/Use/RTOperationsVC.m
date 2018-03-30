@@ -19,15 +19,16 @@
 - (void)add0SectionItems
 {
     NSArray *operationQueueModels = [RTOperationQueue getOperationQueue:self.identify];
-    NSMutableArray *operations = [NSMutableArray array];
-    for (RTOperationQueueModel *model in operationQueueModels) {
-        [operations addObject:model.debugDescription];
-    }
     NSMutableArray *items = [NSMutableArray array];
-    for (NSString *operation in operations) {
-        RTSettingItem *item = [RTSettingItem itemWithIcon:@"" title:operation detail:nil type:ZFSettingItemTypeArrow];
+    for (RTOperationQueueModel *model in operationQueueModels) {
+        RTSettingItem *item = [RTSettingItem itemWithIcon:@"" title:[model debugDescription] detail:nil type:ZFSettingItemTypeArrow];
         item.operation = ^{
-            
+            UIImage *image = [RTOperationImage imageWithName:model.imagePath];
+            UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
+            imageView.frame = [UIScreen mainScreen].bounds;
+            imageView.backgroundColor = [UIColor redColor];
+            [[UIApplication sharedApplication].keyWindow addSubview:imageView];
+            [imageView addUITapGestureRecognizerWithTarget:self withAction:@selector(remove:)];
         };
         [items addObject:item];
     }
@@ -36,6 +37,10 @@
     group.header = @"所有执行命令";
     group.items = items;
     [_allGroups addObject:group];
+}
+
+- (void)remove:(UITapGestureRecognizer *)ges{
+    [ges.view removeFromSuperview];
 }
 
 @end

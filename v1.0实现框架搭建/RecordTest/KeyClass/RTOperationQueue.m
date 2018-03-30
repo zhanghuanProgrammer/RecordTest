@@ -14,6 +14,7 @@
     copy.parameters = self.parameters;
     copy.type = self.type;
     copy.vc = self.vc;
+    copy.imagePath = self.imagePath;
     return copy;
 }
 
@@ -23,6 +24,7 @@
     [aCoder encodeObject:self.parameters forKey:@"parameters"];
     [aCoder encodeInteger:self.type forKey:@"type"];
     [aCoder encodeObject:self.vc forKey:@"vc"];
+    [aCoder encodeObject:self.imagePath forKey:@"imagePath"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder{
@@ -32,6 +34,7 @@
         self.parameters = [aDecoder decodeObjectForKey:@"parameters"];
         self.type = [aDecoder decodeIntegerForKey:@"type"];
         self.vc = [aDecoder decodeObjectForKey:@"vc"];
+        self.imagePath = [aDecoder decodeObjectForKey:@"imagePath"];
     }
     return self;
 }
@@ -192,6 +195,7 @@
         },^{
             [RTOperationQueue shareInstance].isRecord = NO;
             [RTOperationQueue shareInstance].isStopRecordTemp = NO;
+            [RTOperationImage deleteOverdueImage];
         }] otherButtonTitles:@[@"保存",@"取消"]];
     }
 }
@@ -225,6 +229,7 @@
     model.parameters = parameters;
     model.view = NSStringFromClass(view.class);
     model.vc = [view curViewController];
+    model.imagePath = [RTOperationImage saveOperationImage:[[RTViewHierarchy new] snap:view] compressionQuality:0];
     [[RTOperationQueue shareInstance].operationQueue addObject:model];
     if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {
         [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"%@",[model debugDescription]] dismissAfter:1 styleName:JDStatusBarStyleSuccess];
@@ -277,6 +282,7 @@
     if (isSuccess) {
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"删除成功!"];
         [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+        [RTOperationImage deleteOverdueImage];
     }else{
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"删除下标不存在!"];
     }
@@ -287,6 +293,7 @@
         [operationQueues removeObjectForKey:[identify description]];
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"删除成功!"];
         [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+        [RTOperationImage deleteOverdueImage];
     }else{
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"删除对象不存在!"];
     }
@@ -306,6 +313,7 @@
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:[NSString stringWithFormat:@"成功删除了%zd个,%zd个不存在!",count,identifys.count - count]];
     }
     [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+    [RTOperationImage deleteOverdueImage];
 }
 
 + (BOOL)reChanggeOperationQueue:(RTIdentify *)identify{
@@ -339,6 +347,18 @@
         }
     }
     return allIdentifyModels;
+}
+
++ (NSArray *)alloperationQueueModels{
+    NSMutableDictionary *operationQueues = [self operationQueues];
+    NSArray *allValues = [operationQueues allValues];
+    NSMutableArray *alloperationQueueModels = [NSMutableArray array];
+    for (NSArray *operationQueueModels in allValues) {
+        if (operationQueueModels.count>0) {
+            [alloperationQueueModels addObjectsFromArray:operationQueueModels];
+        }
+    }
+    return alloperationQueueModels;
 }
 
 + (NSArray *)allIdentifyModelsForVC:(NSString *)vc{
