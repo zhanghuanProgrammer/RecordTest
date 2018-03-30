@@ -15,6 +15,7 @@
     copy.type = self.type;
     copy.vc = self.vc;
     copy.imagePath = self.imagePath;
+    copy.runResult = self.runResult;
     return copy;
 }
 
@@ -25,6 +26,7 @@
     [aCoder encodeInteger:self.type forKey:@"type"];
     [aCoder encodeObject:self.vc forKey:@"vc"];
     [aCoder encodeObject:self.imagePath forKey:@"imagePath"];
+    [aCoder encodeInteger:self.runResult forKey:@"runResult"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder{
@@ -35,6 +37,7 @@
         self.type = [aDecoder decodeIntegerForKey:@"type"];
         self.vc = [aDecoder decodeObjectForKey:@"vc"];
         self.imagePath = [aDecoder decodeObjectForKey:@"imagePath"];
+        self.runResult = [aDecoder decodeIntegerForKey:@"runResult"];
     }
     return self;
 }
@@ -105,6 +108,18 @@
     if (self) {
         self.identify = identify;
         self.forVC = forVC;
+    }
+    return self;
+}
+
+- (instancetype)initWithIdentify:(NSString *)identifyString{
+    self = [super init];
+    if (self) {
+        NSArray *splits = [identifyString componentsSeparatedByString:@"_&^_^&_"];
+        if (splits.count >= 2) {
+            self.identify = splits[0];
+            self.forVC = splits[1];
+        }
     }
     return self;
 }

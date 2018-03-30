@@ -37,7 +37,7 @@
     RTSettingGroup *group = [[RTSettingGroup alloc] init];
     group.header = @"录制设置";
     group.items = @[push, shake];
-    [_allGroups addObject:group];
+    [self.allGroups addObject:group];
 }
 
 

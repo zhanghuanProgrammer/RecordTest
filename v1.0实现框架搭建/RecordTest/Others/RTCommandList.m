@@ -400,31 +400,40 @@
     BOOL result = NO;
     isAutoStatic = isAuto;
     if (self.isRunOperationQueue) {
+        if (_curRow == 0) {
+            [RTPlayBack shareInstance].stamp = [DateTools getCurInterval];
+            [RTPlayBack shareInstance].identify = [self.operationQueueIdentify copyNew];
+        }
         if (self.dataArr.count > _curRow) {
             RTCommandListVCCellModel *model = self.dataArr[_curRow];
             RTOperationQueueModel *operationQueue = model.operationModel;
             UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
             if (targetView) {
+                operationQueue.imagePath = [RTOperationImage saveOperationPlayBackImage:[[RTViewHierarchy new] snap:targetView type:operationQueue.type] compressionQuality:0];
                 if ([targetView runOperation:operationQueue]) {
                     model.runResultType = OperationRunResultTypeRunSuccess;
                     [ZHStatusBarNotification showWithStatus:@"执行成功" dismissAfter:1 styleName:JDStatusBarStyleSuccess];
                     self.curRow++;
                     runFailure = 0;
                     result = YES;
+                    operationQueue.runResult = RTOperationQueueRunResultTypeSuccess;
                 }else{
                     model.runResultType = OperationRunResultTypeFailure;
                     runFailure ++;
                     [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"执行失败 次数:%d/10",runFailure] dismissAfter:1 styleName:JDStatusBarStyleError];
+                    operationQueue.runResult = RTOperationQueueRunResultTypeFailure;
                 }
             }else{
                 model.runResultType = OperationRunResultTypeFailure;
                 runFailure ++;
                 [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"没找到控件 次数:%d/10",runFailure] dismissAfter:1 styleName:JDStatusBarStyleWarning];
+                operationQueue.runResult = RTOperationQueueRunResultTypeFailure;
             }
             if (runFailure >= 10) {//执行10次还是失败,说明这句命令是真的不能执行了,或者是因为网络问题,实在加载不出来对应的控件了,这个是用来自动运行的
                 runFailure = 0;
                 self.curRow++;
             }
+            [self savePlayBackModels];
         }else{
             if(self.dataArr.count > 0){
                 [ZHStatusBarNotification showWithStatus:@"已执行完毕" dismissAfter:1 styleName:JDStatusBarStyleSuccess];
@@ -451,6 +460,14 @@
         }
     }
     return NO;
+}
+
+- (void)savePlayBackModels{
+    NSMutableArray *operationQueues = [NSMutableArray arrayWithCapacity:self.dataArr.count];
+    for (RTCommandListVCCellModel *model in self.dataArr) {
+        [operationQueues addObject:model.operationModel];
+    }
+    [[RTPlayBack shareInstance] savePlayBack:operationQueues];
 }
 
 @end

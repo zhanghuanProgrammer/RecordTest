@@ -85,6 +85,7 @@
     NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomPlayBackImageName]];
     NSString *savePath = [[self playBackImagesPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];
+    NSLog(@"%@",savePath);
     NSLog(@"图片大小:%@kb",@(imageData.length/1024.0));
     return imageName;
 }

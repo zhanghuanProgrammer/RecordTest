@@ -36,7 +36,7 @@
     RTSettingGroup *group = [[RTSettingGroup alloc] init];
     group.header = @"所有执行命令";
     group.items = items;
-    [_allGroups addObject:group];
+    [self.allGroups addObject:group];
 }
 
 - (void)remove:(UITapGestureRecognizer *)ges{

@@ -63,7 +63,7 @@
 #pragma mark 返回每一组的header标题
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section{
     RTSettingGroup* group = _allGroups[section];
-    return [NSString stringWithFormat:@"控制器:%@",group.header];
+    return [NSString stringWithFormat:@"%@",group.header];
 }
 #pragma mark 返回每一组的footer标题
 - (NSString*)tableView:(UITableView*)tableView titleForFooterInSection:(NSInteger)section{

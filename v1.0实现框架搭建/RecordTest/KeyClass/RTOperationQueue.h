@@ -9,6 +9,12 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
     RTOperationQueueTypeTextChange,
 };
 
+typedef NS_ENUM(NSUInteger, RTOperationQueueRunResultType) {
+    RTOperationQueueRunResultTypeNoRun,
+    RTOperationQueueRunResultTypeSuccess,
+    RTOperationQueueRunResultTypeFailure,
+};
+
 @interface RTOperationQueueModel : NSObject <NSCoding>
 
 @property (nonatomic,copy)NSString *viewId;
@@ -17,10 +23,12 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 @property (nonatomic,copy)NSString *imagePath;
 @property (nonatomic,assign)RTOperationQueueType type;
 @property (nonatomic,strong)NSArray *parameters;
+@property (nonatomic,assign)RTOperationQueueRunResultType runResult;
 
 - (instancetype)copyNew;
 
 @end
+
 
 @interface RTIdentify : NSObject
 
@@ -30,6 +38,7 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
 - (instancetype)copyNew;
 
 - (instancetype)initWithIdentify:(NSString *)identify forVC:(NSString *)forVC;
+- (instancetype)initWithIdentify:(NSString *)identifyString;
 
 @end
 
