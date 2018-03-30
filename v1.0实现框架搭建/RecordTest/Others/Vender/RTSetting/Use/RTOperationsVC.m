@@ -1,9 +1,10 @@
 
 #import "RTOperationsVC.h"
 #import "RecordTestHeader.h"
+#import "RTPhotosViewController.h"
 
 @interface RTOperationsVC ()
-
+@property (nonatomic,strong)NSArray *operationQueueModels;
 @end
 
 @implementation RTOperationsVC
@@ -19,16 +20,12 @@
 - (void)add0SectionItems
 {
     NSArray *operationQueueModels = [RTOperationQueue getOperationQueue:self.identify];
+    self.operationQueueModels = operationQueueModels;
     NSMutableArray *items = [NSMutableArray array];
     for (RTOperationQueueModel *model in operationQueueModels) {
         RTSettingItem *item = [RTSettingItem itemWithIcon:@"" title:[model debugDescription] detail:nil type:ZFSettingItemTypeArrow];
         item.operation = ^{
-            UIImage *image = [RTOperationImage imageWithName:model.imagePath];
-            UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
-            imageView.frame = [UIScreen mainScreen].bounds;
-            imageView.backgroundColor = [UIColor redColor];
-            [[UIApplication sharedApplication].keyWindow addSubview:imageView];
-            [imageView addUITapGestureRecognizerWithTarget:self withAction:@selector(remove:)];
+            [self goToPhotoBrowser:model.imagePath];
         };
         [items addObject:item];
     }
@@ -39,8 +36,19 @@
     [self.allGroups addObject:group];
 }
 
-- (void)remove:(UITapGestureRecognizer *)ges{
-    [ges.view removeFromSuperview];
+- (void)goToPhotoBrowser:(NSString *)imagePath{
+    NSMutableArray *imagePaths = [NSMutableArray array];
+    for (RTOperationQueueModel *model in self.operationQueueModels){
+        if (model.imagePath.length > 0){
+            [imagePaths addObject:[RTOperationImage imagePathWithName:model.imagePath]];
+        }
+    }
+    RTPhotosViewController *vc=[RTPhotosViewController new];
+    vc.imageNames = imagePaths;
+    vc.indexCur = [imagePaths indexOfObject:[RTOperationImage imagePathWithName:imagePath]];
+    vc.bgColor=[UIColor whiteColor];
+    vc.isShowPageIndex = YES;
+    [vc showToVC:self];
 }
 
 @end

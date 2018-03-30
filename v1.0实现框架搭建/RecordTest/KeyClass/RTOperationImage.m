@@ -106,6 +106,14 @@
     return [UIImage new];
 }
 
++ (NSString *)imagePathWithName:(NSString *)name{
+    return [[self imagesPath] stringByAppendingPathComponent:name];
+}
+
++ (NSString *)imagePathWithPlayBackName:(NSString *)name{
+    return [[self playBackImagesPath] stringByAppendingPathComponent:name];
+}
+
 + (BOOL)isExsitName:(NSString *)name{
     NSString *path = [[self imagesPath] stringByAppendingPathComponent:name];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {

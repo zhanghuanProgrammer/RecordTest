@@ -12,12 +12,14 @@
 @implementation KVOAllView
 
 - (void)kvoAllView{
-    self.repearDictionary = nil;
-    self.repearDictionary = [RTRepearDictionary new];
-    for (int i = 0; i < [UIApplication sharedApplication].windows.count; i++) {
-        UIWindow *window = [UIApplication sharedApplication].windows[i];
-        if (window.subviews.count > 0) {
-            [self dumpView:window fatherView:nil atIndent:0 layerDirector:@""];
+    if ([RTOperationQueue shareInstance].isRecord || [RTCommandList shareInstance].isRunOperationQueue) {
+        self.repearDictionary = nil;
+        self.repearDictionary = [RTRepearDictionary new];
+        for (int i = 0; i < [UIApplication sharedApplication].windows.count; i++) {
+            UIWindow *window = [UIApplication sharedApplication].windows[i];
+            if (window.subviews.count > 0) {
+                [self dumpView:window fatherView:nil atIndent:0 layerDirector:@""];
+            }
         }
     }
 }
