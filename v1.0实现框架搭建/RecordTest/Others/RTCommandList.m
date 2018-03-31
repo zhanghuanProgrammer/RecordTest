@@ -360,12 +360,12 @@
     if(!isRunOperationQueue) self.operationQueueIdentify = nil;
     if (isRunOperationQueue) {
         [[SuspendBall shareInstance] setEnable:YES index:0 hide:NO];
-        [[SuspendBall shareInstance] setEnable:YES index:1 hide:NO];
+//        [[SuspendBall shareInstance] setEnable:YES index:1 hide:NO];
         [[SuspendBall shareInstance] setEnable:NO index:3 hide:YES];
         [[SuspendBall shareInstance] setEnable:NO index:4 hide:YES];
     }else{
         [[SuspendBall shareInstance] setEnable:NO index:0 hide:NO];
-        [[SuspendBall shareInstance] setEnable:NO index:1 hide:NO];
+//        [[SuspendBall shareInstance] setEnable:NO index:1 hide:NO];
         [[SuspendBall shareInstance] setEnable:YES index:3 hide:NO];
         [[SuspendBall shareInstance] setEnable:YES index:4 hide:NO];
     }

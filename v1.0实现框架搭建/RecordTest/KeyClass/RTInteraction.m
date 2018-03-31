@@ -5,6 +5,7 @@
 #import "ZHAlertAction.h"
 #import "RTCommandListVCViewController.h"
 #import "RTSetMainViewController.h"
+#import "AutoTestProject.h"
 
 @interface RTInteraction ()<SuspendBallDelegte>
 
@@ -52,11 +53,16 @@
             }
         }break;
         case 1:{
-            if ([RTCommandList shareInstance].isRunOperationQueue) {
-                [[RTCommandList shareInstance] nextStep];
-            }else{
-                [ZHStatusBarNotification showWithStatus:@"没有正在执行的操作队列" dismissAfter:1 styleName:JDStatusBarStyleError];
-            }
+            [self hideAll];
+            [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"开始Monkey测试!"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[AutoTestProject shareInstance] autoTest];
+            });
+//            if ([RTCommandList shareInstance].isRunOperationQueue) {
+//                [[RTCommandList shareInstance] nextStep];
+//            }else{
+//                [ZHStatusBarNotification showWithStatus:@"没有正在执行的操作队列" dismissAfter:1 styleName:JDStatusBarStyleError];
+//            }
         }break;
         case 2:{
             [RTCommandList shareInstance].hidden = ![RTCommandList shareInstance].hidden;

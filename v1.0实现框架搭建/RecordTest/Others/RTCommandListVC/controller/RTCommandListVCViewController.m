@@ -47,7 +47,7 @@
     if(!isHaveSelect)return;
     
     NSString *title = @"";
-    if ([RTCommandList shareInstance].isRunOperationQueue) title = @"是否删除选中的命令行?";
+    if ([RTCommandList shareInstance].isRunOperationQueue) title = @"是否删除选中的命令行? 删除就会停止执行过程!";
     else title = @"是否删除选中的测试录制?";
     DXAlertView *alertView = [[DXAlertView alloc] initWithTitle:@"提示" message:title cancelBtnTitle:@"取消" otherBtnTitle:@"确定"];
     alertView.block = ^(NSInteger index) {
@@ -69,6 +69,7 @@
                 if (indexs.count>0){
                     [RTOperationQueue deleteOperationQueueModelIndexs:indexs forIdentify:[RTCommandList shareInstance].operationQueueIdentify];
                     [[RTCommandList shareInstance] setOperationQueue:[RTCommandList shareInstance].operationQueueIdentify];
+                    [self stopAction];
                 }
             }else{
                 NSMutableArray *identifys = [NSMutableArray array];

@@ -18,7 +18,7 @@ typedef enum : NSUInteger {
 //提示框背景颜色，默认颜色3691D1  232，78，64
 @property (nonatomic,weak) UIColor *alertBgColor;
 
-//提示框显示时间，默认1.5s
+//提示框显示时间，默认1.0s
 @property (nonatomic,assign) CGFloat alertShowTime;
 
 @property (nonatomic,strong) UIColor *textColor;
