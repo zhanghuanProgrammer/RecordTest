@@ -21,6 +21,7 @@
 #import "RTOperationImage.h"
 #import "RTAutoRun.h"
 #import "RTPlayBack.h"
+#import "RTConfigManager.h"
 
 #define Run 1
 
