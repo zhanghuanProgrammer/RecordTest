@@ -112,6 +112,9 @@
         case RTOperationQueueTypeTextFieldDidReturn:
             return @"textFieldDidReturn";
             break;
+        case RTOperationQueueTypeSlide:
+            return @"Slide";
+            break;
         default:
             break;
     }

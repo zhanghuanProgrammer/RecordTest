@@ -10,6 +10,7 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
     RTOperationQueueTypePickerViewItemTap,
     RTOperationQueueTypeTextChange,
     RTOperationQueueTypeTextFieldDidReturn,
+    RTOperationQueueTypeSlide,
 };
 
 typedef NS_ENUM(NSUInteger, RTOperationQueueRunResultType) {
