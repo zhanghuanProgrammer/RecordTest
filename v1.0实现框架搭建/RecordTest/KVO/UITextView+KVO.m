@@ -32,7 +32,26 @@
             if ([model.viewId isEqualToString:self.layerDirector]) {
                 if (model.type == RTOperationQueueTypeTextChange) {
                     NSString *text = model.parameters[0];
+                    if (self.delegate) {
+                        if([self.delegate respondsToSelector:@selector(textViewShouldBeginEditing:)])
+                            [self.delegate textViewShouldBeginEditing:self];
+                        if([self.delegate respondsToSelector:@selector(textViewDidBeginEditing:)])
+                            [self.delegate textViewDidBeginEditing:self];
+                    }
+                    
                     self.text = text;
+                    
+                    if (self.delegate) {
+                        if([self.delegate respondsToSelector:@selector(textViewShouldEndEditing:)])
+                            [self.delegate textViewShouldEndEditing:self];
+                        if([self.delegate respondsToSelector:@selector(textViewDidEndEditing:)])
+                            [self.delegate textViewDidEndEditing:self];
+                        if([self.delegate respondsToSelector:@selector(textViewDidChange:)])
+                            [self.delegate textViewDidChange:self];
+                        if([self.delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)])
+                            [self.delegate textView:self shouldChangeTextInRange:NSMakeRange(0, 0) replacementText:text];
+                    }
+                    
                     result = YES;
                 }
             }
