@@ -1,10 +1,3 @@
-//
-//  JohnTopAlert.h
-//  顶部提示框
-//
-//  Created by YuanQuanTech on 2016/11/11.
-//  Copyright © 2016年 John Lai. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 

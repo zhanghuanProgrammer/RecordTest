@@ -1,10 +1,3 @@
-//
-//  UILabel+ChangeLineSpaceAndWordSpace.h
-//  Elephant
-//
-//  Created by dyy on 2018/1/19.
-//  Copyright © 2018年 杭州大象品牌营销策划有限公司. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 

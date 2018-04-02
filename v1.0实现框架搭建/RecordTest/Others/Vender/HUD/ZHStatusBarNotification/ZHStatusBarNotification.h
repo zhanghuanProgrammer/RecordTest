@@ -1,11 +1,3 @@
-//
-//  ZHStatusBarNotification.h
-//
-//  Based on KGStatusBar by Kevin Gibbon
-//
-//  Created by Markus Emrich on 10/28/13.
-//  Copyright 2013 Markus Emrich. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 

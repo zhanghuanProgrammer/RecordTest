@@ -1,10 +1,3 @@
-//
-//  DXAlertView.m
-//  Elephant
-//
-//  Created by dyy on 2018/1/19.
-//  Copyright © 2018年 dyy. All rights reserved.
-//
 
 #define AlertView_W    HitoActureWidth(260.f)
 #define DXATitle_H     20.0f

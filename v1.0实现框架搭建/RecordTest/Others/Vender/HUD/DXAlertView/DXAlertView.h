@@ -1,10 +1,3 @@
-//
-//  DXAlertView.h
-//  Elephant
-//
-//  Created by dyy on 2018/1/19.
-//  Copyright © 2018年 dyy. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 
