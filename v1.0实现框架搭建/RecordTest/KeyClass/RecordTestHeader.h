@@ -34,5 +34,6 @@
 #define KVO_TextView 1
 #define KVO_TextField 1
 #define KVO_tableView_didSelectRowAtIndexPath 1
+#define KVO_collectionView_didSelectRowAtIndexPath 1
 
 #define KVO_Super 1

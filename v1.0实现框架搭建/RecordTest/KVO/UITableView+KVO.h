@@ -3,6 +3,4 @@
 
 @interface UITableView (KVO)
 
-- (void)kvo;
-
 @end
