@@ -16,7 +16,7 @@
         return;
     }
     if (KVO_TextView) {
-        [self.rac_textSignal subscribeNext:^(id x) {
+        [[self.rac_textSignal distinctUntilChanged] subscribeNext:^(id x) {
             NSLog(@"👌TextView 文字改变了%@",x);
             [RTOperationQueue addOperation:self type:(RTOperationQueueTypeTextChange) parameters:@[x] repeat:NO];
         }];

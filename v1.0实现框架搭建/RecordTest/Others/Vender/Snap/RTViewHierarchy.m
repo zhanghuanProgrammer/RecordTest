@@ -100,6 +100,18 @@
         case RTOperationQueueTypeTableViewCellTap:
             return @"CellTap";
             break;
+        case RTOperationQueueTypeCollectionViewCellTap:
+            return @"CellTap";
+            break;
+        case RTOperationQueueTypePickerViewItemTap:
+            return @"PickerViewItemTap";
+            break;
+        case RTOperationQueueTypeTextChange:
+            return @"TextChange";
+            break;
+        case RTOperationQueueTypeTextFieldDidReturn:
+            return @"textFieldDidReturn";
+            break;
         default:
             break;
     }

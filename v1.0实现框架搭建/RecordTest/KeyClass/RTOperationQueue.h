@@ -9,6 +9,7 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
     RTOperationQueueTypeCollectionViewCellTap,
     RTOperationQueueTypePickerViewItemTap,
     RTOperationQueueTypeTextChange,
+    RTOperationQueueTypeTextFieldDidReturn,
 };
 
 typedef NS_ENUM(NSUInteger, RTOperationQueueRunResultType) {
