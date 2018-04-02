@@ -12,7 +12,7 @@ v2.1 实现进入某个页面后,会出现badge,提示与这个页面相关的�
 v2.2 记录事件时,都需要在上方提示记录了一条什么事件👌
 v2.3 执行完了就变成绿色,执行失败就显示红色👌
 
-v3.1 利用Aspects 监听UISwitch的开关事件
+v3.1 利用Aspects 监听UISwitch的开关事件👌
 v3.2 利用Aspects 监听UISegement的选择事件
 v3.3 利用Aspects 监听UIProgress的数值滑动
 v3.4 利用Aspects 监听Stepper的数值变化
