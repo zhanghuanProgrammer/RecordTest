@@ -723,7 +723,6 @@ typedef enum : NSUInteger {
         self.curRectIndex++;
         if (self.curRectIndex>=self.rects.count||self.curRectIndex<0) {
             self.curRect=CGRectZero;
-            NSLog(@"%@",@"滚动器应该下移");
         }else{
             self.curRect=[self.rects[self.curRectIndex] CGRectValue];
         }
@@ -731,7 +730,6 @@ typedef enum : NSUInteger {
         self.curRectIndex--;
         if (self.curRectIndex<0||self.curRectIndex>=self.rects.count) {
             self.curRect=CGRectZero;
-            NSLog(@"%@",@"滚动器应该上移");
         }else{
             self.curRect=[self.rects[self.curRectIndex] CGRectValue];
         }

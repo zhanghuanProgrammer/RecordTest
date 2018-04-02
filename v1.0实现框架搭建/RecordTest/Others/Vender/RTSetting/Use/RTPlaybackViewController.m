@@ -4,7 +4,7 @@
 #import "RTPlayBackVC.h"
 
 @interface RTPlaybackViewController ()
-
+@property (nonatomic,strong)NSMutableDictionary *sortDic;
 @end
 
 @implementation RTPlaybackViewController
@@ -12,6 +12,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.sortDic = [NSMutableDictionary dictionary];
     [self add0SectionItems];
 }
 
@@ -58,8 +59,14 @@
         RTSettingGroup *group = [[RTSettingGroup alloc] init];
         group.header = compareTime;
         group.items = items;
+        group.sort = [self.sortDic[compareTime] integerValue];
         [self.allGroups addObject:group];
     }
+    [self.allGroups sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        RTSettingGroup *group1 = obj1;
+        RTSettingGroup *group2 = obj2;
+        return group1.sort < group2.sort;;
+    }];
 }
 
 - (NSString *)compareCurrentTime:(NSString *)stamp{
@@ -86,6 +93,7 @@
         temp = temp/12;
         result = [NSString stringWithFormat:@"%ld年前",temp];
     }
+    [self.sortDic setValue:stamp forKey:result];
     return  result;
 }
 
