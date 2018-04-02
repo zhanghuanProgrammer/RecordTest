@@ -7,6 +7,7 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueType) {
     RTOperationQueueTypeScroll,
     RTOperationQueueTypeTableViewCellTap,
     RTOperationQueueTypeCollectionViewCellTap,
+    RTOperationQueueTypePickerViewItemTap,
     RTOperationQueueTypeTextChange,
 };
 
