@@ -1,8 +1,8 @@
 
-#import "UIControl+KVO.h"
+#import "UISwitch+KVO.h"
 #import "RecordTestHeader.h"
 
-@implementation UIControl (KVO)
+@implementation UISwitch (KVO)
 
 - (void)kvo{
     if (self.isKVO) {
@@ -12,7 +12,7 @@
         NSSet *allTargets=[self allTargets];
         if (allTargets.count>0) {
             for (id target in allTargets) {
-                NSArray *actions = [self actionsForTarget:target forControlEvent:(UIControlEventTouchUpInside)];
+                NSArray *actions = [self actionsForTarget:target forControlEvent:(UIControlEventValueChanged)];
                 if (actions.count > 0) {
                     NSString *action = actions[0];
                     SEL sel = NSSelectorFromString(action);
@@ -31,8 +31,6 @@
                             [RTOperationQueue addOperation:view type:(RTOperationQueueTypeEvent) parameters:@[NSStringFromSelector(sel)] repeat:YES];
                         } after:nil error:nil];
                     }
-                }else{
-//                    NSLog(@"%@ - %@",@"⚠️⚠️⚠️⚠️⚠️⚠️没抓到方法..........",self);
                 }
             }
         }else{
@@ -57,6 +55,7 @@
                     if (allTargets.count>0) {
                         for (id target in allTargets) {
                             if (target && [target respondsToSelector:ori_sel]) {
+                                self.on = !self.on;
                                 [self sendActionsForControlEvents:UIControlEventAllEvents];
                                 result = YES;
                                 break;

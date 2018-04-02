@@ -404,7 +404,7 @@ static CGFloat btnSmallImageWidth = 30;
             [_functionMenu addSubview:functionBtn];
             [self.buttons addObject:functionBtn];
             
-            UILabel *badge = [[UILabel alloc]initWithFrame:CGRectMake(functionBtn.lhz_x, functionBtn.lhz_y, fullButtonWidth, 10)];
+            UILabel *badge = [[UILabel alloc] initWithFrame:CGRectMake(functionBtn.lhz_x, functionBtn.lhz_y, fullButtonWidth, 10)];
             badge.isNoNeedKVO = badge.isNoNeedSnap = YES;
             badge.backgroundColor = [UIColor clearColor];
             badge.textColor = [UIColor redColor];
