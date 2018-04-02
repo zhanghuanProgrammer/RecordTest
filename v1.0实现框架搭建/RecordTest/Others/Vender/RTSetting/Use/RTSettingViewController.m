@@ -20,8 +20,11 @@
 {
     __weak typeof(self)weakSelf=self;
     // 1.1.录制测试设置
-    RTSettingItem *item1 = //[RTSettingItem itemWithIcon:@"MorePush" title:@"新消息通知" type:ZFSettingItemTypeArrow];
-    [RTSettingItem itemWithIcon:@"" title:@"截图压缩率" detail:@"录制过程屏幕截图的压缩率 0" type:ZFSettingItemTypeArrow];
+    NSString *curTitle = @"0.0";
+    if ([RTConfigManager shareInstance].compressionQuality != -1) {
+        curTitle = [NSString stringWithFormat:@"%0.1f",[RTConfigManager shareInstance].compressionQuality];
+    }
+    RTSettingItem *item1 = [RTSettingItem itemWithIcon:@"" title:@"截图压缩率" detail:[NSString stringWithFormat:@"录制过程屏幕截图的压缩率: %@",curTitle] type:ZFSettingItemTypeArrow];
     //cell点击事件
     __weak typeof(item1)weakItem1=item1;
     item1.operation = ^{
@@ -31,14 +34,13 @@
         }
         NSString *curTitle = dataArr[0];
         if ([RTConfigManager shareInstance].compressionQuality != -1) {
-            curTitle = [NSString stringWithFormat:@"%0.2f",[RTConfigManager shareInstance].compressionQuality];
+            curTitle = [NSString stringWithFormat:@"%0.1f",[RTConfigManager shareInstance].compressionQuality];
         }
         [[RTPickerManager shareManger] showPickerViewWithDataArray:dataArr curTitle:curTitle title:@"选择截图压缩率" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
+            weakSelf.compressionQuality = [string floatValue];
             weakItem1.detail = [NSString stringWithFormat:@"录制过程屏幕截图的压缩率: %@",string];
             [(UITableView *)weakSelf.view reloadData];
-        } cancelBlock:^{
-            
-        }];
+        } cancelBlock:nil];
     };
     
     RTSettingGroup *group = [[RTSettingGroup alloc] init];
@@ -48,28 +50,32 @@
     
     
     // 1.2.测试回放设置
-    RTSettingItem *item2 = [RTSettingItem itemWithIcon:@"" title:@"录制截图自动清除" subTitle:@"30天" type:ZFSettingItemTypeSwitch];
+    curTitle = @"30天";
+    if ([RTConfigManager shareInstance].autoDeleteDay != -1) {
+        curTitle = [NSString stringWithFormat:@"%ld天",(long)[RTConfigManager shareInstance].autoDeleteDay];
+    }
+    RTSettingItem *item2 = [RTSettingItem itemWithIcon:@"" title:@"录制截图自动清除" subTitle:curTitle type:ZFSettingItemTypeSwitch];
     item2.subTitleFontSize = 10;
+    item2.on = [RTConfigManager shareInstance].isAutoDelete;
     __weak typeof(item2)weakItem2=item2;
     //开关事件
     item2.switchBlock = ^(BOOL on) {
-        
+        weakSelf.isAutoDelete = on;
     };
     item2.operation = ^{
         NSMutableArray *dataArr = [NSMutableArray array];
         for (NSInteger i=5; i<=30; i++) {
-            [dataArr addObject:[NSString stringWithFormat:@"%zd天",i]];
+            [dataArr addObject:[NSString stringWithFormat:@"%ld天",(long)i]];
         }
         NSString *curTitle = dataArr[0];
         if ([RTConfigManager shareInstance].autoDeleteDay != -1) {
-            curTitle = [NSString stringWithFormat:@"%zd天",[RTConfigManager shareInstance].autoDeleteDay];
+            curTitle = [NSString stringWithFormat:@"%ld天",(long)[RTConfigManager shareInstance].autoDeleteDay];
         }
         [[RTPickerManager shareManger] showPickerViewWithDataArray:dataArr curTitle:curTitle title:@"选择截图压缩率" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
-            weakItem2.detail = [NSString stringWithFormat:@"%@天",string];
+            weakItem2.detail = [NSString stringWithFormat:@"%@",string];
+            weakSelf.autoDeleteDay = [string integerValue];
             [(UITableView *)weakSelf.view reloadData];
-        } cancelBlock:^{
-            
-        }];
+        } cancelBlock:nil];
     };
     RTSettingGroup *group2 = [[RTSettingGroup alloc] init];
     group2.header = @"测试回放设置";
@@ -77,4 +83,13 @@
     [self.allGroups addObject:group2];
 }
 
+- (void)setCompressionQuality:(CGFloat)compressionQuality{
+    [RTConfigManager shareInstance].compressionQuality = compressionQuality;
+}
+- (void)setAutoDeleteDay:(NSInteger)autoDeleteDay{
+    [RTConfigManager shareInstance].autoDeleteDay = autoDeleteDay;
+}
+- (void)setIsAutoDelete:(BOOL)isAutoDelete{
+    [RTConfigManager shareInstance].isAutoDelete = isAutoDelete;
+}
 @end

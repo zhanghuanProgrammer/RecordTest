@@ -69,8 +69,9 @@
     self.dataArr = [NSMutableArray arrayWithArray:array];
     [self reloadAllComponents];
     self.selectedRow = 0;
-    
-    self.selectedRow = [array indexOfObject:self.curTitle];
+    if ([array containsObject:self.curTitle]) {
+        self.selectedRow = [array indexOfObject:self.curTitle];
+    }
     [self selectRow:self.selectedRow inComponent:0 animated:NO];
     
     [self showWithAnimation];

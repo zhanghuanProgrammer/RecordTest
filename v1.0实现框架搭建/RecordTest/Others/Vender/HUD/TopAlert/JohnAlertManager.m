@@ -28,7 +28,7 @@ static JohnTopAlert *_alert = nil;
         _alert.textColor = [UIColor blackColor];
     }
     
-    _alert.alertShowTime = 1.0f;
+    _alert.alertShowTime = 0.6f;
     [_alert show];
 }
 

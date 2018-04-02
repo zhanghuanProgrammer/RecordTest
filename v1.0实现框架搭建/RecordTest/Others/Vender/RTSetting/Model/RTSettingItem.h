@@ -30,6 +30,8 @@ typedef enum : NSInteger{
 
 @property (nonatomic, strong) UIColor *subTitleColor;
 
+@property (nonatomic,assign)BOOL on;
+
 /** cell上开关的操作事件 */
 @property (nonatomic, copy) void (^switchBlock)(BOOL on) ;
 

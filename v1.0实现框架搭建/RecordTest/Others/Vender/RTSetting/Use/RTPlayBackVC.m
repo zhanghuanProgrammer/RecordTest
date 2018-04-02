@@ -46,6 +46,10 @@
 }
 
 - (void)goToPhotoBrowser:(NSString *)imagePath{
+    if (!imagePath || imagePath.length<=0) {
+        [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"没有对应的截图!"];
+        return;
+    }
     NSMutableArray *imagePaths = [NSMutableArray array];
     for (RTOperationQueueModel *model in self.playBackModels){
         if (model.imagePath.length > 0){

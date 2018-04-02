@@ -104,6 +104,7 @@
             [_switch addTarget:self action:@selector(switchStatusChanged:) forControlEvents:UIControlEventValueChanged];
         }
 
+        _switch.on = item.on;
         // 右边显示开关
         self.accessoryView = _switch;
         // 禁止选中
