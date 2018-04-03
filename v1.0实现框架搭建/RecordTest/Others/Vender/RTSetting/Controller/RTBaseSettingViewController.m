@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
     _allGroups = [NSMutableArray array];
 }

@@ -1,6 +1,7 @@
 
 #import "RTOperationImage.h"
 #import "RecordTestHeader.h"
+#import "ZHFileManager.h"
 
 @implementation RTOperationImage
 
@@ -28,6 +29,20 @@
 + (NSString *)playBackImagesPath{
     NSString *imagesPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtPlayBackImagesPath"];
     return imagesPath;
+}
++ (NSString *)imagesFileSize{
+    return [ZHFileManager fileSizeString:[self imagesPath]];
+}
++ (NSString *)imagesPlayBackFileSize{
+    return [ZHFileManager fileSizeString:[self playBackImagesPath]];
+}
++ (NSString *)imagesFileCount{
+    NSInteger count = [ZHFileManager subPathFileArrInDirector:[self imagesPath] hasPathExtension:@[@".png",@".jpg"]].count;
+    return [NSString stringWithFormat:@"%zd",count];
+}
++ (NSString *)imagesPlayBackFileCount{
+    NSInteger count = [ZHFileManager subPathFileArrInDirector:[self playBackImagesPath] hasPathExtension:@[@".png",@".jpg"]].count;
+    return [NSString stringWithFormat:@"%zd",count];
 }
 
 + (BOOL)isExsitImageName:(NSString *)imageName{

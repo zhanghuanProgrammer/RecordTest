@@ -14,8 +14,8 @@ v2.3 执行完了就变成绿色,执行失败就显示红色👌
 
 v3.1 利用Aspects 监听UISwitch的开关事件👌
 v3.2 利用Aspects 监听UISegement的选择事件👌
-v3.3 利用Aspects 监听UISlider的滑动
-v3.4 利用Aspects 监听Stepper的数值变化
+v3.3 利用Aspects 监听UISlider的滑动👌
+v3.4 利用Aspects 监听Stepper的数值变化👌
 v3.5 利用Aspects 监听CollectionView的点击👌
 v3.6 利用Aspects 实现监听UITextView的滚动👌
 v3.7 监听PickerView 的选择 和 滚动

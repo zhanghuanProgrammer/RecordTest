@@ -3,6 +3,10 @@
 
 @interface RTOperationImage : NSObject
 
++ (NSString *)imagesFileSize;
++ (NSString *)imagesPlayBackFileSize;
++ (NSString *)imagesFileCount;
++ (NSString *)imagesPlayBackFileCount;
 + (NSString *)saveOperationImage:(UIImage *)image compressionQuality:(CGFloat)compressionQuality;
 + (NSString *)saveOperationPlayBackImage:(UIImage *)image compressionQuality:(CGFloat)compressionQuality;
 + (UIImage *)imageWithName:(NSString *)name;

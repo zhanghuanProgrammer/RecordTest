@@ -53,6 +53,8 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueRunResultType) {
 @property (nonatomic,assign)BOOL isStopRecordTemp;
 
 + (RTOperationQueue *)shareInstance;
++ (NSMutableDictionary *)operationQueues;
+
 + (void)startOrStopRecord;
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat;
 

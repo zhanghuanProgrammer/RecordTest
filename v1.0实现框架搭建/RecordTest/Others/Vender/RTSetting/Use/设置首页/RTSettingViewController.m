@@ -2,6 +2,7 @@
 #import "RTSettingViewController.h"
 #import "RecordTestHeader.h"
 #import "RTPickerManager.h"
+#import "RTSetFileSizeViewController.h"
 
 @interface RTSettingViewController ()
 @end
@@ -81,6 +82,18 @@
     group2.header = @"测试回放设置";
     group2.items = @[item2];
     [self.allGroups addObject:group2];
+    
+    // 1.3占用存储空间
+    RTSettingItem *item3 = [RTSettingItem itemWithIcon:@"" title:@"占用存储空间" subTitle:nil type:ZFSettingItemTypeArrow];
+    item3.subTitleFontSize = 10;
+    item3.operation = ^{
+        RTSetFileSizeViewController *vc = [RTSetFileSizeViewController new];
+        [self.navigationController pushViewController:vc animated:YES];
+    };
+    RTSettingGroup *group3 = [[RTSettingGroup alloc] init];
+    group3.header = @"测试回放设置";
+    group3.items = @[item3];
+    [self.allGroups addObject:group3];
 }
 
 - (void)setCompressionQuality:(CGFloat)compressionQuality{
