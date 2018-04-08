@@ -33,7 +33,7 @@
     [viewControllers addObject:set_vc];
     [self addChildViewController:set_vc];
     
-    _slideSwitch = [[RTSegmentedSlideSwitch alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    _slideSwitch = [[RTSegmentedSlideSwitch alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 64)];
     _slideSwitch.backgroundColor = [UIColor whiteColor];
     _slideSwitch.delegate = self;
     _slideSwitch.tintColor = [UIColor darkGrayColor];
