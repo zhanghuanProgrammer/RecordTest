@@ -22,6 +22,7 @@
                                 id target = targetAction.target;
                                 __weak typeof(ges.view)weakView=ges.view;
                                 [target aspect_hookSelector:targetAction.action withOptions:AspectPositionAfter usingBlock:^{
+                                    
                                 } before:^(id target, SEL sel, NSArray *args, int deep) {
                                     NSLog(@"%@",@"👌Tap evevnt");
                                     UIView *view = weakView;

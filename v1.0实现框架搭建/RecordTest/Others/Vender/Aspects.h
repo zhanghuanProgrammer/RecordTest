@@ -5,7 +5,6 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
     AspectPositionAfter   = 0,            /// Called after the original implementation (default)
     AspectPositionInstead = 1,            /// Will replace the original implementation.
     AspectPositionBefore  = 2,            /// Called before the original implementation.
-    
     AspectOptionAutomaticRemoval = 1 << 3 /// Will remove the hook after the first execution.
 };
 

@@ -3,6 +3,7 @@
 #import <libkern/OSAtomic.h>
 #import <objc/runtime.h>
 #import <objc/message.h>
+#import "ANYMethodLog.h"
 
 //调用层次
 static int deep = -1;
@@ -170,6 +171,79 @@ return @(val); \
     return nil;
 }
 
+#define AspectLog(...)
+//#define AspectLog(...) do { NSLog(__VA_ARGS__); }while(0)
+#define AspectLogError(...) do { NSLog(__VA_ARGS__); }while(0)
+
+// Block internals.
+typedef NS_OPTIONS(int, AspectBlockFlags) {
+    AspectBlockFlagsHasCopyDisposeHelpers = (1 << 25),
+    AspectBlockFlagsHasSignature          = (1 << 30)
+};
+typedef struct _AspectBlock {
+    __unused Class isa;
+    AspectBlockFlags flags;
+    __unused int reserved;
+    void (__unused *invoke)(struct _AspectBlock *block, ...);
+    struct {
+        unsigned long int reserved;
+        unsigned long int size;
+        // requires AspectBlockFlagsHasCopyDisposeHelpers
+        void (*copy)(void *dst, const void *src);
+        void (*dispose)(const void *);
+        // requires AspectBlockFlagsHasSignature
+        const char *signature;
+        const char *layout;
+    } *descriptor;
+    // imported variables
+} *AspectBlockRef;
+
+@interface AspectInfo : NSObject <AspectInfo>
+- (id)initWithInstance:(__unsafe_unretained id)instance invocation:(NSInvocation *)invocation;
+@property (nonatomic, unsafe_unretained, readonly) id instance;
+@property (nonatomic, strong, readonly) NSArray *arguments;
+@property (nonatomic, strong, readonly) NSInvocation *originalInvocation;
+@end
+
+// Tracks a single aspect.
+@interface AspectIdentifier : NSObject
++ (instancetype)identifierWithSelector:(SEL)selector object:(id)object options:(AspectOptions)options block:(id)block error:(NSError **)error;
+- (BOOL)invokeWithInfo:(id<AspectInfo>)info;
+@property (nonatomic, assign) SEL selector;
+@property (nonatomic, strong) id block;
+@property (nonatomic, strong) NSMethodSignature *blockSignature;
+@property (nonatomic, weak) id object;
+@property (nonatomic, assign) AspectOptions options;
+@end
+
+// Tracks all aspects for an object/class.
+@interface AspectsContainer : NSObject
+- (void)addAspect:(AspectIdentifier *)aspect withOptions:(AspectOptions)injectPosition;
+- (BOOL)removeAspect:(id)aspect;
+- (BOOL)hasAspects;
+@property (atomic, copy) NSArray *beforeAspects;
+@property (atomic, copy) NSArray *insteadAspects;
+@property (atomic, copy) NSArray *afterAspects;
+@end
+
+@interface AspectTracker : NSObject
+- (id)initWithTrackedClass:(Class)trackedClass;
+@property (nonatomic, strong) Class trackedClass;
+@property (nonatomic, readonly) NSString *trackedClassName;
+@property (nonatomic, strong) NSMutableSet *selectorNames;
+@property (nonatomic, strong) NSMutableDictionary *selectorNamesToSubclassTrackers;
+- (void)addSubclassTracker:(AspectTracker *)subclassTracker hookingSelectorName:(NSString *)selectorName;
+- (void)removeSubclassTracker:(AspectTracker *)subclassTracker hookingSelectorName:(NSString *)selectorName;
+- (BOOL)subclassHasHookedSelectorName:(NSString *)selectorName;
+- (NSSet *)subclassTrackersHookingSelectorName:(NSString *)selectorName;
+@end
+
+@interface NSInvocation (Aspects)
+- (NSArray *)aspects_arguments;
+@end
+
+
+
 #pragma mark - AspectBlock
 
 @interface AspectBlock : NSObject
@@ -246,76 +320,6 @@ return @(val); \
 
 @end
 
-#define AspectLog(...)
-//#define AspectLog(...) do { NSLog(__VA_ARGS__); }while(0)
-#define AspectLogError(...) do { NSLog(__VA_ARGS__); }while(0)
-
-// Block internals.
-typedef NS_OPTIONS(int, AspectBlockFlags) {
-    AspectBlockFlagsHasCopyDisposeHelpers = (1 << 25),
-    AspectBlockFlagsHasSignature          = (1 << 30)
-};
-typedef struct _AspectBlock {
-    __unused Class isa;
-    AspectBlockFlags flags;
-    __unused int reserved;
-    void (__unused *invoke)(struct _AspectBlock *block, ...);
-    struct {
-        unsigned long int reserved;
-        unsigned long int size;
-        // requires AspectBlockFlagsHasCopyDisposeHelpers
-        void (*copy)(void *dst, const void *src);
-        void (*dispose)(const void *);
-        // requires AspectBlockFlagsHasSignature
-        const char *signature;
-        const char *layout;
-    } *descriptor;
-    // imported variables
-} *AspectBlockRef;
-
-@interface AspectInfo : NSObject <AspectInfo>
-- (id)initWithInstance:(__unsafe_unretained id)instance invocation:(NSInvocation *)invocation;
-@property (nonatomic, unsafe_unretained, readonly) id instance;
-@property (nonatomic, strong, readonly) NSArray *arguments;
-@property (nonatomic, strong, readonly) NSInvocation *originalInvocation;
-@end
-
-// Tracks a single aspect.
-@interface AspectIdentifier : NSObject
-+ (instancetype)identifierWithSelector:(SEL)selector object:(id)object options:(AspectOptions)options block:(id)block error:(NSError **)error;
-- (BOOL)invokeWithInfo:(id<AspectInfo>)info;
-@property (nonatomic, assign) SEL selector;
-@property (nonatomic, strong) id block;
-@property (nonatomic, strong) NSMethodSignature *blockSignature;
-@property (nonatomic, weak) id object;
-@property (nonatomic, assign) AspectOptions options;
-@end
-
-// Tracks all aspects for an object/class.
-@interface AspectsContainer : NSObject
-- (void)addAspect:(AspectIdentifier *)aspect withOptions:(AspectOptions)injectPosition;
-- (BOOL)removeAspect:(id)aspect;
-- (BOOL)hasAspects;
-@property (atomic, copy) NSArray *beforeAspects;
-@property (atomic, copy) NSArray *insteadAspects;
-@property (atomic, copy) NSArray *afterAspects;
-@end
-
-@interface AspectTracker : NSObject
-- (id)initWithTrackedClass:(Class)trackedClass;
-@property (nonatomic, strong) Class trackedClass;
-@property (nonatomic, readonly) NSString *trackedClassName;
-@property (nonatomic, strong) NSMutableSet *selectorNames;
-@property (nonatomic, strong) NSMutableDictionary *selectorNamesToSubclassTrackers;
-- (void)addSubclassTracker:(AspectTracker *)subclassTracker hookingSelectorName:(NSString *)selectorName;
-- (void)removeSubclassTracker:(AspectTracker *)subclassTracker hookingSelectorName:(NSString *)selectorName;
-- (BOOL)subclassHasHookedSelectorName:(NSString *)selectorName;
-- (NSSet *)subclassTrackersHookingSelectorName:(NSString *)selectorName;
-@end
-
-@interface NSInvocation (Aspects)
-- (NSArray *)aspects_arguments;
-@end
 
 #define AspectPositionFilter 0x07
 
@@ -343,16 +347,24 @@ static NSString *const AspectsMessagePrefix = @"aspects_";
 - (id<AspectToken>)aspect_hookSelector:(SEL)selector
                            withOptions:(AspectOptions)options
                             usingBlock:(id)block
-                                before:(AspectBeforeBlock)before
-                                 after:(AspectAfterBlock)after
+                                before:(AspectBeforeBlock)beforeOld
+                                 after:(AspectAfterBlock)afterOld
                                  error:(NSError **)error {
+    if (object_isClass(self)) {
+        [ANYMethodLog logMethodWithClass:(Class)self condition:^BOOL(SEL sel) {
+            return sel_isEqual(sel,selector);
+        } before:beforeOld after:afterOld];
+        return nil;
+    }
+    
     if ([AspectBlockInstance sharedAspectBlockInstance].aspectCache[[NSString stringWithFormat:@"%p-%@",self,NSStringFromSelector(selector)]]){
         return nil;
     }
+    
     AspectBlock *aspectBlock = [[AspectBlock alloc] init];
     aspectBlock.targetClassName = [NSString stringWithFormat:@"%p-%@",self,NSStringFromSelector(selector)];
-    aspectBlock.before = before;
-    aspectBlock.after = after;
+    aspectBlock.before = beforeOld;
+    aspectBlock.after = afterOld;
     [[AspectBlockInstance sharedAspectBlockInstance] setAMLBlock:aspectBlock forKey:aspectBlock.targetClassName];
     [[AspectBlockInstance sharedAspectBlockInstance].aspectCache setObject:@"" forKey:[NSString stringWithFormat:@"%p-%@",self,NSStringFromSelector(selector)]];
     return aspect_add(self, selector, options, block, error);
@@ -365,7 +377,6 @@ static id aspect_add(id self, SEL selector, AspectOptions options, id block, NSE
     NSCParameterAssert(self);
     NSCParameterAssert(selector);
     NSCParameterAssert(block);
-    
     __block AspectIdentifier *identifier = nil;
     aspect_performLocked(^{
         if (aspect_isSelectorAllowedAndTrack(self, selector, options, error)) {
@@ -373,7 +384,6 @@ static id aspect_add(id self, SEL selector, AspectOptions options, id block, NSE
             identifier = [AspectIdentifier identifierWithSelector:selector object:self options:options block:block error:error];
             if (identifier) {
                 [aspectContainer addAspect:identifier withOptions:options];
-                
                 // Modify the class to allow message interception.
                 aspect_prepareClassAndHookSelector(self, selector, error);
             }
@@ -513,12 +523,14 @@ static IMP aspect_getMsgForwardIMP(NSObject *self, SEL selector) {
 #endif
     return msgForwardIMP;
 }
-
+    
 static void aspect_prepareClassAndHookSelector(NSObject *self, SEL selector, NSError **error) {
     NSCParameterAssert(selector);
     Class klass = aspect_hookClass(self, error);
+    
     Method targetMethod = class_getInstanceMethod(klass, selector);
     IMP targetMethodIMP = method_getImplementation(targetMethod);
+    
     if (!aspect_isMsgForwardIMP(targetMethodIMP)) {
         // Make a method alias for the existing method implementation, it not already copied.
         const char *typeEncoding = method_getTypeEncoding(targetMethod);

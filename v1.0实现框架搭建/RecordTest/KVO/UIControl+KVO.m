@@ -1,6 +1,9 @@
 
 #import "UIControl+KVO.h"
 #import "RecordTestHeader.h"
+#import "ANYMethodLog.h"
+#import "CJOLActionSheetBirthdayView.h"
+#import "ANYMethodLog.h"
 
 @implementation UIControl (KVO)
 
@@ -19,6 +22,7 @@
                     if (target && [target respondsToSelector:sel]) {
                         __weak typeof(self)weakSelf=self;
                         [target aspect_hookSelector:sel withOptions:AspectPositionAfter usingBlock:^{
+                            
                         } before:^(id target, SEL sel, NSArray *args, int deep) {
                             UIView *view = weakSelf;
                             if (args.count>0) {
@@ -57,7 +61,7 @@
                     if (allTargets.count>0) {
                         for (id target in allTargets) {
                             if (target && [target respondsToSelector:ori_sel]) {
-                                [self sendActionsForControlEvents:UIControlEventAllEvents];
+                                [self sendActionsForControlEvents:UIControlEventTouchUpInside];
                                 result = YES;
                                 break;
                             }

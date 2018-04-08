@@ -239,13 +239,8 @@ static CGFloat btnSmallImageWidth = 30;
 - (void)setImage:(NSString *)imageName index:(NSInteger)index{
     index ++;//因为第一个也算进去了
     if (self.buttons.count > index) {
-        
         UIButton *functionBtn = self.buttons[index];
-        if (index==1) {//这个图标没给好,给大了,所以这里调整一下
-            [functionBtn setImage:[self resizeImage:[UIImage imageNamed:imageName] wantSize:CGSizeMake(btnSmallImageWidth-6, btnSmallImageWidth-6)] forState:UIControlStateNormal];
-        }else{
-            [functionBtn setImage:[self resizeImage:[UIImage imageNamed:imageName] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:UIControlStateNormal];
-        }
+        [functionBtn setImage:[self resizeImage:[UIImage imageNamed:imageName] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:UIControlStateNormal];
     }
 }
 - (void)setEnable:(BOOL)enable index:(NSInteger)index hide:(BOOL)hide{
@@ -386,11 +381,7 @@ static CGFloat btnSmallImageWidth = 30;
         for (int i = 0; i < self.imageNameGroup.count; i++) {
             UIButton *functionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             functionBtn.isNoNeedKVO = functionBtn.isNoNeedSnap = YES;
-            if (i==1) {//这个图标没给好,给大了,所以这里调整一下
-                [functionBtn setImage:[self resizeImage:[UIImage imageNamed:self.imageNameGroup[i]] wantSize:CGSizeMake(btnSmallImageWidth-6, btnSmallImageWidth-6)] forState:UIControlStateNormal];
-            }else{
-                [functionBtn setImage:[self resizeImage:[UIImage imageNamed:self.imageNameGroup[i]] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:UIControlStateNormal];
-            }
+            [functionBtn setImage:[self resizeImage:[UIImage imageNamed:self.imageNameGroup[i]] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:UIControlStateNormal];
             
             functionBtn.lhz_width = fullButtonWidth;
             functionBtn.lhz_height = fullButtonWidth;
