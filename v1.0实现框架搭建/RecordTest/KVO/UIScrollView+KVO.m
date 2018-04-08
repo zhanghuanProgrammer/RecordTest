@@ -26,7 +26,13 @@
                     if (!CGRectContainsPoint(CGRectMake(0, 0, self.contentSize.width, self.contentSize.height), point)) {
                         NSLog(@"%@",@"滚动的位置 超出 可滚动的区域");
                     }
-                    if (NeedSimilationView) [SimulationView addSwipeSimulationView:self.centerInWindow direction:1 afterDismiss:1];
+                    CGFloat verScrollOffsetY=point.y-self.contentOffset.y,horScrollOffsetX=point.x-self.contentOffset.x;
+                    NSInteger direction=0;//direction 1左 2上 3右 4下
+                    if (horScrollOffsetX>0) direction=3;
+                    else if (horScrollOffsetX<0) direction=1;
+                    if (verScrollOffsetY>0) direction=4;
+                    else if (verScrollOffsetY<0) direction=2;
+                    if (NeedSimilationView) [SimulationView addSwipeSimulationView:self.centerInWindow direction:direction afterDismiss:1];
                     [self setContentOffset:point animated:YES];
                     result = YES;
                 }

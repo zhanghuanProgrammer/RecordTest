@@ -465,7 +465,6 @@
     NSMutableArray *operationQueues = [NSMutableArray arrayWithCapacity:self.dataArr.count];
     for (RTCommandListVCCellModel *model in self.dataArr) {
         [operationQueues addObject:model.operationModel];
-        NSLog(@"imagePath = %@",model.operationModel.imagePath);
     }
     [[RTPlayBack shareInstance] savePlayBack:operationQueues];
 }
