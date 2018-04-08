@@ -30,7 +30,7 @@
     __weak typeof(item1)weakItem1=item1;
     item1.operation = ^{
         NSMutableArray *dataArr = [NSMutableArray array];
-        for (NSInteger i=0; i<=10; i++) {
+        for (NSInteger i=0; i<=5; i++) {
             [dataArr addObject:[NSString stringWithFormat:@"%0.1f",i/10.0]];
         }
         NSString *curTitle = dataArr[0];

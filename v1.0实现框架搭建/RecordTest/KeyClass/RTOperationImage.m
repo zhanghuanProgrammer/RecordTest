@@ -95,8 +95,8 @@
     return imageName;
 }
 
-+ (NSString *)saveOperationPlayBackImage:(UIImage *)image compressionQuality:(CGFloat)compressionQuality{
-    NSData *imageData = UIImageJPEGRepresentation(image,compressionQuality);
++ (NSString *)saveOperationPlayBackImage:(UIImage *)image{
+    NSData *imageData = UIImageJPEGRepresentation(image,[RTConfigManager shareInstance].compressionQuality);
     NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomPlayBackImageName]];
     NSString *savePath = [[self playBackImagesPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];

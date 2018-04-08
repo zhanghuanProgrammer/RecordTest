@@ -408,7 +408,7 @@
             RTOperationQueueModel *operationQueue = model.operationModel;
             UIView *targetView = [[RTGetTargetView new] getTargetView:operationQueue.viewId];
             if (targetView) {
-                operationQueue.imagePath = [RTOperationImage saveOperationPlayBackImage:[[RTViewHierarchy new] snap:[targetView targetViewWithOperation:operationQueue] type:operationQueue.type] compressionQuality:0];
+                operationQueue.imagePath = [RTOperationImage saveOperationPlayBackImage:[[RTViewHierarchy new] snap:[targetView targetViewWithOperation:operationQueue] type:operationQueue.type]];
                 if ([targetView runOperation:operationQueue]) {
                     model.runResultType = OperationRunResultTypeRunSuccess;
                     [ZHStatusBarNotification showWithStatus:@"执行成功" dismissAfter:1 styleName:JDStatusBarStyleSuccess];

@@ -7,8 +7,8 @@
 + (NSString *)imagesPlayBackFileSize;
 + (NSString *)imagesFileCount;
 + (NSString *)imagesPlayBackFileCount;
-+ (NSString *)saveOperationImage:(UIImage *)image compressionQuality:(CGFloat)compressionQuality;
-+ (NSString *)saveOperationPlayBackImage:(UIImage *)image compressionQuality:(CGFloat)compressionQuality;
++ (NSString *)saveOperationImage:(UIImage *)image;
++ (NSString *)saveOperationPlayBackImage:(UIImage *)image;
 + (UIImage *)imageWithName:(NSString *)name;
 + (UIImage *)imageWithPlayBackName:(NSString *)name;
 + (NSString *)imagePathWithName:(NSString *)name;

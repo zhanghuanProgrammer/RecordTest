@@ -16,6 +16,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self autoDeleteOverDate];
     self.sortDic = [NSMutableDictionary dictionary];
     [self add0SectionItems];
     
@@ -189,6 +190,31 @@
     }
     [self.sortDic setValue:stamp forKey:result];
     return  result;
+}
+
+
+- (BOOL)isOverDate:(NSString *)stamp{
+    NSTimeInterval timeInterval = [DateTools getCurInterval] - [stamp longLongValue];
+    timeInterval /=(3600*24);
+    if(timeInterval > [RTConfigManager shareInstance].autoDeleteDay){
+        return YES;
+    }
+    return NO;
+}
+
+- (void)autoDeleteOverDate{
+    if ([RTConfigManager shareInstance].isAutoDelete) {
+        NSDictionary *playBacks = [[RTPlayBack shareInstance] playBacks];
+        NSMutableArray *stamps = [NSMutableArray array];
+        for (NSString *stamp in playBacks) {
+            if ([self isOverDate:stamp]) {
+                [stamps addObject:stamp];
+            }
+        }
+        if(stamps.count>0){
+            [[RTPlayBack shareInstance] deletePlayBacks:stamps];
+        }
+    }
 }
 
 @end
