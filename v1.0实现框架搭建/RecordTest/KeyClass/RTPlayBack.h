@@ -10,5 +10,6 @@
 + (RTPlayBack *)shareInstance;
 - (NSMutableDictionary *)playBacks;
 - (void)savePlayBack:(NSArray *)playBackModels;
+- (void)deletePlayBacks:(NSArray *)stamps;
 
 @end

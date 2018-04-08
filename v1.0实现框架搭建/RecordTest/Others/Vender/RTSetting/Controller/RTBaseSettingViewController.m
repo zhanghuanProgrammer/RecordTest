@@ -8,18 +8,17 @@
 
 @implementation RTBaseSettingViewController
 
-- (void)loadView{
-    UITableView* tableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStyleGrouped];
-    tableView.delegate = self;
-    tableView.dataSource = self;
-    self.view = tableView;
-}
-
 - (void)viewDidLoad{
     [super viewDidLoad];
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
     _allGroups = [NSMutableArray array];
+    
+    UITableView* tableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStyleGrouped];
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    [self.view addSubview:tableView];
+    self.tableView = tableView;
 }
 
 #pragma mark - Table view data source
@@ -44,7 +43,6 @@
             weakCell.item.switchBlock(on);
         }
     };
-
     return cell;
 }
 
@@ -81,4 +79,3 @@
 }
 
 @end
-

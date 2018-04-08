@@ -37,8 +37,10 @@
             break;
     }
     self.selectImg.hidden = !dataModel.isShowSelect;
+    self.hintImg.hidden = dataModel.isShowSelect;
     if (dataModel.isShowSelect) {
         self.selectImg.image = dataModel.isSelect ? [UIImage imageNamed:@"RTCommandListSelect"] : [UIImage imageNamed:@"RTCommandListNoSelect"];
+        self.selectImg.backgroundColor = dataModel.isSelect ? [UIColor greenColor] : [UIColor clearColor];
     }
 }
 

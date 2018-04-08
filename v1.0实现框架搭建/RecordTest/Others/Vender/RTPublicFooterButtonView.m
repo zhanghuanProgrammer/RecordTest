@@ -8,7 +8,7 @@
 
 - (UIButton *)button{
     if (!_button) {
-        _button=[[UIButton alloc] initWithFrame:CGRectMake(25, 20, self.width-50,44)];
+        _button=[[UIButton alloc] initWithFrame:CGRectMake(25, (self.height -44)/2.0, self.width-50,44)];
         _button.backgroundColor=RGB(0, 78, 162);
         _button.layer.cornerRadius=3;
         _button.layer.masksToBounds=YES;
@@ -20,7 +20,7 @@
 
 - (UIButton *)leftButton{
     if (!_leftButton) {
-        _leftButton=[[UIButton alloc] initWithFrame:CGRectMake(25, 20, (self.width-50-20)/2.0,44)];
+        _leftButton=[[UIButton alloc] initWithFrame:CGRectMake(25, (self.height -44)/2.0, (self.width-50-20)/2.0,44)];
         _leftButton.backgroundColor=RGB(0, 78, 162);
         _leftButton.layer.cornerRadius=3;
         _leftButton.layer.masksToBounds=YES;
@@ -32,7 +32,7 @@
 
 - (UIButton *)rightButton{
     if (!_rightButton) {
-        _rightButton=[[UIButton alloc] initWithFrame:CGRectMake(self.width/2.0+10, 20, (self.width-50-20)/2.0,44)];
+        _rightButton=[[UIButton alloc] initWithFrame:CGRectMake(self.width/2.0+10, (self.height -44)/2.0, (self.width-50-20)/2.0,44)];
         _rightButton.backgroundColor=RGB(0, 78, 162);
         _rightButton.layer.cornerRadius=3;
         _rightButton.layer.masksToBounds=YES;

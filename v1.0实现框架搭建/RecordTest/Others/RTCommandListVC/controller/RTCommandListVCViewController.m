@@ -8,6 +8,7 @@
 
 @interface RTCommandListVCViewController ()<UITableViewDataSource,UITableViewDelegate>
 @property (nonatomic,assign)BOOL isEdit;
+@property (nonatomic,strong)UIView *headerView;
 @end
 
 @implementation RTCommandListVCViewController
@@ -17,6 +18,19 @@
 		_dataArr = [NSMutableArray array];
 	}
 	return _dataArr;
+}
+
+- (void)setHeaderView:(UIView *)headerView{
+    if (_headerView) {
+        [_headerView removeFromSuperview];
+    }
+    _headerView = headerView;
+    if (headerView) {
+        [self.view addSubview:headerView];
+        self.tableView.contentInset = UIEdgeInsetsMake(headerView.height, 0, 0, 0);
+    }else{
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
 }
 
 - (void)viewDidLoad{
@@ -32,7 +46,7 @@
     [TabBarAndNavagation setLeftBarButtonItemTitle:@"<返回" TintColor:[UIColor blackColor] target:self action:@selector(backAction)];
     [TabBarAndNavagation setRightBarButtonItemTitle:@"批量" TintColor:[UIColor redColor] target:self action:@selector(editAction)];
     if ([RTCommandList shareInstance].isRunOperationQueue) {
-        self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"停止" withTarget:self withSelector:@selector(stopAction)];
+        self.headerView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"停止" withTarget:self withSelector:@selector(stopAction)];
     }
     self.navigationController.navigationBar.translucent = NO;
 }
@@ -122,9 +136,9 @@
         model.isSelect = YES;
     }
     if ([RTCommandList shareInstance].isRunOperationQueue) {
-        self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"删除" withTarget:self withSelector:@selector(delete)];
+        self.headerView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"删除" withTarget:self withSelector:@selector(delete)];
     }else{
-        self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"自动运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
+        self.headerView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"自动运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
     }
     [self.tableView reloadData];
 }
@@ -137,15 +151,15 @@
     }
     if ([RTCommandList shareInstance].isRunOperationQueue) {
         if (self.isEdit) {
-            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"全选" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(allSelect) withRightSelector:@selector(delete)];
+            self.headerView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"全选" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(allSelect) withRightSelector:@selector(delete)];
         }else{
-            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"停止" withTarget:self withSelector:@selector(stopAction)];
+            self.headerView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"停止" withTarget:self withSelector:@selector(stopAction)];
         }
     }else{
         if (self.isEdit) {
-            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"全选" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(allSelect) withRightSelector:@selector(delete)];
+            self.headerView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"全选" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(allSelect) withRightSelector:@selector(delete)];
         }else{
-            self.tableView.tableHeaderView=nil;
+            self.headerView=nil;
         }
     }
     [self.tableView reloadData];
@@ -183,9 +197,9 @@
     if (self.isEdit) {
         model.isSelect = !model.isSelect;
         if ([RTCommandList shareInstance].isRunOperationQueue) {
-            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"删除" withTarget:self withSelector:@selector(delete)];
+            self.headerView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"删除" withTarget:self withSelector:@selector(delete)];
         }else{
-            self.tableView.tableHeaderView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"自动运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
+            self.headerView=[[RTPublicFooterButtonView new]publicFooterTwoButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withLeftTitle:@"自动运行" withRightTitle:@"删除" withTarget:self withLeftSelector:@selector(run) withRightSelector:@selector(delete)];
         }
         [self.tableView reloadData];
     }else{

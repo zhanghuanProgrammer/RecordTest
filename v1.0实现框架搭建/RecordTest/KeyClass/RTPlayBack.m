@@ -29,4 +29,16 @@
     }
 }
 
+- (void)deletePlayBacks:(NSArray *)stamps{
+    if (stamps.count>0) {
+        NSMutableDictionary *playBacks = [self playBacks];
+        for (NSString *stamp in stamps) {
+            if (stamp.length>0) {
+                [playBacks removeObjectForKey:stamp];
+            }
+        }
+        [ZHSaveDataToFMDB insertDataWithData:playBacks WithIdentity:@"RTPlayBack"];
+    }
+}
+
 @end

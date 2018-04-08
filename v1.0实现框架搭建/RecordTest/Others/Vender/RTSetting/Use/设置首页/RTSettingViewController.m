@@ -40,7 +40,7 @@
         [[RTPickerManager shareManger] showPickerViewWithDataArray:dataArr curTitle:curTitle title:@"选择截图压缩率" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
             weakSelf.compressionQuality = [string floatValue];
             weakItem1.detail = [NSString stringWithFormat:@"录制过程屏幕截图的压缩率: %@",string];
-            [(UITableView *)weakSelf.view reloadData];
+            [weakSelf.tableView reloadData];
         } cancelBlock:nil];
     };
     
@@ -48,7 +48,6 @@
     group.header = @"录制测试设置";
     group.items = @[item1];
     [self.allGroups addObject:group];
-    
     
     // 1.2.测试回放设置
     curTitle = @"30天";
@@ -75,7 +74,7 @@
         [[RTPickerManager shareManger] showPickerViewWithDataArray:dataArr curTitle:curTitle title:@"选择截图压缩率" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
             weakItem2.detail = [NSString stringWithFormat:@"%@",string];
             weakSelf.autoDeleteDay = [string integerValue];
-            [(UITableView *)weakSelf.view reloadData];
+            [weakSelf.tableView reloadData];
         } cancelBlock:nil];
     };
     RTSettingGroup *group2 = [[RTSettingGroup alloc] init];

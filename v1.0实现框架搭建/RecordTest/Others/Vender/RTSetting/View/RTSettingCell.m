@@ -58,7 +58,7 @@
     _item = item;
 
     // 设置数据
-    self.imageView.image = [UIImage imageNamed:item.icon];
+    if(item.icon.length>0) self.imageView.image = [UIImage imageNamed:item.icon];
     self.textLabel.text = item.title;
     if (item.titleFontSize > 0) {
         self.textLabel.font = [UIFont fontWithName:self.detailTextLabel.font.fontName size:item.titleFontSize];
@@ -91,31 +91,41 @@
         }
     }
 
-    if (item.type == ZFSettingItemTypeArrow) {
-
-        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        // 用默认的选中样式
-        self.selectionStyle = UITableViewCellSelectionStyleBlue;
-
-    } else if (item.type == ZFSettingItemTypeSwitch) {
-
-        if (_switch == nil) {
-            _switch = [[UISwitch alloc] init];
-            [_switch addTarget:self action:@selector(switchStatusChanged:) forControlEvents:UIControlEventValueChanged];
-        }
-
-        _switch.on = item.on;
-        // 右边显示开关
-        self.accessoryView = _switch;
-        // 禁止选中
+    if (item.isEdit) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-
-    } else {
-
-        // 什么也没有，清空右边显示的view
+        UIImageView *selectImg = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 15, 15)];
+        selectImg.image = item.isSelect ? [UIImage imageNamed:@"RTCommandListSelect"] : [UIImage imageNamed:@"RTCommandListNoSelect"];
+        selectImg.backgroundColor = item.isSelect ? [UIColor greenColor] : [UIColor clearColor];
+        [selectImg cornerRadius];
+        self.accessoryView = selectImg;
+    }else{
         self.accessoryView = nil;
-        // 用默认的选中样式
-        self.selectionStyle = UITableViewCellSelectionStyleBlue;
+        if (item.type == ZFSettingItemTypeArrow) {
+            
+            self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            // 用默认的选中样式
+            self.selectionStyle = UITableViewCellSelectionStyleBlue;
+            
+        } else if (item.type == ZFSettingItemTypeSwitch) {
+            
+            if (_switch == nil) {
+                _switch = [[UISwitch alloc] init];
+                [_switch addTarget:self action:@selector(switchStatusChanged:) forControlEvents:UIControlEventValueChanged];
+            }
+            
+            _switch.on = item.on;
+            // 右边显示开关
+            self.accessoryView = _switch;
+            // 禁止选中
+            self.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+        } else {
+            
+            // 什么也没有，清空右边显示的view
+            self.accessoryView = nil;
+            // 用默认的选中样式
+            self.selectionStyle = UITableViewCellSelectionStyleBlue;
+        }
     }
 }
 

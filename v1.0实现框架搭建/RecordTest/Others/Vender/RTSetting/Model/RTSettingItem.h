@@ -1,5 +1,6 @@
 
 #import <UIKit/UIKit.h>
+@class RTIdentify;
 
 typedef enum : NSInteger{
     ZFSettingItemTypeNone, // 什么也没有
@@ -32,6 +33,11 @@ typedef enum : NSInteger{
 
 @property (nonatomic,assign)BOOL on;
 
+@property (nonatomic,assign)BOOL isEdit;
+@property (nonatomic,assign)BOOL isSelect;
+
+@property (nonatomic,strong)RTIdentify *identify;
+@property (nonatomic,copy)NSString *stamp;
 /** cell上开关的操作事件 */
 @property (nonatomic, copy) void (^switchBlock)(BOOL on) ;
 
