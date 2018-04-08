@@ -20,9 +20,12 @@ typedef void(^FunctionClickAction)(UIButton *);
 
 /*****          数据源接口          *****/
 
+@property (nonatomic ,assign) BOOL showImage;
+
 /** 子悬浮球 图片名字 数组  */
 @property (nonatomic, strong) NSArray *imageNameGroup;
-
+/** 子悬浮球 图片名字 数组  */
+@property (nonatomic, strong) NSArray *titleGroup;
 
 
 
@@ -57,5 +60,6 @@ typedef void(^FunctionClickAction)(UIButton *);
 - (void)setImage:(NSString *)imageName index:(NSInteger)index;
 - (void)setEnable:(BOOL)enable index:(NSInteger)index hide:(BOOL)hide;
 - (void)setBadge:(NSString *)badge index:(NSInteger)index;
+- (void)setTitle:(NSString *)title index:(NSInteger)index;
 
 @end

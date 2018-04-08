@@ -168,18 +168,21 @@
 - (void)setIsRecord:(BOOL)isRecord{
     _isRecord = isRecord;
     if (!isRecord) {
-        [[SuspendBall shareInstance]setImage:@"SuspendBall_startrecord" index:3];
+        if([SuspendBall shareInstance].showImage) [[SuspendBall shareInstance] setImage:@"SuspendBall_startrecord" index:3];
+        else [[SuspendBall shareInstance] setTitle:@"开始录制" index:3];
         [self.operationQueue removeAllObjects];
         [[RTCommandList shareInstance] initData];
         [RTCommandList shareInstance].alpha = 1;
         [SuspendBall shareInstance].showFunction = NO;
         [[SuspendBall shareInstance] suspendBallShow];
     }else{
-        [[SuspendBall shareInstance]setImage:@"SuspendBall_stoprecord" index:3];
+        if([SuspendBall shareInstance].showImage) [[SuspendBall shareInstance] setImage:@"SuspendBall_stoprecord" index:3];
+        else [[SuspendBall shareInstance] setTitle:@"停止录制" index:3];
         [self.operationQueue removeAllObjects];
         [RTCommandList shareInstance].alpha = 0;
         [[SuspendBall shareInstance] suspendBallShow];
-        [[SuspendBall shareInstance]setHomeImage:@"SuspendBall_stoprecord"];
+        if([SuspendBall shareInstance].showImage) [[SuspendBall shareInstance] setHomeImage:@"SuspendBall_stoprecord"];
+        else [[SuspendBall shareInstance] setTitle:@"停止录制" forState:0];
     }
 }
 

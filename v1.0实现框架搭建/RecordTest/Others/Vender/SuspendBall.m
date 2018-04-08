@@ -140,7 +140,13 @@ static CGFloat btnSmallImageWidth = 30;
         self.buttons = [NSMutableArray array];
         self.layer.cornerRadius = fullButtonWidth / 2;
         self.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:0.6];
-        [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_home"] wantSize:CGSizeMake(btnBigImageWidth, btnBigImageWidth)] forState:0];
+        self.titleLabel.font = [UIFont systemFontOfSize:12];
+        if(self.showImage){
+            [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_home"] wantSize:CGSizeMake(btnBigImageWidth, btnBigImageWidth)] forState:0];
+        }else{
+            [self setTitle:@"展开" forState:0];
+        }
+        
         [self addTarget:self action:@selector(suspendBallShow) forControlEvents:UIControlEventTouchUpInside];
 
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveSuspend:)];
@@ -156,13 +162,13 @@ static CGFloat btnSmallImageWidth = 30;
     suspendBall.frame = ballFrame;
     suspendBall.delegate = delegate;
     suspendBall.imageNameGroup = imageArray;
+    suspendBall.showImage = YES;
     return suspendBall;
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
 }
 
 - (void)didMoveToSuperview
@@ -262,6 +268,24 @@ static CGFloat btnSmallImageWidth = 30;
     }
 }
 
+- (void)setTitleGroup:(NSArray *)titleGroup{
+    _titleGroup = titleGroup;
+    self.showImage = NO;
+    for (NSInteger i=0; i<titleGroup.count; i++) {
+        NSString *title = titleGroup[i];
+        [self setTitle:title index:i];
+    }
+}
+
+- (void)setTitle:(NSString *)title index:(NSInteger)index{
+    index ++;//因为第一个也算进去了
+    if (self.buttons.count > index) {
+        UIButton *functionBtn = self.buttons[index];
+        [functionBtn setTitle:title forState:(UIControlStateNormal)];
+        [functionBtn setImage:nil forState:UIControlStateNormal];
+    }
+}
+
 - (void)suspendBallShow
 {
     [self addAnimate:_showFunction];
@@ -273,7 +297,11 @@ static CGFloat btnSmallImageWidth = 30;
             return;
         }
         self.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.6];
-        [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_back"] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:0];
+        if(self.showImage){
+            [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_back"] wantSize:CGSizeMake(btnBigImageWidth, btnBigImageWidth)] forState:0];
+        }else{
+            [self setTitle:@"收拢" forState:0];
+        }
         _showFunction = YES;
         
         [self functionMenuShow];
@@ -285,7 +313,11 @@ static CGFloat btnSmallImageWidth = 30;
         
     } else if (_showFunction == YES) { //full state
         self.backgroundColor = _superBallBackColor;
-        [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_home"] wantSize:CGSizeMake(btnBigImageWidth, btnBigImageWidth)] forState:0];
+        if(self.showImage){
+            [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_home"] wantSize:CGSizeMake(btnBigImageWidth, btnBigImageWidth)] forState:0];
+        }else{
+            [self setTitle:@"展开" forState:0];
+        }
         _showFunction = NO;
         
         [self.functionMenu removeFromSuperview];
@@ -338,7 +370,6 @@ static CGFloat btnSmallImageWidth = 30;
     } else if (myCenterX >= KScreenWidth / 2) { //屏幕的右侧
         [self.superview addConstraint:[NSLayoutConstraint constraintWithItem:self.functionMenu attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
     }
-
 }
 
 //判断悬浮球拖动结束时在屏幕的哪侧
@@ -381,7 +412,14 @@ static CGFloat btnSmallImageWidth = 30;
         for (int i = 0; i < self.imageNameGroup.count; i++) {
             UIButton *functionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             functionBtn.isNoNeedKVO = functionBtn.isNoNeedSnap = YES;
-            [functionBtn setImage:[self resizeImage:[UIImage imageNamed:self.imageNameGroup[i]] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:UIControlStateNormal];
+            functionBtn.titleLabel.font = [UIFont systemFontOfSize:10];
+            if (self.showImage) {
+                [functionBtn setImage:[self resizeImage:[UIImage imageNamed:self.imageNameGroup[i]] wantSize:CGSizeMake(btnSmallImageWidth, btnSmallImageWidth)] forState:UIControlStateNormal];
+            }else{
+                if (self.titleGroup.count>i) {
+                    [functionBtn setTitle:self.titleGroup[i] forState:0];
+                }
+            }
             
             functionBtn.lhz_width = fullButtonWidth;
             functionBtn.lhz_height = fullButtonWidth;

@@ -24,6 +24,7 @@
 
 - (void)startInteraction{
     SuspendBall *suspendBall = [SuspendBall suspendBallWithFrame:CGRectMake(0, 64, 50, 50) delegate:self subBallImageArray:@[@"SuspendBall_down",@"SuspendBall_monkey",@"SuspendBall_list",@"SuspendBall_startrecord",@"SuspendBall_set"]];
+    suspendBall.titleGroup = @[@"下一步",@"自动测试",@"列表",@"开始录制",@"设置"];
     [[UIApplication sharedApplication].keyWindow addSubview:suspendBall];
     suspendBall.isNoNeedKVO = suspendBall.isNoNeedSnap = YES;
     RTCommandList *list = [[RTCommandList alloc]initInKeyWindowWithFrame:CGRectMake(0, suspendBall.maxY, 200, 12*10)];
