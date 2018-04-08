@@ -38,7 +38,23 @@
             }
         }
         [ZHSaveDataToFMDB insertDataWithData:playBacks WithIdentity:@"RTPlayBack"];
+        [RTOperationImage deleteOverduePlayBackImage];
     }
+}
+
++ (NSArray *)allPlayBackModels{
+    NSMutableArray *allPlayBackModels = [NSMutableArray array];
+    NSMutableDictionary *playBacks = [[RTPlayBack shareInstance] playBacks];
+    NSArray *values = [playBacks allValues];
+    for (NSDictionary *value in values) {
+        if (value.count>0) {
+            NSArray *models = [value allValues][0];
+            if ([models isKindOfClass:[NSArray class]] && models.count>0) {
+                [allPlayBackModels addObjectsFromArray:models];
+            }
+        }
+    }
+    return allPlayBackModels;
 }
 
 @end

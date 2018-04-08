@@ -162,21 +162,21 @@
 }
 
 + (void)deleteOverduePlayBackImage{
-//    NSString *director = [self playBackImagesPath];
-//    NSArray *subPathFilesArrInDirector = [self subPathFileArrInDirector:director];
-//    NSMutableArray *allImages = [NSMutableArray array];
-//    NSArray *operationQueueModels = [RTOperationQueue alloperationQueueModels];
-//    for (RTOperationQueueModel *model in operationQueueModels) {
-//        if (model.imagePath.length>0) {
-//            [allImages addObject:model.imagePath];
-//        }
-//    }
-//    for (NSString *filename in subPathFilesArrInDirector) {
-//        if (![allImages containsObject:filename]) {
-//            NSString *deletePath = [director stringByAppendingPathComponent:filename];
-//            [[NSFileManager defaultManager] removeItemAtPath:deletePath error:nil];
-//        }
-//    }
+    NSString *director = [self playBackImagesPath];
+    NSArray *subPathFilesArrInDirector = [self subPathFileArrInDirector:director];
+    NSMutableArray *allImages = [NSMutableArray array];
+    NSArray *allPlayBackModels = [RTPlayBack allPlayBackModels];
+    for (RTOperationQueueModel *model in allPlayBackModels) {
+        if (model.imagePath.length>0) {
+            [allImages addObject:model.imagePath];
+        }
+    }
+    for (NSString *filename in subPathFilesArrInDirector) {
+        if (![allImages containsObject:filename]) {
+            NSString *deletePath = [director stringByAppendingPathComponent:filename];
+            [[NSFileManager defaultManager] removeItemAtPath:deletePath error:nil];
+        }
+    }
 }
 
 + (NSArray *)subPathFileArrInDirector:(NSString *)DirectorPath{
