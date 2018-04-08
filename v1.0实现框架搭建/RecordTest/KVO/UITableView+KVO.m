@@ -61,6 +61,7 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[model.parameters[1] integerValue] inSection:[model.parameters[0] integerValue]];
         UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
         if (cell) {
+            if (NeedSimilationView) [SimulationView addTouchSimulationView:cell.centerInWindow afterDismiss:1];
             return cell;
         }
     }

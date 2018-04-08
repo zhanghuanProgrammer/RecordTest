@@ -64,6 +64,7 @@
         NSInteger component = [model.parameters[1] integerValue];
         UIView *view = [self viewForRow:row forComponent:component];
         if (view) {
+            if (NeedSimilationView) [SimulationView addTouchSimulationView:view.centerInWindow afterDismiss:1];
             return view;
         }
     }

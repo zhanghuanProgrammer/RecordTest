@@ -196,7 +196,6 @@
         
         self.center = CGPointMake(self.center.x + offsetX, self.center.y + offsetY);
         
-        
         //设置自身移动不超过边界
         CGRect superviewFrame = self.superview.frame;
         CGRect frame = self.frame;
@@ -407,7 +406,7 @@
         if (self.dataArr.count > _curRow) {
             RTCommandListVCCellModel *model = self.dataArr[_curRow];
             RTOperationQueueModel *operationQueue = model.operationModel;
-            UIView *targetView = [[RTGetTargetView new]getTargetView:operationQueue.viewId];
+            UIView *targetView = [[RTGetTargetView new] getTargetView:operationQueue.viewId];
             if (targetView) {
                 operationQueue.imagePath = [RTOperationImage saveOperationPlayBackImage:[[RTViewHierarchy new] snap:[targetView targetViewWithOperation:operationQueue] type:operationQueue.type] compressionQuality:0];
                 if ([targetView runOperation:operationQueue]) {
@@ -466,6 +465,7 @@
     NSMutableArray *operationQueues = [NSMutableArray arrayWithCapacity:self.dataArr.count];
     for (RTCommandListVCCellModel *model in self.dataArr) {
         [operationQueues addObject:model.operationModel];
+        NSLog(@"imagePath = %@",model.operationModel.imagePath);
     }
     [[RTPlayBack shareInstance] savePlayBack:operationQueues];
 }

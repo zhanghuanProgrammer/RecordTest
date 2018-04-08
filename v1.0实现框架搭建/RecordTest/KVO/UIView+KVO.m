@@ -78,6 +78,7 @@
 }
 
 - (UIView *)targetViewWithOperation:(RTOperationQueueModel *)model{
+    if (NeedSimilationView) [SimulationView addTouchSimulationView:self.centerInWindow afterDismiss:1];
     return self;
 }
 

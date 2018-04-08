@@ -22,6 +22,7 @@
 #import "RTAutoRun.h"
 #import "RTPlayBack.h"
 #import "RTConfigManager.h"
+#import "SimulationView.h"
 
 #define Run 1
 
@@ -37,3 +38,4 @@
 #define KVO_collectionView_didSelectRowAtIndexPath 1
 
 #define KVO_Super 1
+#define NeedSimilationView 0
