@@ -371,8 +371,9 @@
         [[SuspendBall shareInstance] setEnable:YES index:3 hide:NO];
         [[SuspendBall shareInstance] setEnable:YES index:4 hide:NO];
         if ([RTConfigManager shareInstance].isRecoderVideoPlayBack) {
+            BOOL shouldSave = _curRow>0;
             [[RTScreenRecorder sharedInstance] stopRecordingWithCompletion:^(NSString *videoPath) {
-                if (_curRow > 0) {
+                if (shouldSave) {
                     [[RTRecordVideo shareInstance] saveVideoPlayBackForStamp:[NSString stringWithFormat:@"%lld",[RTPlayBack shareInstance].stamp] videoPath:videoPath];
                 }
             }];
@@ -381,6 +382,7 @@
 }
 
 - (void)setOperationQueue:(RTIdentify *)identify{
+    [RTPlayBack shareInstance].stamp = 0;
     self.isRunOperationQueue = YES;
     self.operationQueueIdentify = [identify copyNew];
     self.curCommand.text = [NSString stringWithFormat:@"正在执行:%@",[identify debugDescription]];
@@ -410,8 +412,10 @@
     isAutoStatic = isAuto;
     if (self.isRunOperationQueue) {
         if (_curRow == 0) {
-            [RTPlayBack shareInstance].stamp = [DateTools getCurInterval];
-            [RTPlayBack shareInstance].identify = [self.operationQueueIdentify copyNew];
+            if ([RTPlayBack shareInstance].stamp == 0) {
+                [RTPlayBack shareInstance].stamp = [DateTools getCurInterval];
+                [RTPlayBack shareInstance].identify = [self.operationQueueIdentify copyNew];
+            }
         }
         if (self.dataArr.count > _curRow) {
             RTCommandListVCCellModel *model = self.dataArr[_curRow];

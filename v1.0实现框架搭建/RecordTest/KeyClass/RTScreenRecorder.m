@@ -40,43 +40,58 @@
     static RTScreenRecorder* sharedInstance;
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
+        // app从后台进入前台都会调用这个方法
+        [[NSNotificationCenter defaultCenter] addObserver:sharedInstance selector:@selector(applicationBecomeActive) name:UIApplicationWillEnterForegroundNotification object:nil];
+        // 添加检测app进入后台的观察者
+        [[NSNotificationCenter defaultCenter] addObserver:sharedInstance selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];
     });
     return sharedInstance;
 }
 
-- (instancetype)init{
-    self = [super init];
-    if (self) {
-        _viewSize = [UIApplication sharedApplication].delegate.window.bounds.size;
-        _scale = [UIScreen mainScreen].scale;
-        if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) && _scale > 1) {
-            _scale = 1.0;
-        }
-        _isRecording = NO;
-
-        _append_pixelBuffer_queue = dispatch_queue_create("RTScreenRecorder.append_queue", DISPATCH_QUEUE_SERIAL);
-        _render_queue = dispatch_queue_create("RTScreenRecorder.render_queue", DISPATCH_QUEUE_SERIAL);
-        dispatch_set_target_queue(_render_queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
-        _frameRenderingSemaphore = dispatch_semaphore_create(1);
-        _pixelAppendSemaphore = dispatch_semaphore_create(1);
-        
-        NSInteger compression = 0;
-        if ([RTOperationQueue shareInstance].isRecord) {
-            compression = [RTConfigManager shareInstance].compressionQualityRecoderVideo + 1;
-        }else if([RTCommandList shareInstance].isRunOperationQueue){
-            compression = [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack + 1;
-        }
-        if(compression <= 1)compression = 1;
-        if(compression > 4)compression = 4;
-        
-        _fps = 20 + compression*10;
+- (void)applicationBecomeActive{
+    if (self.isPaused) {
+        [self resumeRecording];
+        NSLog(@"%@",@"app从后台进入前台");
     }
-    return self;
+}
+
+- (void)applicationEnterBackground{
+    if (self.isRecording) {
+        [self pauseRecording];
+        NSLog(@"%@",@"app进入后台");
+    }
+}
+
+- (void)initData{
+    _viewSize = [UIApplication sharedApplication].delegate.window.bounds.size;
+    _scale = [UIScreen mainScreen].scale;
+    if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) && _scale > 1) {
+        _scale = 1.0;
+    }
+    _isRecording = NO;
+    
+    _append_pixelBuffer_queue = dispatch_queue_create("RTScreenRecorder.append_queue", DISPATCH_QUEUE_SERIAL);
+    _render_queue = dispatch_queue_create("RTScreenRecorder.render_queue", DISPATCH_QUEUE_SERIAL);
+    dispatch_set_target_queue(_render_queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
+    _frameRenderingSemaphore = dispatch_semaphore_create(1);
+    _pixelAppendSemaphore = dispatch_semaphore_create(1);
+    
+    NSInteger compression = 0;
+    if ([RTOperationQueue shareInstance].isRecord) {
+        compression = [RTConfigManager shareInstance].compressionQualityRecoderVideo + 1;
+    }else if([RTCommandList shareInstance].isRunOperationQueue){
+        compression = [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack + 1;
+    }
+    if(compression <= 1)compression = 1;
+    if(compression > 4)compression = 4;
+    
+    _fps = 20 + compression*10;
 }
 
 - (BOOL)startRecording{
     if (!_isRecording) {
         NSLog(@"%@",@"视频录制开始");
+        [self initData];
         [self setUpWriter];
         _isRecording = (_videoWriter.status == AVAssetWriterStatusWriting);
         _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(writeVideoFrame)];
