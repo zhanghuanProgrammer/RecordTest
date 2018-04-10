@@ -23,6 +23,7 @@
 #import "RTPlayBack.h"
 #import "RTConfigManager.h"
 #import "SimulationView.h"
+#import "RTScreenRecorder.h"
 
 #define Run 1
 

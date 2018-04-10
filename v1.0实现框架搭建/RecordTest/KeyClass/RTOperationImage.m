@@ -86,8 +86,8 @@
     return fileName;
 }
 
-+ (NSString *)saveOperationImage:(UIImage *)image compressionQuality:(CGFloat)compressionQuality{
-    NSData *imageData = UIImageJPEGRepresentation(image,compressionQuality);
++ (NSString *)saveOperationImage:(UIImage *)image{
+    NSData *imageData = UIImageJPEGRepresentation(image,[RTConfigManager shareInstance].compressionQuality);
     NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomImageName]];
     NSString *savePath = [[self imagesPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];

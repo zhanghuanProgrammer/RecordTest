@@ -54,11 +54,12 @@
             }
         }break;
         case 1:{
-            [self hideAll];
-            [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"开始Monkey测试!"];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[AutoTestProject shareInstance] autoTest];
-            });
+            [[RTScreenRecorder sharedInstance] startRecording];
+//            [self hideAll];
+//            [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"开始Monkey测试!"];
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [[AutoTestProject shareInstance] autoTest];
+//            });
 //            if ([RTCommandList shareInstance].isRunOperationQueue) {
 //                [[RTCommandList shareInstance] nextStep];
 //            }else{
@@ -69,7 +70,12 @@
             [RTCommandList shareInstance].hidden = ![RTCommandList shareInstance].hidden;
         }break;
         case 3:{
-            [RTOperationQueue startOrStopRecord];//开始录制 结束录制
+            if ([RTScreenRecorder sharedInstance].isRecording) {
+                [[RTScreenRecorder sharedInstance] stopRecordingWithCompletion:^{
+                    
+                }];
+            }
+//            [RTOperationQueue startOrStopRecord];//开始录制 结束录制
         }break;
         case 4:{
             [self hideAll];

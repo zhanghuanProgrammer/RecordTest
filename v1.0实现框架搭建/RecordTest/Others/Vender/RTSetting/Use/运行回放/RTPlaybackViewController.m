@@ -196,6 +196,9 @@
 - (BOOL)isOverDate:(NSString *)stamp{
     NSTimeInterval timeInterval = [DateTools getCurInterval] - [stamp longLongValue];
     timeInterval /=(3600*24);
+    if ([RTConfigManager shareInstance].autoDeleteDay < 0) {
+        return NO;
+    }
     if(timeInterval > [RTConfigManager shareInstance].autoDeleteDay){
         return YES;
     }

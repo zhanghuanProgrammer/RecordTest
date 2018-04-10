@@ -104,4 +104,5 @@
 - (void)setIsAutoDelete:(BOOL)isAutoDelete{
     [RTConfigManager shareInstance].isAutoDelete = isAutoDelete;
 }
+
 @end
