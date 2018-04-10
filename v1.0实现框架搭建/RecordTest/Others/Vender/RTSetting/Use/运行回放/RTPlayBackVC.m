@@ -2,6 +2,11 @@
 #import "RTPlayBackVC.h"
 #import "RecordTestHeader.h"
 #import "RTPhotosViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
+
+@interface RTPlayBackVC ()
+@property (nonatomic,strong)MPMoviePlayerViewController *moviePlayerController;
+@end
 
 @implementation RTPlayBackVC
 
@@ -18,7 +23,14 @@
 }
 
 - (void)video{
-    
+    NSURL *URL = [[NSURL alloc] initFileURLWithPath:[RTOperationImage videoPlayBackPathWithName:self.videoPath]];
+    _moviePlayerController = [[MPMoviePlayerViewController alloc] initWithContentURL:URL];
+    [self presentMoviePlayerViewControllerAnimated:_moviePlayerController];
+    _moviePlayerController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [_moviePlayerController.moviePlayer setFullscreen:YES animated:YES];
+    [_moviePlayerController.moviePlayer setControlStyle:MPMovieControlStyleEmbedded];
+    _moviePlayerController.moviePlayer.movieSourceType=MPMovieSourceTypeFile;
+    [_moviePlayerController.moviePlayer prepareToPlay];
 }
 
 #pragma mark 添加第0组的模型数据
