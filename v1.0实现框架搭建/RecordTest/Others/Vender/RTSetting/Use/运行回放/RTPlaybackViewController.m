@@ -134,6 +134,7 @@
                     }else{
                         RTPlayBackVC *playBackVC = [RTPlayBackVC new];
                         playBackVC.identify = identify;
+                        playBackVC.stamp = stamp;
                         playBackVC.playBackModels = playBackModels;
                         [self.navigationController pushViewController:playBackVC animated:YES];
                     }

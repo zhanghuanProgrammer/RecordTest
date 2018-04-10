@@ -24,6 +24,7 @@
 #import "RTConfigManager.h"
 #import "SimulationView.h"
 #import "RTScreenRecorder.h"
+#import "RTRecordVideo.h"
 
 #define Run 1
 

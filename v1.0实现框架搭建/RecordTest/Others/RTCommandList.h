@@ -44,6 +44,5 @@
 - (void)setOperationQueue:(RTIdentify *)identify;
 
 - (BOOL)runStep:(BOOL)isAuto;
-- (BOOL)nextStep;
 
 @end

@@ -5,6 +5,7 @@
 
 @interface RTOperationsVC ()
 @property (nonatomic,strong)NSArray *operationQueueModels;
+@property (nonatomic,copy)NSString *videoPath;
 @end
 
 @implementation RTOperationsVC
@@ -14,6 +15,15 @@
     [super viewDidLoad];
     self.title = [self.identify debugDescription];
     [self add0SectionItems];
+    
+    self.videoPath = [[RTRecordVideo shareInstance] videos][[self.identify description]];
+    if (self.videoPath.length>0) {
+        [TabBarAndNavagation setRightBarButtonItemTitle:@"视频" TintColor:[UIColor redColor] target:self action:@selector(video)];
+    }
+}
+
+- (void)video{
+    
 }
 
 #pragma mark 添加第0组的模型数据

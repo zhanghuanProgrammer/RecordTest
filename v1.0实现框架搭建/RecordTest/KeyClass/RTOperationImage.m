@@ -11,9 +11,17 @@
     if (![[NSFileManager defaultManager] fileExistsAtPath:imagesPath]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:imagesPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    NSString *imagesPlaBackPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtPlayBackImagesPath"];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:imagesPlaBackPath]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:imagesPlaBackPath withIntermediateDirectories:YES attributes:nil error:nil];
+    NSString *imagesPlayBackPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtPlayBackImagesPath"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:imagesPlayBackPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:imagesPlayBackPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *videoPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtVideoPath"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:videoPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:videoPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *videoPlayBackPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtVideoPlayBackPath"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:videoPlayBackPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:videoPlayBackPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
 }
 
@@ -30,11 +38,25 @@
     NSString *imagesPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtPlayBackImagesPath"];
     return imagesPath;
 }
++ (NSString *)videoPath{
+    NSString *videoPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtVideoPath"];
+    return videoPath;
+}
++ (NSString *)videoPlayBackPath{
+    NSString *videoPlaBackPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtVideoPlayBackPath"];
+    return videoPlaBackPath;
+}
 + (NSString *)imagesFileSize{
     return [ZHFileManager fileSizeString:[self imagesPath]];
 }
 + (NSString *)imagesPlayBackFileSize{
     return [ZHFileManager fileSizeString:[self playBackImagesPath]];
+}
++ (NSString *)videoFileSize{
+    return [ZHFileManager fileSizeString:[self videoPath]];
+}
++ (NSString *)videoPlayBackFileSize{
+    return [ZHFileManager fileSizeString:[self videoPlayBackPath]];
 }
 + (NSString *)imagesFileCount{
     NSInteger count = [ZHFileManager subPathFileArrInDirector:[self imagesPath] hasPathExtension:@[@".png",@".jpg"]].count;
@@ -44,7 +66,14 @@
     NSInteger count = [ZHFileManager subPathFileArrInDirector:[self playBackImagesPath] hasPathExtension:@[@".png",@".jpg"]].count;
     return [NSString stringWithFormat:@"%zd",count];
 }
-
++ (NSString *)videoFileCount{
+    NSInteger count = [ZHFileManager subPathFileArrInDirector:[self videoPath] hasPathExtension:@[@".mp4"]].count;
+    return [NSString stringWithFormat:@"%zd",count];
+}
++ (NSString *)videoPlayBackFileCount{
+    NSInteger count = [ZHFileManager subPathFileArrInDirector:[self videoPlayBackPath] hasPathExtension:@[@".mp4"]].count;
+    return [NSString stringWithFormat:@"%zd",count];
+}
 + (BOOL)isExsitImageName:(NSString *)imageName{
     NSString *path = [[self imagesPath] stringByAppendingPathComponent:imageName];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -54,6 +83,20 @@
 }
 + (BOOL)isExsitPlayBackImageName:(NSString *)imageName{
     NSString *path = [[self playBackImagesPath] stringByAppendingPathComponent:imageName];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return YES;
+    }
+    return NO;
+}
++ (BOOL)isExsitVideo:(NSString *)video{
+    NSString *path = [[self videoPath] stringByAppendingPathComponent:video];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return YES;
+    }
+    return NO;
+}
++ (BOOL)isExsitPlayBackVideo:(NSString *)video{
+    NSString *path = [[self videoPlayBackPath] stringByAppendingPathComponent:video];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         return YES;
     }
@@ -73,6 +116,20 @@
         imageName = [self getCharacterFileName];
     }
     return imageName;
+}
++ (NSString *)getRandomVideoName{
+    NSString *videoName = [self getCharacterFileName];
+    while ([self isExsitVideo:videoName]) {
+        videoName = [self getCharacterFileName];
+    }
+    return videoName;
+}
++ (NSString *)getRandomVideoPlayBackName{
+    NSString *videoName = [self getCharacterFileName];
+    while ([self isExsitPlayBackVideo:videoName]) {
+        videoName = [self getCharacterFileName];
+    }
+    return videoName;
 }
 
 + (NSString *)getCharacterFileName{
@@ -105,6 +162,21 @@
     return imageName;
 }
 
++ (NSString *)saveVideo:(NSString *)video{
+    NSString *videoName=[NSString stringWithFormat:@"%@.mp4",[self getRandomVideoName]];
+    NSString *savePath = [[self videoPath] stringByAppendingPathComponent:videoName];
+    [[NSFileManager defaultManager] copyItemAtPath:video toPath:savePath error:nil];
+    NSLog(@"录制视频路径:%@",savePath);
+    return videoName;
+}
++ (NSString *)savePlayBackVideo:(NSString *)video{
+    NSString *videoName=[NSString stringWithFormat:@"%@.mp4",[self getRandomVideoPlayBackName]];
+    NSString *savePath = [[self videoPlayBackPath] stringByAppendingPathComponent:videoName];
+    [[NSFileManager defaultManager] copyItemAtPath:video toPath:savePath error:nil];
+    NSLog(@"运行回放视频路径:%@",savePath);
+    return videoName;
+}
+
 + (UIImage *)imageWithName:(NSString *)name{
     NSString *path = [[self imagesPath] stringByAppendingPathComponent:name];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -129,6 +201,20 @@
     return [[self playBackImagesPath] stringByAppendingPathComponent:name];
 }
 
++ (NSString *)videoPathWithName:(NSString *)name{
+    NSString *path = [[self videoPath] stringByAppendingPathComponent:name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return path;
+    }
+    return @"";
+}
++ (NSString *)videoPlayBackPathWithName:(NSString *)name{
+    NSString *path = [[self videoPlayBackPath] stringByAppendingPathComponent:name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return path;
+    }
+    return @"";
+}
 + (BOOL)isExsitName:(NSString *)name{
     NSString *path = [[self imagesPath] stringByAppendingPathComponent:name];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -143,6 +229,21 @@
     }
     return NO;
 }
++ (BOOL)isExsitVideoName:(NSString *)name{
+    NSString *path = [[self videoPath] stringByAppendingPathComponent:name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return YES;
+    }
+    return NO;
+}
++ (BOOL)isExsitPlayBackVideoName:(NSString *)name{
+    NSString *path = [[self videoPlayBackPath] stringByAppendingPathComponent:name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return YES;
+    }
+    return NO;
+}
+
 + (void)deleteOverdueImage{
     NSString *director = [self imagesPath];
     NSArray *subPathFilesArrInDirector = [self subPathFileArrInDirector:director];
@@ -173,6 +274,30 @@
     }
     for (NSString *filename in subPathFilesArrInDirector) {
         if (![allImages containsObject:filename]) {
+            NSString *deletePath = [director stringByAppendingPathComponent:filename];
+            [[NSFileManager defaultManager] removeItemAtPath:deletePath error:nil];
+        }
+    }
+}
+
++ (void)deleteOverdueVideo{
+    NSString *director = [self videoPath];
+    NSArray *subPathFilesArrInDirector = [self subPathFileArrInDirector:director];
+    NSArray *allVideos = [[[RTRecordVideo shareInstance] videos] allValues];
+    for (NSString *filename in subPathFilesArrInDirector) {
+        if (![allVideos containsObject:filename]) {
+            NSString *deletePath = [director stringByAppendingPathComponent:filename];
+            [[NSFileManager defaultManager] removeItemAtPath:deletePath error:nil];
+        }
+    }
+}
+
++ (void)deleteOverduePlayBackVideo{
+    NSString *director = [self videoPlayBackPath];
+    NSArray *subPathFilesArrInDirector = [self subPathFileArrInDirector:director];
+    NSArray *allVideos = [[[RTRecordVideo shareInstance] videosPlayBacks] allValues];
+    for (NSString *filename in subPathFilesArrInDirector) {
+        if (![allVideos containsObject:filename]) {
             NSString *deletePath = [director stringByAppendingPathComponent:filename];
             [[NSFileManager defaultManager] removeItemAtPath:deletePath error:nil];
         }

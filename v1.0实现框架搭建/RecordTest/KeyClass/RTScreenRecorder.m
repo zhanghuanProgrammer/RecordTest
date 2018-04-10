@@ -4,6 +4,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
+#import "RecordTestHeader.h"
 
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -58,20 +59,24 @@
         dispatch_set_target_queue(_render_queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
         _frameRenderingSemaphore = dispatch_semaphore_create(1);
         _pixelAppendSemaphore = dispatch_semaphore_create(1);
-        _fps = 60;
+        
+        NSInteger compression = 0;
+        if ([RTOperationQueue shareInstance].isRecord) {
+            compression = [RTConfigManager shareInstance].compressionQualityRecoderVideo + 1;
+        }else if([RTCommandList shareInstance].isRunOperationQueue){
+            compression = [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack + 1;
+        }
+        if(compression <= 1)compression = 1;
+        if(compression > 4)compression = 4;
+        
+        _fps = 20 + compression*10;
     }
     return self;
 }
 
-#pragma mark - public
-
-- (void)setVideoURL:(NSURL*)videoURL{
-    NSAssert(!_isRecording, @"videoURL can not be changed whilst recording is in progress");
-    _videoURL = videoURL;
-}
-
 - (BOOL)startRecording{
     if (!_isRecording) {
+        NSLog(@"%@",@"视频录制开始");
         [self setUpWriter];
         _isRecording = (_videoWriter.status == AVAssetWriterStatusWriting);
         _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(writeVideoFrame)];
@@ -95,6 +100,7 @@
 - (void)stopRecordingWithCompletion:(VideoCompletionBlock)completionBlock;{
     if (_isRecording) {
         _isRecording = NO;
+        NSLog(@"%@",@"视频录制结束");
         [_displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         [self completeRecordingSession:completionBlock];
         self.pauseResumeTimeRanges = nil;
@@ -123,11 +129,19 @@
     CVPixelBufferPoolCreate(NULL, NULL, (__bridge CFDictionaryRef)(bufferAttributes), &_outputBufferPool);
 
     NSError* error = nil;
-    _videoWriter = [[AVAssetWriter alloc] initWithURL:self.videoURL ?: [self tempFileURL] fileType:AVFileTypeQuickTimeMovie error:&error];
+    _videoWriter = [[AVAssetWriter alloc] initWithURL: [self tempFileURL] fileType:AVFileTypeQuickTimeMovie error:&error];
     NSParameterAssert(_videoWriter);
 
     NSInteger pixelNumber = _viewSize.width * _viewSize.height * _scale;
-    NSDictionary* videoCompression = @{ AVVideoAverageBitRateKey : @(pixelNumber * 2) };
+    
+    NSInteger compression = 0;
+    if ([RTOperationQueue shareInstance].isRecord) {
+        compression = [RTConfigManager shareInstance].compressionQualityRecoderVideo * 3;
+    }else if([RTCommandList shareInstance].isRunOperationQueue){
+        compression = [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack * 3;
+    }
+    if(compression<=1)compression = 1;
+    NSDictionary* videoCompression = @{ AVVideoAverageBitRateKey : @(pixelNumber * compression) };
 
     NSDictionary* videoSettings = @{ AVVideoCodecKey : AVVideoCodecH264,
         AVVideoWidthKey : [NSNumber numberWithInt:_viewSize.width * _scale],
@@ -183,31 +197,29 @@
     }
 }
 
-- (void)completeRecordingSession:(VideoCompletionBlock)completionBlock;{
+- (void)completeRecordingSession:(VideoCompletionBlock)completionBlock{
     dispatch_async(_render_queue, ^{
         dispatch_sync(_append_pixelBuffer_queue, ^{
             [_videoWriterInput markAsFinished];
             [_videoWriter finishWritingWithCompletionHandler:^{
-                void (^completion)(void) = ^() {
-                    [self cleanup];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (completionBlock)
-                            completionBlock();
-                    });
-                };
-                if (self.videoURL) {
-                    completion();
-                } else {
-                    ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
-                    [library writeVideoAtPathToSavedPhotosAlbum:_videoWriter.outputURL completionBlock:^(NSURL* assetURL, NSError* error) {
-                        if (error) {
-                            NSLog(@"Error copying video to camera roll:%@", [error localizedDescription]);
-                        } else {
-                            [self removeTempFilePath:_videoWriter.outputURL.path];
-                            completion();
-                        }
-                    }];
-                }
+                NSString *videoPath = _videoWriter.outputURL.path;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (completionBlock) completionBlock(videoPath);
+                });
+                [self cleanup];
+                
+//                [self removeTempFilePath:_videoWriter.outputURL.path];
+                
+                //导出视频到相册
+//                ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
+//                [library writeVideoAtPathToSavedPhotosAlbum:_videoWriter.outputURL completionBlock:^(NSURL* assetURL, NSError* error) {
+//                    if (error) {
+//                        NSLog(@"Error copying video to camera roll:%@", [error localizedDescription]);
+//                    } else {
+//                        [self removeTempFilePath:_videoWriter.outputURL.path];
+//                        completion();
+//                    }
+//                }];
             }];
         });
     });

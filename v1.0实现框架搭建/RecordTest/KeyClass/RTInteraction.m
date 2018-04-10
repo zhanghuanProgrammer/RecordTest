@@ -54,28 +54,17 @@
             }
         }break;
         case 1:{
-            [[RTScreenRecorder sharedInstance] startRecording];
-//            [self hideAll];
-//            [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"开始Monkey测试!"];
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [[AutoTestProject shareInstance] autoTest];
-//            });
-//            if ([RTCommandList shareInstance].isRunOperationQueue) {
-//                [[RTCommandList shareInstance] nextStep];
-//            }else{
-//                [ZHStatusBarNotification showWithStatus:@"没有正在执行的操作队列" dismissAfter:1 styleName:JDStatusBarStyleError];
-//            }
+            [self hideAll];
+            [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"开始Monkey测试!"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[AutoTestProject shareInstance] autoTest];
+            });
         }break;
         case 2:{
             [RTCommandList shareInstance].hidden = ![RTCommandList shareInstance].hidden;
         }break;
         case 3:{
-            if ([RTScreenRecorder sharedInstance].isRecording) {
-                [[RTScreenRecorder sharedInstance] stopRecordingWithCompletion:^{
-                    
-                }];
-            }
-//            [RTOperationQueue startOrStopRecord];//开始录制 结束录制
+            [RTOperationQueue startOrStopRecord];//开始录制 结束录制
         }break;
         case 4:{
             [self hideAll];

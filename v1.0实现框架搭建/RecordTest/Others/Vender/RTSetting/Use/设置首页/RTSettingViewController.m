@@ -44,9 +44,40 @@
         } cancelBlock:nil];
     };
     
+    NSArray *qualitys = @[@"不清晰(节省空间)",@"一般(推荐使用)",@"清晰(比较清晰,有点浪费空间)",@"高清(画质非常好,非常浪费空间)"];
+    curTitle = qualitys[0];
+    if ([RTConfigManager shareInstance].compressionQualityRecoderVideo != -1) {
+        NSInteger compressionQualityRecoderVideo = [RTConfigManager shareInstance].compressionQualityRecoderVideo;
+        if(compressionQualityRecoderVideo >=0 || compressionQualityRecoderVideo<qualitys.count){
+            curTitle = qualitys[compressionQualityRecoderVideo];
+        }
+    }
+    RTSettingItem *item1_1 = [RTSettingItem itemWithIcon:@"" title:@"录制过程是否录制视频" subTitle:curTitle type:ZFSettingItemTypeSwitch];
+    item1_1.subTitleFontSize = 10;
+    item1_1.on = [RTConfigManager shareInstance].isRecoderVideo;
+    __weak typeof(item1_1)weakItem1_1=item1_1;
+    //开关事件
+    item1_1.switchBlock = ^(BOOL on) {
+        weakSelf.isRecoderVideo = on;
+    };
+    item1_1.operation = ^{
+        NSString *curTitle = qualitys[0];
+        if ([RTConfigManager shareInstance].compressionQualityRecoderVideo != -1) {
+            NSInteger compressionQualityRecoderVideo = [RTConfigManager shareInstance].compressionQualityRecoderVideo;
+            if(compressionQualityRecoderVideo >=0 || compressionQualityRecoderVideo<qualitys.count){
+                curTitle = qualitys[compressionQualityRecoderVideo];
+            }
+        }
+        [[RTPickerManager shareManger] showPickerViewWithDataArray:qualitys curTitle:curTitle title:@"选择录制视频的画质" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
+            weakItem1_1.detail = [NSString stringWithFormat:@"%@",string];
+            weakSelf.compressionQualityRecoderVideo = [qualitys indexOfObject:string];
+            [weakSelf.tableView reloadData];
+        } cancelBlock:nil];
+    };
+    
     RTSettingGroup *group = [[RTSettingGroup alloc] init];
     group.header = @"录制测试设置";
-    group.items = @[item1];
+    group.items = @[item1,item1_1];
     [self.allGroups addObject:group];
     
     // 1.2.测试回放设置
@@ -77,9 +108,41 @@
             [weakSelf.tableView reloadData];
         } cancelBlock:nil];
     };
+    
+    curTitle = qualitys[0];
+    if ([RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack != -1) {
+        NSInteger compressionQualityRecoderVideoPlayBack = [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack;
+        if(compressionQualityRecoderVideoPlayBack >=0 || compressionQualityRecoderVideoPlayBack<qualitys.count){
+            curTitle = qualitys[compressionQualityRecoderVideoPlayBack];
+        }
+    }
+    RTSettingItem *item2_1 = [RTSettingItem itemWithIcon:@"" title:@"测试回放是否录制视频" subTitle:curTitle type:ZFSettingItemTypeSwitch];
+    item2_1.subTitleFontSize = 10;
+    item2_1.on = [RTConfigManager shareInstance].isRecoderVideoPlayBack;
+    __weak typeof(item2_1)weakItem2_1=item2_1;
+    //开关事件
+    item2_1.switchBlock = ^(BOOL on) {
+        weakSelf.isRecoderVideoPlayBack = on;
+    };
+    item2_1.operation = ^{
+        NSString *curTitle = qualitys[0];
+        if ([RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack != -1) {
+            NSInteger compressionQualityRecoderVideoPlayBack = [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack;
+            if(compressionQualityRecoderVideoPlayBack >=0 || compressionQualityRecoderVideoPlayBack<qualitys.count){
+                curTitle = qualitys[compressionQualityRecoderVideoPlayBack];
+            }
+        }
+        [[RTPickerManager shareManger] showPickerViewWithDataArray:qualitys curTitle:curTitle title:@"选择录制视频的画质" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
+            weakItem2_1.detail = [NSString stringWithFormat:@"%@",string];
+            weakSelf.compressionQualityRecoderVideoPlayBack = [qualitys indexOfObject:string];
+            [weakSelf.tableView reloadData];
+        } cancelBlock:nil];
+    };
+    
+    
     RTSettingGroup *group2 = [[RTSettingGroup alloc] init];
     group2.header = @"测试回放设置";
-    group2.items = @[item2];
+    group2.items = @[item2,item2_1];
     [self.allGroups addObject:group2];
     
     // 1.3占用存储空间
@@ -104,5 +167,22 @@
 - (void)setIsAutoDelete:(BOOL)isAutoDelete{
     [RTConfigManager shareInstance].isAutoDelete = isAutoDelete;
 }
+
+- (void)setIsRecoderVideo:(BOOL)isRecoderVideo{
+    [RTConfigManager shareInstance].isRecoderVideo = isRecoderVideo;
+}
+
+- (void)setIsRecoderVideoPlayBack:(BOOL)isRecoderVideoPlayBack{
+    [RTConfigManager shareInstance].isRecoderVideoPlayBack = isRecoderVideoPlayBack;
+}
+
+- (void)setCompressionQualityRecoderVideo:(NSInteger)compressionQualityRecoderVideo{
+    [RTConfigManager shareInstance].compressionQualityRecoderVideo = compressionQualityRecoderVideo;
+}
+
+- (void)setCompressionQualityRecoderVideoPlayBack:(NSInteger)compressionQualityRecoderVideoPlayBack{
+    [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack = compressionQualityRecoderVideoPlayBack;
+}
+
 
 @end

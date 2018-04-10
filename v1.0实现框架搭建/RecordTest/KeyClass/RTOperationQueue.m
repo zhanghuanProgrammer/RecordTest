@@ -175,6 +175,9 @@
         [RTCommandList shareInstance].alpha = 1;
         [SuspendBall shareInstance].showFunction = NO;
         [[SuspendBall shareInstance] suspendBallShow];
+        if ([RTConfigManager shareInstance].isRecoderVideo) {
+            [[RTScreenRecorder sharedInstance] stopRecordingWithCompletion:nil];
+        }
     }else{
         if([SuspendBall shareInstance].showImage) [[SuspendBall shareInstance] setImage:@"SuspendBall_stoprecord" index:3];
         else [[SuspendBall shareInstance] setTitle:@"停止录制" index:3];
@@ -183,6 +186,9 @@
         [[SuspendBall shareInstance] suspendBallShow];
         if([SuspendBall shareInstance].showImage) [[SuspendBall shareInstance] setHomeImage:@"SuspendBall_stoprecord"];
         else [[SuspendBall shareInstance] setTitle:@"停止录制" forState:0];
+        if ([RTConfigManager shareInstance].isRecoderVideo) {
+            [[RTScreenRecorder sharedInstance] startRecording];
+        }
     }
 }
 
@@ -272,7 +278,9 @@
     [operationQueues setValue:[RTOperationQueue shareInstance].operationQueue forKey:[identify description]];
     [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
     [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"保存成功!"];
-    [RTOperationQueue shareInstance].isRecord = NO;
+    [[RTScreenRecorder sharedInstance] stopRecordingWithCompletion:^(NSString *videoPath) {
+        [[RTRecordVideo shareInstance] saveVideoForIdentify:identify videoPath:videoPath];
+    }];
     return YES;
 }
 
@@ -332,6 +340,7 @@
     }
     [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
     [RTOperationImage deleteOverdueImage];
+    [[RTRecordVideo shareInstance] deleteVideos:identifys];
 }
 
 + (BOOL)reChanggeOperationQueue:(RTIdentify *)identify{

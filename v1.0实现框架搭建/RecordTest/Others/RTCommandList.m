@@ -362,11 +362,21 @@
 //        [[SuspendBall shareInstance] setEnable:YES index:1 hide:NO];
         [[SuspendBall shareInstance] setEnable:NO index:3 hide:YES];
         [[SuspendBall shareInstance] setEnable:NO index:4 hide:YES];
+        if ([RTConfigManager shareInstance].isRecoderVideoPlayBack) {
+            [[RTScreenRecorder sharedInstance] startRecording];
+        }
     }else{
         [[SuspendBall shareInstance] setEnable:NO index:0 hide:NO];
 //        [[SuspendBall shareInstance] setEnable:NO index:1 hide:NO];
         [[SuspendBall shareInstance] setEnable:YES index:3 hide:NO];
         [[SuspendBall shareInstance] setEnable:YES index:4 hide:NO];
+        if ([RTConfigManager shareInstance].isRecoderVideoPlayBack) {
+            [[RTScreenRecorder sharedInstance] stopRecordingWithCompletion:^(NSString *videoPath) {
+                if (_curRow > 0) {
+                    [[RTRecordVideo shareInstance] saveVideoPlayBackForStamp:[NSString stringWithFormat:@"%lld",[RTPlayBack shareInstance].stamp] videoPath:videoPath];
+                }
+            }];
+        }
     }
 }
 
@@ -449,16 +459,6 @@
         }
     }
     return result;
-}
-
-- (BOOL)nextStep{
-    if (self.isRunOperationQueue){
-        if (![self runStep:NO]) {
-            self.curRow++;
-            return YES;
-        }
-    }
-    return NO;
 }
 
 - (void)savePlayBackModels{

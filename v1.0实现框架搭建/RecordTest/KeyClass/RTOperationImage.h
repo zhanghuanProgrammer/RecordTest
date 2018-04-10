@@ -17,4 +17,22 @@
 + (void)deleteOverdueImage;
 + (void)deleteOverduePlayBackImage;
 
+
++ (NSString *)videoPath;
++ (NSString *)videoPlayBackPath;
++ (NSString *)videoFileSize;
++ (NSString *)videoPlayBackFileSize;
++ (NSString *)videoFileCount;
++ (NSString *)videoPlayBackFileCount;
++ (BOOL)isExsitVideo:(NSString *)video;
++ (BOOL)isExsitPlayBackVideo:(NSString *)video;
++ (NSString *)saveVideo:(NSString *)video;
++ (NSString *)savePlayBackVideo:(NSString *)video;
++ (NSString *)videoPathWithName:(NSString *)name;
++ (NSString *)videoPlayBackPathWithName:(NSString *)name;
++ (BOOL)isExsitVideoName:(NSString *)name;
++ (BOOL)isExsitPlayBackVideoName:(NSString *)name;
++ (void)deleteOverdueVideo;
++ (void)deleteOverduePlayBackVideo;
+
 @end

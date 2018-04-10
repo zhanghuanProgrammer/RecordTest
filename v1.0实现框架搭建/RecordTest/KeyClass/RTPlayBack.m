@@ -39,6 +39,7 @@
         }
         [ZHSaveDataToFMDB insertDataWithData:playBacks WithIdentity:@"RTPlayBack"];
         [RTOperationImage deleteOverduePlayBackImage];
+        [[RTRecordVideo shareInstance]deletePlayBackVideos:stamps];
     }
 }
 

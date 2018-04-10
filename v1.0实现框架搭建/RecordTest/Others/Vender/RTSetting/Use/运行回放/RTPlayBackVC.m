@@ -10,6 +10,15 @@
     [super viewDidLoad];
     self.title = [self.identify debugDescription];
     [self add0SectionItems];
+    
+    self.videoPath = [[RTRecordVideo shareInstance] videosPlayBacks][self.stamp];
+    if (self.videoPath.length>0) {
+        [TabBarAndNavagation setRightBarButtonItemTitle:@"视频" TintColor:[UIColor redColor] target:self action:@selector(video)];
+    }
+}
+
+- (void)video{
+    
 }
 
 #pragma mark 添加第0组的模型数据

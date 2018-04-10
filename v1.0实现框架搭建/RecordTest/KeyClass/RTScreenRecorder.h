@@ -1,14 +1,12 @@
 
 #import <Foundation/Foundation.h>
-typedef void (^VideoCompletionBlock)(void);
+typedef void (^VideoCompletionBlock)(NSString *videoPath);
 @protocol ASScreenRecorderDelegate;
 
 @interface RTScreenRecorder : NSObject
 @property (nonatomic, readonly) BOOL isRecording;
 
 @property (nonatomic, weak) id <ASScreenRecorderDelegate> delegate;
-
-@property (strong, nonatomic) NSURL *videoURL;
 
 @property (nonatomic, getter = isPaused) BOOL paused;
 

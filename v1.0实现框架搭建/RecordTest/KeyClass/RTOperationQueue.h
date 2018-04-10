@@ -60,7 +60,6 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueRunResultType) {
 
 + (BOOL)saveOperationQueue:(RTIdentify *)identify;
 + (NSMutableArray *)getOperationQueue:(RTIdentify *)identify;
-+ (void)deleteOperationQueue:(RTIdentify *)identify;
 + (void)deleteOperationQueues:(NSArray *)identifys;
 + (void)deleteOperationQueueModelIndexs:(NSArray *)indexs forIdentify:(RTIdentify *)identify;
 + (BOOL)reChanggeOperationQueue:(RTIdentify *)identify;
