@@ -23,6 +23,7 @@
 + (NSString *)videoFileSize;
 + (NSString *)videoPlayBackFileSize;
 + (NSString *)allSize;
++ (NSString *)homeDirectorySize;
 + (NSString *)videoFileCount;
 + (NSString *)videoPlayBackFileCount;
 + (BOOL)isExsitVideo:(NSString *)video;

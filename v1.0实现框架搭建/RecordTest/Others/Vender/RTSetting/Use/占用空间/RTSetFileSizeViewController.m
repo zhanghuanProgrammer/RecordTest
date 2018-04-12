@@ -1,7 +1,6 @@
 
 #import "RTSetFileSizeViewController.h"
 #import "RecordTestHeader.h"
-#import "RTFileListVC.h"
 
 @interface RTSetFileSizeViewController ()
 
@@ -60,12 +59,8 @@
     [RTOperationImage deleteOverdueVideo];
     [RTOperationImage deleteOverdueImage];
     [RTOperationImage deleteOverduePlayBackImage];
-    [TabBarAndNavagation setRightBarButtonItemTitle:@"沙盒浏览" TintColor:[UIColor redColor] target:self action:@selector(sandbox)];
+    [TabBarAndNavagation setRightBarButtonItemTitle:@"" TintColor:[UIColor redColor] target:self action:nil];
     [self loadData];
-}
-
-- (void)sandbox{
-    [self.navigationController pushViewController:[RTFileListVC new] animated:YES];
 }
 
 @end

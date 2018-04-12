@@ -4,6 +4,7 @@
 #import "RTPickerManager.h"
 #import "RTSetFileSizeViewController.h"
 #import "RTMigrationDataVC.h"
+#import "RTFileListVC.h"
 
 @interface RTSettingViewController ()
 @end
@@ -147,15 +148,20 @@
     [self.allGroups addObject:group2];
     
     // 1.3占用存储空间
-    RTSettingItem *item3 = [RTSettingItem itemWithIcon:@"" title:@"占用存储空间" subTitle:nil type:ZFSettingItemTypeArrow];
+    RTSettingItem *item3 = [RTSettingItem itemWithIcon:@"" title:@"占用存储空间" subTitle:[RTOperationImage allSize] type:ZFSettingItemTypeArrow];
     item3.subTitleFontSize = 10;
     item3.operation = ^{
         RTSetFileSizeViewController *vc = [RTSetFileSizeViewController new];
         [self.navigationController pushViewController:vc animated:YES];
     };
+    RTSettingItem *item3_1 = [RTSettingItem itemWithIcon:@"" title:@"沙盒目录" subTitle:[RTOperationImage homeDirectorySize] type:ZFSettingItemTypeArrow];
+    item3_1.subTitleFontSize = 10;
+    item3_1.operation = ^{
+        [self.navigationController pushViewController:[RTFileListVC new] animated:YES];
+    };
     RTSettingGroup *group3 = [[RTSettingGroup alloc] init];
-    group3.header = @"测试回放设置";
-    group3.items = @[item3];
+    group3.header = @"存储空间";
+    group3.items = @[item3,item3_1];
     [self.allGroups addObject:group3];
     
     RTSettingItem *item4 = [RTSettingItem itemWithIcon:@"" title:@"共享数据到其它设备" subTitle:nil type:ZFSettingItemTypeArrow];

@@ -105,6 +105,7 @@
     cell.detailTextLabel.text = model.subTitle;
     cell.textLabel.textColor = (model.isDirectory)? [UIColor blueColor] : [UIColor grayColor];
     cell.imageView.image = [UIImage imageNamed:model.info.typeImageName];
+    cell.accessoryType = (model.isDirectory)? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
     return cell;
 }
 

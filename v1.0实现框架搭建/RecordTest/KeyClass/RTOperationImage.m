@@ -66,6 +66,9 @@
     [ZHFileManager getFileSize:[self videoPlayBackPath]] ;
     return [ZHFileManager sizeOfByte:totol];
 }
++ (NSString *)homeDirectorySize{
+    return [ZHFileManager sizeOfByte:[ZHFileManager getFileSize:NSHomeDirectory()]];
+}
 + (NSString *)imagesFileCount{
     NSInteger count = [ZHFileManager subPathFileArrInDirector:[self imagesPath] hasPathExtension:@[@".png",@".jpg"]].count;
     return [NSString stringWithFormat:@"%zd",count];
