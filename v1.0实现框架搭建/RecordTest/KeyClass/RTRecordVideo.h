@@ -8,6 +8,8 @@
 
 - (NSMutableDictionary *)videos;
 - (NSMutableDictionary *)videosPlayBacks;
++ (void)addVideosFromOtherDataBase:(NSString *)dataBase;
++ (void)addVideosPlayBacksFromOtherDataBase:(NSString *)dataBase;
 
 - (void)saveVideoPlayBackForStamp:(NSString *)stamp videoPath:(NSString *)videoPath;
 - (void)saveVideoForIdentify:(RTIdentify *)identify videoPath:(NSString *)videoPath;

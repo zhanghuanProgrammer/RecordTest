@@ -54,6 +54,7 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueRunResultType) {
 
 + (RTOperationQueue *)shareInstance;
 + (NSMutableDictionary *)operationQueues;
++ (void)addOperationQueuesFromOtherDataBase:(NSString *)dataBase;
 
 + (void)startOrStopRecord;
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat;

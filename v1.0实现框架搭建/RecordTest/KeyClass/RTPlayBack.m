@@ -21,6 +21,15 @@
     return playBacks;
 }
 
++ (void)addPlayBacksFromOtherDataBase:(NSString *)dataBase{
+    NSDictionary *playBacksOther = [RTOpenDataBase selectDataWithIdentity:@"RTPlayBack" dataBasePath:dataBase];
+    if (playBacksOther.count>0) {
+        NSMutableDictionary *playBacks = [[RTPlayBack shareInstance] playBacks];
+        [playBacks setValuesForKeysWithDictionary:playBacksOther];
+        [ZHSaveDataToFMDB insertDataWithData:playBacks WithIdentity:@"RTPlayBack"];
+    }
+}
+
 - (void)savePlayBack:(NSArray *)playBackModels{
     if (self.stamp > 0 && playBackModels.count > 0 && self.identify) {
         NSMutableDictionary *playBacks = [self playBacks];

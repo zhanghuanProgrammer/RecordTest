@@ -22,6 +22,7 @@
 + (NSString *)videoPlayBackPath;
 + (NSString *)videoFileSize;
 + (NSString *)videoPlayBackFileSize;
++ (NSString *)allSize;
 + (NSString *)videoFileCount;
 + (NSString *)videoPlayBackFileCount;
 + (BOOL)isExsitVideo:(NSString *)video;
@@ -34,5 +35,9 @@
 + (BOOL)isExsitPlayBackVideoName:(NSString *)name;
 + (void)deleteOverdueVideo;
 + (void)deleteOverduePlayBackVideo;
+
++ (NSArray *)allFilePaths;
++ (void)addFileFromOtherDevice:(NSString *)filePath data:(NSData *)data;
++ (BOOL)isExsitFileFromOtherDevice:(NSString *)filePath;
 
 @end

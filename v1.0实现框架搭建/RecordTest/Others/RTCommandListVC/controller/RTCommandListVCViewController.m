@@ -5,6 +5,7 @@
 #import "RecordTestHeader.h"
 #import "RTPublicFooterButtonView.h"
 #import "DXAlertView.h"
+#import "RTMutableRunVC.h"
 
 @interface RTCommandListVCViewController ()<UITableViewDataSource,UITableViewDelegate>
 @property (nonatomic,assign)BOOL isEdit;
@@ -21,13 +22,18 @@
 }
 
 - (void)setHeaderView:(UIView *)headerView{
+    BOOL isReplace=NO;
     if (_headerView) {
         [_headerView removeFromSuperview];
+        isReplace = YES;
     }
     _headerView = headerView;
     if (headerView) {
         [self.view addSubview:headerView];
         self.tableView.contentInset = UIEdgeInsetsMake(headerView.height, 0, 0, 0);
+        if (!isReplace) {
+            self.tableView.contentOffset = CGPointMake(self.tableView.contentOffset.x, -headerView.height);
+        }
     }else{
         self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     }

@@ -4,6 +4,7 @@
 #import "RTOperationsVC.h"
 #import "RTPublicFooterButtonView.h"
 #import "DXAlertView.h"
+#import "RTMutableRunVC.h"
 
 @interface RTAllRecordVC ()
 @property (nonatomic,strong)UIView *headerView;
@@ -63,9 +64,13 @@
             }
         }
     }
-    [[RTAutoRun shareInstance] start];
-    [[RTInteraction shareInstance]showAll];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    __weak typeof(self)weakSelf=self;
+    RTMutableRunVC *vc = [RTMutableRunVC new];
+    vc.block = ^{
+        [[RTInteraction shareInstance] showAll];
+        [weakSelf dismissViewControllerAnimated:NO completion:nil];
+    };
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 - (void)delete{

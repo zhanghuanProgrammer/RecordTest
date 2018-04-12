@@ -19,12 +19,28 @@
     }
     return videos;
 }
++ (void)addVideosFromOtherDataBase:(NSString *)dataBase{
+    NSDictionary *videosOther = [RTOpenDataBase selectDataWithIdentity:@"RTVideo" dataBasePath:dataBase];
+    if (videosOther.count>0) {
+        NSMutableDictionary *videos = [[RTRecordVideo shareInstance] videos];
+        [videos setValuesForKeysWithDictionary:videosOther];
+        [ZHSaveDataToFMDB insertDataWithData:videos WithIdentity:@"RTVideo"];
+    }
+}
 - (NSMutableDictionary *)videosPlayBacks{
     NSMutableDictionary *videosPlayBacks = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTVideoPlayBack"];
     if (!videosPlayBacks) {
         videosPlayBacks = [NSMutableDictionary dictionary];
     }
     return videosPlayBacks;
+}
++ (void)addVideosPlayBacksFromOtherDataBase:(NSString *)dataBase{
+    NSDictionary *videosPlayBacksOther = [RTOpenDataBase selectDataWithIdentity:@"RTVideoPlayBack" dataBasePath:dataBase];
+    if (videosPlayBacksOther.count>0) {
+        NSMutableDictionary *videosPlayBacks = [[RTRecordVideo shareInstance] videosPlayBacks];
+        [videosPlayBacks setValuesForKeysWithDictionary:videosPlayBacksOther];
+        [ZHSaveDataToFMDB insertDataWithData:videosPlayBacks WithIdentity:@"RTVideoPlayBack"];
+    }
 }
 - (void)saveVideoPlayBackForStamp:(NSString *)stamp videoPath:(NSString *)videoPath{
     if (stamp > 0 && videoPath.length > 0) {

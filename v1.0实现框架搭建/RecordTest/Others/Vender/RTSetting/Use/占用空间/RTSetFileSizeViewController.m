@@ -48,6 +48,7 @@
     item4.subTitleFontSize = 12;
     RTSettingGroup *group4 = [[RTSettingGroup alloc] init];
     group4.header = @"所有运行回放视频的存储空间";
+    group4.footer = [NSString stringWithFormat:@"总占用空间: %@",[RTOperationImage allSize]];
     group4.items = @[item4];
     [self.allGroups addObject:group4];
     [self.tableView reloadData];

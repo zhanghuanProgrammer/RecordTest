@@ -17,6 +17,7 @@
 @property (strong, nonatomic) NSDictionary* outputBufferPoolAuxAttributes;
 @property (nonatomic) CFTimeInterval firstTimeStamp;
 @property (nonatomic) BOOL isRecording;
+@property (nonatomic,assign)BOOL shouldReInit;
 
 @property (strong, nonatomic) NSMutableArray* pauseResumeTimeRanges;
 
@@ -40,6 +41,7 @@
     static RTScreenRecorder* sharedInstance;
     dispatch_once(&once, ^{
         sharedInstance = [[self alloc] init];
+        sharedInstance.shouldReInit = YES;
         // app从后台进入前台都会调用这个方法
         [[NSNotificationCenter defaultCenter] addObserver:sharedInstance selector:@selector(applicationBecomeActive) name:UIApplicationWillEnterForegroundNotification object:nil];
         // 添加检测app进入后台的观察者
@@ -58,11 +60,16 @@
 - (void)applicationEnterBackground{
     if (self.isRecording) {
         [self pauseRecording];
+        self.shouldReInit = YES;
         NSLog(@"%@",@"app进入后台");
     }
 }
 
 - (void)initData{
+    if (!self.shouldReInit) {
+        self.shouldReInit = YES;
+        return;
+    }
     _viewSize = [UIApplication sharedApplication].delegate.window.bounds.size;
     _scale = [UIScreen mainScreen].scale;
     if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) && _scale > 1) {

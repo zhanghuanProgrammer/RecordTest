@@ -19,7 +19,7 @@
     [self add0SectionItems];
     
     self.videoPath = [[RTRecordVideo shareInstance] videos][[self.identify description]];
-    if (self.videoPath.length>0) {
+    if (self.videoPath.length>0 && [[NSFileManager defaultManager] fileExistsAtPath:[RTOperationImage videoPathWithName:self.videoPath]]) {
         [TabBarAndNavagation setRightBarButtonItemTitle:@"视频" TintColor:[UIColor redColor] target:self action:@selector(video)];
     }
 }

@@ -269,6 +269,15 @@
     return operationQueues;
 }
 
++ (void)addOperationQueuesFromOtherDataBase:(NSString *)dataBase{
+    NSDictionary *operationQueuesOther = [RTOpenDataBase selectDataWithIdentity:@"operationQueue" dataBasePath:dataBase];
+    if (operationQueuesOther.count>0) {
+        NSMutableDictionary *operationQueues = [self operationQueues];
+        [operationQueues setValuesForKeysWithDictionary:operationQueuesOther];
+        [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+    }
+}
+
 + (BOOL)saveOperationQueue:(RTIdentify *)identify{
     NSMutableDictionary *operationQueues = [self operationQueues];
     if (operationQueues[[identify description]]) {

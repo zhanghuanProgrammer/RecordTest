@@ -37,6 +37,14 @@
         NSString *compressionQualityRecoderVideoPlayBack = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTCompressionQualityRecoderVideoPlayBack"];
         if(compressionQualityRecoderVideoPlayBack.length > 0) _sharedObject.compressionQualityRecoderVideoPlayBack = [compressionQualityRecoderVideoPlayBack integerValue];
         else _sharedObject.compressionQualityRecoderVideoPlayBack = -1;
+        
+        NSString *isMigrationImage = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTIsMigrationImage"];
+        if(isMigrationImage.length > 0) _sharedObject.isMigrationImage = [isMigrationImage boolValue];
+        else _sharedObject.isMigrationImage = YES;
+        
+        NSString *isMigrationVideo = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTIsMigrationVideo"];
+        if(isMigrationVideo.length > 0) _sharedObject.isMigrationVideo = [isMigrationVideo boolValue];
+        else _sharedObject.isMigrationVideo = YES;
     });
     return _sharedObject;
 }
@@ -74,6 +82,16 @@
 - (void)setCompressionQualityRecoderVideoPlayBack:(NSInteger)compressionQualityRecoderVideoPlayBack{
     _compressionQualityRecoderVideoPlayBack = compressionQualityRecoderVideoPlayBack;
     [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%zd",compressionQualityRecoderVideoPlayBack] WithIdentity:@"RTCompressionQualityRecoderVideoPlayBack"];
+}
+
+- (void)setIsMigrationImage:(BOOL)isMigrationImage{
+    _isMigrationImage = isMigrationImage;
+    [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%d",isMigrationImage] WithIdentity:@"RTIsMigrationImage"];
+}
+
+- (void)setIsMigrationVideo:(BOOL)isMigrationVideo{
+    _isMigrationVideo = isMigrationVideo;
+    [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%d",isMigrationVideo] WithIdentity:@"RTIsMigrationVideo"];
 }
 
 @end

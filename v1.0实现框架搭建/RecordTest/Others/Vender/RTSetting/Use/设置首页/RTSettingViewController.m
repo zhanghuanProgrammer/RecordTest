@@ -3,6 +3,7 @@
 #import "RecordTestHeader.h"
 #import "RTPickerManager.h"
 #import "RTSetFileSizeViewController.h"
+#import "RTMigrationDataVC.h"
 
 @interface RTSettingViewController ()
 @end
@@ -156,6 +157,30 @@
     group3.header = @"测试回放设置";
     group3.items = @[item3];
     [self.allGroups addObject:group3];
+    
+    RTSettingItem *item4 = [RTSettingItem itemWithIcon:@"" title:@"共享数据到其它设备" subTitle:nil type:ZFSettingItemTypeArrow];
+    item4.subTitleFontSize = 10;
+    item4.operation = ^{
+        RTMigrationDataVC *vc = [RTMigrationDataVC new];
+        [self.navigationController pushViewController:vc animated:YES];
+    };
+    
+    RTSettingItem *item4_1 = [RTSettingItem itemWithIcon:@"" title:@"是否共享录制和回放截屏" subTitle:@"" type:ZFSettingItemTypeSwitch];
+    item4_1.on = [RTConfigManager shareInstance].isMigrationImage;
+    //开关事件
+    item4_1.switchBlock = ^(BOOL on) {
+        weakSelf.isMigrationImage = on;
+    };
+    RTSettingItem *item4_2 = [RTSettingItem itemWithIcon:@"" title:@"是否共享录制和回放视频" subTitle:@"" type:ZFSettingItemTypeSwitch];
+    item4_2.on = [RTConfigManager shareInstance].isMigrationVideo;
+    //开关事件
+    item4_2.switchBlock = ^(BOOL on) {
+        weakSelf.isMigrationVideo = on;
+    };
+    RTSettingGroup *group4 = [[RTSettingGroup alloc] init];
+    group4.header = @"蓝牙传输";
+    group4.items = @[item4,item4_1,item4_2];
+    [self.allGroups addObject:group4];
 }
 
 - (void)setCompressionQuality:(CGFloat)compressionQuality{
@@ -182,6 +207,14 @@
 
 - (void)setCompressionQualityRecoderVideoPlayBack:(NSInteger)compressionQualityRecoderVideoPlayBack{
     [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack = compressionQualityRecoderVideoPlayBack;
+}
+
+- (void)setIsMigrationImage:(BOOL)isMigrationImage{
+    [RTConfigManager shareInstance].isMigrationImage = isMigrationImage;
+}
+
+- (void)setIsMigrationVideo:(BOOL)isMigrationVideo{
+    [RTConfigManager shareInstance].isMigrationVideo = isMigrationVideo;
 }
 
 

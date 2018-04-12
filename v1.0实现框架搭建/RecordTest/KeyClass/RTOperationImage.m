@@ -58,6 +58,14 @@
 + (NSString *)videoPlayBackFileSize{
     return [ZHFileManager fileSizeString:[self videoPlayBackPath]];
 }
++ (NSString *)allSize{
+    CGFloat totol =
+    [ZHFileManager getFileSize:[self imagesPath]] +
+    [ZHFileManager getFileSize:[self playBackImagesPath]] +
+    [ZHFileManager getFileSize:[self videoPath]] +
+    [ZHFileManager getFileSize:[self videoPlayBackPath]] ;
+    return [ZHFileManager sizeOfByte:totol];
+}
 + (NSString *)imagesFileCount{
     NSInteger count = [ZHFileManager subPathFileArrInDirector:[self imagesPath] hasPathExtension:@[@".png",@".jpg"]].count;
     return [NSString stringWithFormat:@"%zd",count];
@@ -319,6 +327,53 @@
         return pathFileArr;
     }
     return nil;
+}
+
++ (NSArray *)allFilePaths{
+    NSMutableArray *allFilePaths = [NSMutableArray array];
+    [allFilePaths addObject:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/ZHJSONData.rdb"]];
+    if ([RTConfigManager shareInstance].isMigrationImage) {
+        [allFilePaths addObjectsFromArray:[ZHFileManager subPathFileArrInDirector:[self imagesPath] hasPathExtension:@[@".png",@".jpg"]]];
+        [allFilePaths addObjectsFromArray:[ZHFileManager subPathFileArrInDirector:[self playBackImagesPath] hasPathExtension:@[@".png",@".jpg"]]];
+    }
+    if ([RTConfigManager shareInstance].isMigrationVideo) {
+        [allFilePaths addObjectsFromArray:[ZHFileManager subPathFileArrInDirector:[self videoPath] hasPathExtension:@[@".mp4"]]];
+        [allFilePaths addObjectsFromArray:[ZHFileManager subPathFileArrInDirector:[self videoPlayBackPath] hasPathExtension:@[@".mp4"]]];
+    }
+    return allFilePaths;
+}
+
++ (void)addFileFromOtherDevice:(NSString *)filePath data:(NSData *)data{
+    if ([filePath rangeOfString:@"Documents/"].location!=NSNotFound) {
+        filePath = [filePath substringFromIndex:[filePath rangeOfString:@"Documents/"].location+@"Documents/".length];
+        filePath = [[self documentsPath] stringByAppendingPathComponent:filePath];
+        if ([filePath hasSuffix:@".rdb"]) {//数据库文件里面的数据一直增加
+            NSString *newFilePath = [ZHFileManager changeFileOldPath:filePath newFileName:@"tempDataBase"];
+            [data writeToFile:newFilePath atomically:YES];
+            [RTRecordVideo addVideosFromOtherDataBase:newFilePath];
+            [RTRecordVideo addVideosPlayBacksFromOtherDataBase:newFilePath];
+            [RTOperationQueue addOperationQueuesFromOtherDataBase:newFilePath];
+            [RTPlayBack addPlayBacksFromOtherDataBase:newFilePath];
+            [RTOpenDataBase closeDataBasePath:newFilePath];
+            [[NSFileManager defaultManager]removeItemAtPath:newFilePath error:nil];
+        }else{
+            [data writeToFile:filePath atomically:YES];
+        }
+    }
+}
+
++ (BOOL)isExsitFileFromOtherDevice:(NSString *)filePath{
+    if ([filePath hasSuffix:@".rdb"]) {//数据库文件里面的数据一直增加
+        return NO;
+    }
+    if ([filePath rangeOfString:@"Documents/"].location!=NSNotFound) {
+        filePath = [filePath substringFromIndex:[filePath rangeOfString:@"Documents/"].location+@"Documents/".length];
+        filePath = [[self documentsPath] stringByAppendingPathComponent:filePath];
+        if ([[NSFileManager defaultManager]fileExistsAtPath:filePath]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

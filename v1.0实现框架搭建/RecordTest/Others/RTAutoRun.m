@@ -27,7 +27,10 @@
         if (self.autoRunQueue.count > self.index) {
             RTIdentify *identify = self.autoRunQueue[self.index++];
             [[RTCommandList shareInstance] setOperationQueue:identify];
-            [[RTCommandList shareInstance] runStep:YES];
+            //延迟1s,不然太快会导致录制屏幕那里的多线程和信号量提前被释放
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[RTCommandList shareInstance] runStep:YES];
+            });
         }else{
             [self stop];
         }
