@@ -187,6 +187,17 @@
     group4.header = @"蓝牙传输";
     group4.items = @[item4,item4_1,item4_2];
     [self.allGroups addObject:group4];
+    
+    RTSettingItem *item5 = [RTSettingItem itemWithIcon:@"" title:@"退出登录" subTitle:nil type:ZFSettingItemTypeArrow];
+    item5.subTitleFontSize = 10;
+    item5.operation = ^{
+        RTLoginViewController *vc = [RTLoginViewController new];
+        [self.navigationController pushViewController:vc animated:YES];
+    };
+    RTSettingGroup *group5 = [[RTSettingGroup alloc] init];
+    group5.header = @"账户";
+    group5.items = @[item5];
+    [self.allGroups addObject:group5];
 }
 
 - (void)setCompressionQuality:(CGFloat)compressionQuality{

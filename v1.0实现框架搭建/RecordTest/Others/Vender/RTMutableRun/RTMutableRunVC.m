@@ -78,12 +78,12 @@
     _headerView = headerView;
     if (headerView) {
         [self.view addSubview:headerView];
-        self.tableView.contentInset = UIEdgeInsetsMake(headerView.height, 0, 0, 0);
+        self.tableView.contentInset = UIEdgeInsetsMake(headerView.height, 0, 64, 0);
         if (!isReplace) {
             self.tableView.contentOffset = CGPointMake(self.tableView.contentOffset.x, self.tableView.contentOffset.y-headerView.height);
         }
     }else{
-        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
     }
 }
 

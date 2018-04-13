@@ -19,6 +19,7 @@
     tableView.dataSource = self;
     [self.view addSubview:tableView];
     self.tableView = tableView;
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
 }
 
 #pragma mark - Table view data source

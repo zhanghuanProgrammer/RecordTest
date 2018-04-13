@@ -28,6 +28,9 @@
 #import "RTOpenDataBase.h"
 #import "RTSearchVCPath.h"
 #import "RTConsole.h"
+#import "RTLoginViewController.h"
+#import "RTRegistViewController.h"
+#import "RTForgetPasswordViewController.h"
 
 #define Run 1
 
@@ -44,3 +47,5 @@
 
 #define KVO_Super 1
 #define NeedSimilationView 0
+
+#define CurrentAppThemeColor RGB(257,127,0)

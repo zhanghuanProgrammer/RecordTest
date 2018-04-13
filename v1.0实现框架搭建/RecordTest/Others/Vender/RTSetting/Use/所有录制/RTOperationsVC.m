@@ -21,7 +21,7 @@
     self.videoPath = [[RTRecordVideo shareInstance] videos][[self.identify description]];
     [TabBarAndNavagation setRightBarButtonItemTitle:@"导出" TintColor:[UIColor redColor] target:self action:@selector(export)];
     [self add0SectionItems];
-    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0);
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
 }
 
 - (void)export{

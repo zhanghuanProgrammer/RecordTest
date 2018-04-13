@@ -125,7 +125,7 @@
         [self.view addSubview:headerView];
         self.tableView.contentInset = UIEdgeInsetsMake(headerView.height, 0, headerView.height, 0);
     }else{
-        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
     }
 }
 
