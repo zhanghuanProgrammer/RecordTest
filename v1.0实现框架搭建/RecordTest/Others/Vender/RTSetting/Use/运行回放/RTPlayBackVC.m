@@ -3,23 +3,35 @@
 #import "RecordTestHeader.h"
 #import "RTPhotosViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "RTALAssetsLibrary.h"
 
 @interface RTPlayBackVC ()
 @property (nonatomic,strong)MPMoviePlayerViewController *moviePlayerController;
+@property (nonatomic,assign)BOOL isExport;
 @end
 
 @implementation RTPlayBackVC
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
     self.title = [self.identify debugDescription];
-    [self add0SectionItems];
-    
     self.videoPath = [[RTRecordVideo shareInstance] videosPlayBacks][self.stamp];
-    if (self.videoPath.length>0 && [[NSFileManager defaultManager] fileExistsAtPath:[RTOperationImage videoPlayBackPathWithName:self.videoPath]]) {
-        [TabBarAndNavagation setRightBarButtonItemTitle:@"视频" TintColor:[UIColor redColor] target:self action:@selector(video)];
+    [TabBarAndNavagation setRightBarButtonItemTitle:@"导出" TintColor:[UIColor redColor] target:self action:@selector(export)];
+    [self add0SectionItems];
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0);
+}
+
+- (void)export{
+    self.isExport = !self.isExport;
+}
+
+- (void)setIsExport:(BOOL)isExport{
+    _isExport = isExport;
+    if (isExport) {
+        [JohnAlertManager showAlertWithType:JohnTopAlertTypeMessage title:@"点击对应的命令或者视频就可以保存到相册!"];
     }
+    [TabBarAndNavagation setRightBarButtonItemTitle:isExport ? @"取消":@"导出" TintColor:[UIColor redColor] target:self action:@selector(export)];
+    [self add0SectionItems];
 }
 
 - (void)video{
@@ -36,12 +48,29 @@
 #pragma mark 添加第0组的模型数据
 - (void)add0SectionItems
 {
+    [self.allGroups removeAllObjects];
+    __weak typeof(self)weakSelf=self;
+    if (self.videoPath.length>0 && [[NSFileManager defaultManager] fileExistsAtPath:[RTOperationImage videoPlayBackPathWithName:self.videoPath]]) {
+        RTSettingItem *item = [RTSettingItem itemWithIcon:@"" title:self.isExport ? @"导出视频":@"播放视频" detail:nil type:ZFSettingItemTypeArrow];
+        item.operation = ^{
+            if (weakSelf.isExport) {
+                [[RTALAssetsLibrary shareInstance] saveVideoToPhotosAlbum:[RTOperationImage videoPlayBackPathWithName:self.videoPath]];
+            }else{
+                [weakSelf video];
+            }
+        };
+        RTSettingGroup *group = [[RTSettingGroup alloc] init];
+        group.header = @"录屏视频";
+        group.items = @[item];
+        [self.allGroups addObject:group];
+    }
+    
     NSMutableArray *items = [NSMutableArray array];
     for (RTOperationQueueModel *model in self.playBackModels) {
-        RTSettingItem *item = [RTSettingItem itemWithIcon:@"" title:[model debugDescription] detail:nil type:ZFSettingItemTypeArrow];
+        RTSettingItem *item = [RTSettingItem itemWithIcon:@"" title:self.isExport ? [@"导出截图 " stringByAppendingString:[model debugDescription]]:[model debugDescription] detail:nil type:ZFSettingItemTypeArrow];
         item.operation = ^{
             if (model.imagePath.length > 0) {
-                [self goToPhotoBrowser:model.imagePath];
+                [weakSelf goToPhotoBrowser:model.imagePath];
             }
         };
         switch (model.runResult) {
@@ -64,16 +93,22 @@
     group.header = @"所有执行命令";
     group.items = items;
     [self.allGroups addObject:group];
+    [self.tableView reloadData];
 }
 
 - (void)goToPhotoBrowser:(NSString *)imagePath{
-    if (!imagePath || imagePath.length<=0) {
+    if (!imagePath || imagePath.length<=0 || (![[NSFileManager defaultManager] fileExistsAtPath:[RTOperationImage imagePathWithPlayBackName:imagePath]])) {
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"没有对应的截图!"];
         return;
     }
+    if (self.isExport) {
+        [[RTALAssetsLibrary shareInstance] savePhotoToPhotosAlbum:[RTOperationImage imagePathWithPlayBackName:imagePath]];
+        return;
+    }
+    
     NSMutableArray *imagePaths = [NSMutableArray array];
     for (RTOperationQueueModel *model in self.playBackModels){
-        if (model.imagePath.length > 0){
+        if (model.imagePath.length > 0 && [[NSFileManager defaultManager] fileExistsAtPath:[RTOperationImage imagePathWithPlayBackName:model.imagePath]]){
             [imagePaths addObject:[RTOperationImage imagePathWithPlayBackName:model.imagePath]];
         }
     }

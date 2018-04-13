@@ -82,7 +82,6 @@
             [viewController.navigationController popViewControllerAnimated:YES];
         }
     }else{
-        //present方式
         [viewController dismissViewControllerAnimated:YES completion:nil];
     }
 }

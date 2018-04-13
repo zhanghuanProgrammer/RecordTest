@@ -36,10 +36,10 @@
     if(superViewLayerDirector.length<=0) superViewLayerDirector=@"";
     if ([aView isKindOfClass:[UITableViewCell class]]) {
         UITableViewCell *cell = (UITableViewCell *)aView;
-        layerDirector=[superViewLayerDirector stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-section-%zd-row-%zd",[cell class],cell.indexPath.section,cell.indexPath.row]];
+        layerDirector=[superViewLayerDirector stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-section-%ld-row-%ld",[cell class],(long)cell.indexPath.section,(long)cell.indexPath.row]];
     }else if ([aView isKindOfClass:[UICollectionViewCell class]]){
         UICollectionViewCell *cell = (UICollectionViewCell *)aView;
-        layerDirector=[superViewLayerDirector stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-section-%zd-row-%zd",[cell class],cell.indexPath.section,cell.indexPath.row]];
+        layerDirector=[superViewLayerDirector stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-section-%ld-row-%ld",[cell class],(long)cell.indexPath.section,(long)cell.indexPath.row]];
     }else{
         layerDirector=[superViewLayerDirector stringByAppendingPathComponent:NSStringFromClass([aView class])];
     }

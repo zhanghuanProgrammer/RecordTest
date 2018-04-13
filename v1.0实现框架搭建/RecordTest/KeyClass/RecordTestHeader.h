@@ -26,6 +26,8 @@
 #import "RTScreenRecorder.h"
 #import "RTRecordVideo.h"
 #import "RTOpenDataBase.h"
+#import "RTSearchVCPath.h"
+#import "RTConsole.h"
 
 #define Run 1
 

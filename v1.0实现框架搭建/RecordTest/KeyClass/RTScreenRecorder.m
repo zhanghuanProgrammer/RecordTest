@@ -231,17 +231,6 @@
                 [self cleanup];
                 
 //                [self removeTempFilePath:_videoWriter.outputURL.path];
-                
-                //导出视频到相册
-//                ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
-//                [library writeVideoAtPathToSavedPhotosAlbum:_videoWriter.outputURL completionBlock:^(NSURL* assetURL, NSError* error) {
-//                    if (error) {
-//                        NSLog(@"Error copying video to camera roll:%@", [error localizedDescription]);
-//                    } else {
-//                        [self removeTempFilePath:_videoWriter.outputURL.path];
-//                        completion();
-//                    }
-//                }];
             }];
         });
     });

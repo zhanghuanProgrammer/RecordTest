@@ -26,6 +26,7 @@
             NSString* className = NSStringFromClass([[info instance] class]);
             self.topVC = className;
             [self.vcStack addObject:className];
+            [[RTSearchVCPath shareInstance] adjustTopology:self.vcStack];
             [[RTCommandList shareInstance] initData];
             [[KVOAllView new] kvoAllView];
         } error:NULL];
