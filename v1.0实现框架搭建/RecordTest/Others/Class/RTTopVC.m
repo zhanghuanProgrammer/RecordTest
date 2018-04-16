@@ -1,6 +1,7 @@
 
 #import "RTTopVC.h"
 #import "RecordTestHeader.h"
+#import <mach/mach.h>
 
 @interface RTTopVC ()
 
@@ -24,8 +25,8 @@
     if (Run) {
         [UIViewController aspect_hookSelector:@selector(viewDidAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
             NSString* className = NSStringFromClass([[info instance] class]);
-            self.topVC = className;
             [self.vcStack addObject:className];
+            [self updateTopVC];
             [[RTSearchVCPath shareInstance] adjustTopology:self.vcStack];
             [[RTCommandList shareInstance] initData];
             [[KVOAllView new] kvoAllView];
@@ -34,20 +35,45 @@
         [UIViewController aspect_hookSelector:@selector(viewDidDisappear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
             NSString* className = NSStringFromClass([[info instance] class]);
             [self popVC:className];
-            [self popNoExsitVC];
+            [self updateTopVC];
             [[RTCommandList shareInstance]initData];
         } error:NULL];
     }
 }
 
 - (void)popVC:(NSString *)vc{
+    NSInteger index = -1;
     for (NSInteger i=self.vcStack.count-1; i>=0; i--) {
         NSString *className = self.vcStack[i];
         if ([className isEqualToString:vc]) {
             [self.vcStack removeObjectAtIndex:i];
+            index = i-1;
             break;
         }
     }
+    [self popNoExsitVCFromIndex:index];
+}
+
+- (void)updateTopVC{
+    NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.vcStack];
+    [self removeNotShowInWindow:vcStack];
+    NSLog(@"😄:%@",vcStack);
+    if (vcStack.count>0) {
+        self.topVC = [vcStack lastObject];
+        NSLog(@"当前最顶部的控制器%@",self.topVC);
+    }else{
+        NSLog(@"有异常情况发生:控制器堆栈被筛选后为空");
+    }
+}
+
+- (void)removeNotShowInWindow:(NSMutableArray *)vcStack{
+    NSMutableArray *temp = [NSMutableArray array];
+    for (NSString *vc in vcStack) {
+        if ([[RTSystemClass shareInstance] isSystemClass:NSClassFromString(vc)] || [self isExsitVC:vc] == NO) {
+            [temp addObject:vc];
+        }
+    }
+    [vcStack removeObjectsInArray:temp];
 }
 
 - (void)popNoExsitVC{
@@ -56,7 +82,16 @@
         [self.vcStack popLastObject];
         topVC = [self.vcStack lastObject];
     }
-    self.topVC = topVC;
+}
+
+- (void)popNoExsitVCFromIndex:(NSInteger)index{
+    if (index>=0 && index<self.vcStack.count) {
+        NSString *className = self.vcStack[index];
+        if ([self isExsitVC:className] == NO) {
+            [self.vcStack removeObjectAtIndex:index];
+        }
+        [self popNoExsitVCFromIndex:index-1];
+    }
 }
 
 - (BOOL)isExsitVC:(NSString *)vc{

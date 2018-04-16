@@ -30,7 +30,7 @@
 }
 
 - (void)printMSG:(NSString*)msg andFunc:(const char*)function andLine:(NSInteger)Line{
-    msg = [NSString stringWithFormat:@"%@ %@ line-%ld\n%@\n", [_formatter stringFromDate:[NSDate new]], [NSString stringWithUTF8String:function], (long)Line, msg];
+    msg = [NSString stringWithFormat:@"%@ %@ line:%ld %@\n", [_formatter stringFromDate:[NSDate new]], [NSString stringWithUTF8String:function], (long)Line, msg];
 //    [self.log appendString:msg];
     
     const char* resultCString = NULL;

@@ -26,9 +26,6 @@
 
 - (void)setIsExport:(BOOL)isExport{
     _isExport = isExport;
-    if (isExport) {
-        [JohnAlertManager showAlertWithType:JohnTopAlertTypeMessage title:@"点击对应的命令或者视频就可以保存到相册!"];
-    }
     [TabBarAndNavagation setRightBarButtonItemTitle:isExport ? @"取消":@"导出" TintColor:[UIColor redColor] target:self action:@selector(export)];
     [self add0SectionItems];
 }
@@ -122,6 +119,5 @@
 - (void)remove:(UITapGestureRecognizer *)ges{
     [ges.view removeFromSuperview];
 }
-
 
 @end

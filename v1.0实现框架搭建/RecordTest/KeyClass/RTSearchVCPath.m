@@ -1,5 +1,6 @@
 
 #import "RTSearchVCPath.h"
+#import "RecordTestHeader.h"
 
 @implementation RTSearchVCPath
 
@@ -30,8 +31,10 @@
         }
         lastVC = curVC;
     }
+    NSMutableArray *vcStacks = [NSMutableArray arrayWithArray:vcStack];
+//    [[RTTopVC shareInstance]removeNotShowInWindow:vcStacks];
     NSMutableArray *unionVC = [NSMutableArray array];
-    for (NSString *vc in vcStack) {
+    for (NSString *vc in vcStacks) {
         Class vcCls = NSClassFromString(vc);
         if ([self rt_isKindOfClass:vcCls acls:[UITabBarController class]]||
             [self rt_isKindOfClass:vcCls acls:[UINavigationController class]]) {
@@ -39,8 +42,9 @@
         }
         [unionVC addObject:vc];
     }
-    NSLog(@"%@",unionVC);
-    NSLog(@"%@",self.topology);
+    NSLog(@"当前最顶部的控制器%@",[RTTopVC shareInstance].topVC);
+    NSLog(@"当前所有存在的控制器%@",unionVC);
+//    NSLog(@"%@",self.topology);
 }
 
 - (void)goToRootVC{

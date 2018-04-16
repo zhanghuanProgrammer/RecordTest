@@ -31,6 +31,7 @@
 #import "RTLoginViewController.h"
 #import "RTRegistViewController.h"
 #import "RTForgetPasswordViewController.h"
+#import "RTSystemClass.h"
 
 #define Run 1
 

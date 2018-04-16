@@ -109,9 +109,9 @@
             }
             default:
                 //liman
-                self.textView.text = @" unable to preview";
-                self.textView.backgroundColor = [UIColor blackColor];
-                self.textView.textColor = [UIColor whiteColor];
+                self.textView.text = @" 暂不支持打开该格式的文件";
+                self.textView.backgroundColor = [UIColor whiteColor];
+                self.textView.textColor = [UIColor redColor];
                 self.textView.font = [UIFont boldSystemFontOfSize:17];
                 break;
         }
@@ -125,9 +125,9 @@
         
         if (!data) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.textView.text = @" unable to preview";
-                self.textView.backgroundColor = [UIColor blackColor];
-                self.textView.textColor = [UIColor whiteColor];
+                self.textView.text = @" 暂不支持打开该格式的文件";
+                self.textView.backgroundColor = [UIColor whiteColor];
+                self.textView.textColor = [UIColor redColor];
                 self.textView.font = [UIFont boldSystemFontOfSize:17];
             });
         }else{
@@ -137,9 +137,9 @@
                 [self.activityIndicatorView stopAnimating];
                 //liman
                 if (error) {
-                    self.textView.text = @" unable to preview";
-                    self.textView.backgroundColor = [UIColor blackColor];
-                    self.textView.textColor = [UIColor whiteColor];
+                    self.textView.text = @" 暂不支持打开该格式的文件";
+                    self.textView.backgroundColor = [UIColor whiteColor];
+                    self.textView.textColor = [UIColor redColor];
                     self.textView.font = [UIFont boldSystemFontOfSize:17];
                 }else{
                     self.textView.text = content;

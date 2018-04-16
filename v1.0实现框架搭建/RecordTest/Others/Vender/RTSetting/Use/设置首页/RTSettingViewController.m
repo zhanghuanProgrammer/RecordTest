@@ -104,7 +104,7 @@
         if ([RTConfigManager shareInstance].autoDeleteDay != -1) {
             curTitle = [NSString stringWithFormat:@"%ld天",(long)[RTConfigManager shareInstance].autoDeleteDay];
         }
-        [[RTPickerManager shareManger] showPickerViewWithDataArray:dataArr curTitle:curTitle title:@"选择截图压缩率" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
+        [[RTPickerManager shareManger] showPickerViewWithDataArray:dataArr curTitle:curTitle title:@"选择多少天后自动清除" cancelTitle:@"取消" commitTitle:@"确定" commitBlock:^(NSString *string) {
             weakItem2.detail = [NSString stringWithFormat:@"%@",string];
             weakSelf.autoDeleteDay = [string integerValue];
             [weakSelf.tableView reloadData];
