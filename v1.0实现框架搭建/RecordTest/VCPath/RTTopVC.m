@@ -21,13 +21,27 @@
     return _sharedObject;
 }
 
+/**判断某类（cls）是否为指定类（acls）的子类*/
+- (BOOL)rt_isKindOfClass:(Class)cls acls:(Class)acls{
+    Class scls = class_getSuperclass(cls);
+    if (scls==acls) return true;
+    else if (scls==nil) return false;
+    return [self rt_isKindOfClass:scls acls:acls];
+}
+
 - (void)hookTopVC{
     if (Run) {
         [UIViewController aspect_hookSelector:@selector(viewDidAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
             NSString* className = NSStringFromClass([[info instance] class]);
             [self.vcStack addObject:className];
             [self updateTopVC];
-            [[RTSearchVCPath shareInstance] adjustTopology:self.vcStack];
+            
+            
+//            NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.vcStack];
+//            [self removeNotShowInWindow:vcStack];
+//            [[RTVCLearn shareInstance] setTopologyVC:vcStack];
+            
+            
             [[RTCommandList shareInstance] initData];
             [[KVOAllView new] kvoAllView];
         } error:NULL];
@@ -57,6 +71,8 @@
 - (void)updateTopVC{
     NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.vcStack];
     [self removeNotShowInWindow:vcStack];
+    [[RTVCLearn shareInstance] setUnionVC:vcStack];
+//    [[RTVCLearn shareInstance] setTopologyVC:vcStack];
 //    NSLog(@"😄:%@",vcStack);
     if (vcStack.count>0) {
         self.topVC = [vcStack lastObject];
@@ -69,7 +85,11 @@
 - (void)removeNotShowInWindow:(NSMutableArray *)vcStack{
     NSMutableArray *temp = [NSMutableArray array];
     for (NSString *vc in vcStack) {
-        if ([[RTSystemClass shareInstance] isSystemClass:NSClassFromString(vc)] || [self isExsitVC:vc] == NO) {
+        Class vcCls =  NSClassFromString(vc);
+        if ([[RTSystemClass shareInstance] isSystemClass:vcCls] ||
+            [self rt_isKindOfClass:vcCls acls:[UINavigationController class]] ||
+            [self rt_isKindOfClass:vcCls acls:[UITabBarController class]] ||
+            [self isExsitVC:vc] == NO) {
             [temp addObject:vc];
         }
     }
