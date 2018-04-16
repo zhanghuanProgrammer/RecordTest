@@ -57,10 +57,10 @@
 - (void)updateTopVC{
     NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.vcStack];
     [self removeNotShowInWindow:vcStack];
-    NSLog(@"😄:%@",vcStack);
+//    NSLog(@"😄:%@",vcStack);
     if (vcStack.count>0) {
         self.topVC = [vcStack lastObject];
-        NSLog(@"当前最顶部的控制器%@",self.topVC);
+//        NSLog(@"当前最顶部的控制器%@",self.topVC);
     }else{
         NSLog(@"有异常情况发生:控制器堆栈被筛选后为空");
     }

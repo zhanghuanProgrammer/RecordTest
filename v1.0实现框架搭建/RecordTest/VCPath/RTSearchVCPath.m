@@ -32,7 +32,7 @@
         lastVC = curVC;
     }
     NSMutableArray *vcStacks = [NSMutableArray arrayWithArray:vcStack];
-//    [[RTTopVC shareInstance]removeNotShowInWindow:vcStacks];
+    [[RTTopVC shareInstance]removeNotShowInWindow:vcStacks];
     NSMutableArray *unionVC = [NSMutableArray array];
     for (NSString *vc in vcStacks) {
         Class vcCls = NSClassFromString(vc);

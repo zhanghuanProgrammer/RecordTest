@@ -12,7 +12,7 @@
 @implementation KVOAllView
 
 - (void)kvoAllView{
-    if ([RTOperationQueue shareInstance].isRecord || [RTCommandList shareInstance].isRunOperationQueue) {
+    if ([RTOperationQueue shareInstance].isRecord || [RTCommandList shareInstance].isRunOperationQueue || [RTSearchVCPath shareInstance].isLearnVCPath) {
         self.repearDictionary = nil;
         self.repearDictionary = [RTRepearDictionary new];
         for (int i = 0; i < [UIApplication sharedApplication].windows.count; i++) {

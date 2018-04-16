@@ -13,6 +13,7 @@
             [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
             [[RTInteraction shareInstance] startInteraction];
             [[RTTopVC shareInstance] hookTopVC];
+            [RTSearchVCPath shareInstance].isLearnVCPath = YES;
         }
     });
     return _sharedObject;

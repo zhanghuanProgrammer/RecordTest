@@ -6,6 +6,7 @@
 + (RTSearchVCPath *)shareInstance;
 @property (nonatomic,weak)UIViewController *curVC;
 @property (nonatomic,strong)NSMutableDictionary *topology;
+@property (nonatomic,assign)BOOL isLearnVCPath;
 
 - (void)adjustTopology:(NSArray *)vcStack;
 

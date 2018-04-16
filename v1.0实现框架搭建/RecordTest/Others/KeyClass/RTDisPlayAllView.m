@@ -3,7 +3,6 @@
 #import "AutoTestHeader.h"
 #import "UIView+RTLayerIndex.h"
 
-
 @interface RTDisPlayAllView ()
 @property (nonatomic,strong)NSMutableString *outstring;
 @end
