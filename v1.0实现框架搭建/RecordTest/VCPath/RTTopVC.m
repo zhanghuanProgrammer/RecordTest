@@ -34,14 +34,7 @@
         [UIViewController aspect_hookSelector:@selector(viewDidAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
             NSString* className = NSStringFromClass([[info instance] class]);
             [self.vcStack addObject:className];
-            [self updateTopVC];
-            
-            
-//            NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.vcStack];
-//            [self removeNotShowInWindow:vcStack];
-//            [[RTVCLearn shareInstance] setTopologyVC:vcStack];
-            
-            
+            [self updateTopVC:YES];
             [[RTCommandList shareInstance] initData];
             [[KVOAllView new] kvoAllView];
         } error:NULL];
@@ -49,7 +42,7 @@
         [UIViewController aspect_hookSelector:@selector(viewDidDisappear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
             NSString* className = NSStringFromClass([[info instance] class]);
             [self popVC:className];
-            [self updateTopVC];
+            [self updateTopVC:NO];
             [[RTCommandList shareInstance]initData];
         } error:NULL];
     }
@@ -68,16 +61,17 @@
     [self popNoExsitVCFromIndex:index];
 }
 
-- (void)updateTopVC{
+- (void)updateTopVC:(BOOL)isNewVC{
     NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.vcStack];
     [self removeNotShowInWindow:vcStack];
     [[RTVCLearn shareInstance] setUnionVC:vcStack];
+    if(isNewVC)[[RTVCLearn shareInstance]setTopologyVCMore:vcStack];
 //    [[RTVCLearn shareInstance] setTopologyVC:vcStack];
 //    NSLog(@"😄:%@",vcStack);
     if (vcStack.count>0) {
         self.topVC = [vcStack lastObject];
 //        NSLog(@"当前最顶部的控制器%@",self.topVC);
-    }else{
+    }else if(self.vcStack.count>0){
         NSLog(@"有异常情况发生:控制器堆栈被筛选后为空");
     }
 }
@@ -87,8 +81,8 @@
     for (NSString *vc in vcStack) {
         Class vcCls =  NSClassFromString(vc);
         if ([[RTSystemClass shareInstance] isSystemClass:vcCls] ||
-            [self rt_isKindOfClass:vcCls acls:[UINavigationController class]] ||
-            [self rt_isKindOfClass:vcCls acls:[UITabBarController class]] ||
+//            [self rt_isKindOfClass:vcCls acls:[UINavigationController class]] ||
+//            [self rt_isKindOfClass:vcCls acls:[UITabBarController class]] ||
             [self isExsitVC:vc] == NO) {
             [temp addObject:vc];
         }

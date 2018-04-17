@@ -9,6 +9,7 @@
 
 @property (nonatomic,strong)NSMutableDictionary *vcUnion;//页面相互共存的
 @property (nonatomic,strong)NSMutableString *topology;//vc路径,连续的操作路径
+@property (nonatomic,strong)NSMutableString *topologyMore;//vc路径,连续的操作路径(这个可以存在相同的push)
 
 @end
 @implementation RTVCLearn
@@ -22,6 +23,7 @@
         _sharedObject.vcIdentity = [NSMutableDictionary dictionary];
         _sharedObject.vcUnion = [NSMutableDictionary dictionary];
         _sharedObject.topology = [NSMutableString string];
+        _sharedObject.topologyMore = [NSMutableString string];
     });
     return _sharedObject;
 }
@@ -48,11 +50,9 @@
         if (!self.vcUnion[temp]) {
             self.vcUnion[temp] = @"";
 //            NSLog(@"%@",self.vcUnion);
-            NSLog(@"😄%@",temp);
             [self setTopologyVC:vcs unionVC:temp];
         }else{
             if (temp.length != lastIdentitys.length ||![temp isEqualToString:lastIdentitys]) {
-                NSLog(@"😄%@",temp);
                 [self setTopologyVC:vcs unionVC:temp];
             }
         }
@@ -67,6 +67,7 @@
         if (!lastVC) {
             [self.topology appendString:[self getVcIdentity:curVC]];
         }
+//        NSLog(@"😄%@",unionVC);
         if (lastVC && lastVC.length > 0 && ![lastVC isEqualToString:curVC]) {
             [self.topology appendFormat:@",%@",[self getVcIdentity:curVC]];
             NSString *unionSuffix = [self unionSuffix:unionVC topology:self.topology];
@@ -78,12 +79,28 @@
                 appendString = unionSuffix;
             }
             [self.topology replaceCharactersInRange:NSMakeRange(self.topology.length - unionSuffix.length , unionSuffix.length) withString:appendString];
-            NSLog(@"💣:%@",appendString);
+//            NSLog(@"💣:%@",appendString);
         }
         lastVC = curVC;
     }
 //    NSLog(@"当前最顶部的控制器%@",[RTTopVC shareInstance].topVC);
-    NSLog(@"👌%@",self.topology);
+//    NSLog(@"👌%@",self.topology);
+}
+
+- (void)setTopologyVCMore:(NSArray *)vcStack{
+    NSLog(@"%@",vcStack);
+    static NSString *lastVCMore = nil;
+    if (vcStack.count > 0) {
+        NSString *curVC = [vcStack lastObject];
+        if (!lastVCMore) {
+            [self.topologyMore appendString:[self getVcIdentity:curVC]];
+        }
+        if (lastVCMore && lastVCMore.length > 0 && ![lastVCMore isEqualToString:curVC]) {
+            [self.topologyMore appendFormat:@",%@",[self getVcIdentity:curVC]];
+        }
+        lastVCMore = curVC;
+    }
+    NSLog(@"👌%@",self.topologyMore);
 }
 
 - (NSString *)unionSuffix:(NSString *)unionVC topology:(NSString *)topology{
