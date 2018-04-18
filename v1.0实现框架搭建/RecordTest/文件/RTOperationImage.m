@@ -26,7 +26,11 @@
 }
 
 + (NSString *)documentsPath{
-    NSString *documentsPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    static NSString *documentsPath = nil;
+    if (documentsPath && documentsPath.length > 0) {
+        return documentsPath;
+    }
+    documentsPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
     return documentsPath;
 }
 

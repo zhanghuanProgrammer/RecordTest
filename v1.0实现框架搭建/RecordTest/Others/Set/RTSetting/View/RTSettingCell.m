@@ -62,6 +62,8 @@
     self.textLabel.text = item.title;
     if (item.titleFontSize > 0) {
         self.textLabel.font = [UIFont fontWithName:self.detailTextLabel.font.fontName size:item.titleFontSize];
+    }else{
+        self.textLabel.font = [UIFont systemFontOfSize:14];
     }
     if (item.titleColor) {
         self.textLabel.textColor = item.titleColor;

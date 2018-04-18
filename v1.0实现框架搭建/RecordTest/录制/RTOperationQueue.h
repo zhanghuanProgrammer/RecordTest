@@ -69,5 +69,6 @@ typedef NS_ENUM(NSUInteger, RTOperationQueueRunResultType) {
 + (NSArray *)allIdentifyModels;
 + (NSArray *)allIdentifyModelsForVC:(NSString *)vc;
 + (NSArray *)alloperationQueueModels;
++ (void)save;
 
 @end

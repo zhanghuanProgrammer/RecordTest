@@ -2,6 +2,10 @@
 #import "RTPlayBack.h"
 #import "RecordTestHeader.h"
 
+@interface RTPlayBack ()
+@property (nonatomic,strong)NSMutableDictionary *playBacksCache;//为了解决每次都要访问数据库而导致速度变慢
+@end
+
 @implementation RTPlayBack
 
 + (RTPlayBack *)shareInstance{
@@ -14,11 +18,24 @@
 }
 
 - (NSMutableDictionary *)playBacks{
+    if (self.playBacksCache) {
+        return self.playBacksCache;
+    }
     NSMutableDictionary *playBacks = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTPlayBack"];
     if (!playBacks) {
         playBacks = [NSMutableDictionary dictionary];
     }
+    self.playBacksCache = playBacks;
     return playBacks;
+}
+
++ (void)save{
+    [[RTPlayBack shareInstance] save];
+}
+- (void)save{
+    if ([RTPlayBack shareInstance].playBacksCache) {
+        [ZHSaveDataToFMDB insertDataWithData:[RTPlayBack shareInstance].playBacksCache WithIdentity:@"RTPlayBack"];
+    }
 }
 
 + (void)addPlayBacksFromOtherDataBase:(NSString *)dataBase{
@@ -26,7 +43,7 @@
     if (playBacksOther.count>0) {
         NSMutableDictionary *playBacks = [[RTPlayBack shareInstance] playBacks];
         [playBacks setValuesForKeysWithDictionary:playBacksOther];
-        [ZHSaveDataToFMDB insertDataWithData:playBacks WithIdentity:@"RTPlayBack"];
+        [self save];
     }
 }
 
@@ -34,7 +51,7 @@
     if (self.stamp > 0 && playBackModels.count > 0 && self.identify) {
         NSMutableDictionary *playBacks = [self playBacks];
         [playBacks setValue:@{[self.identify description]:playBackModels} forKey:[NSString stringWithFormat:@"%lld",self.stamp]];
-        [ZHSaveDataToFMDB insertDataWithData:playBacks WithIdentity:@"RTPlayBack"];
+        [self save];
     }
 }
 
@@ -46,7 +63,7 @@
                 [playBacks removeObjectForKey:stamp];
             }
         }
-        [ZHSaveDataToFMDB insertDataWithData:playBacks WithIdentity:@"RTPlayBack"];
+        [self save];
         [RTOperationImage deleteOverduePlayBackImage];
         [[RTRecordVideo shareInstance]deletePlayBackVideos:stamps];
     }

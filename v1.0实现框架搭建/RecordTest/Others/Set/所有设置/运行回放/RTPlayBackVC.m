@@ -48,6 +48,7 @@
     __weak typeof(self)weakSelf=self;
     if (self.videoPath.length>0 && [[NSFileManager defaultManager] fileExistsAtPath:[RTOperationImage videoPlayBackPathWithName:self.videoPath]]) {
         RTSettingItem *item = [RTSettingItem itemWithIcon:@"" title:self.isExport ? @"导出视频":@"播放视频" detail:nil type:ZFSettingItemTypeArrow];
+        item.titleFontSize = 14;
         item.operation = ^{
             if (weakSelf.isExport) {
                 [[RTALAssetsLibrary shareInstance] saveVideoToPhotosAlbum:[RTOperationImage videoPlayBackPathWithName:self.videoPath]];

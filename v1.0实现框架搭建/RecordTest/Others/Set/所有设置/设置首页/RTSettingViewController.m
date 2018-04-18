@@ -5,6 +5,7 @@
 #import "RTSetFileSizeViewController.h"
 #import "RTMigrationDataVC.h"
 #import "RTFileListVC.h"
+#import "RTFeedbackVC.h"
 
 @interface RTSettingViewController ()
 @end
@@ -148,13 +149,13 @@
     [self.allGroups addObject:group2];
     
     // 1.3占用存储空间
-    RTSettingItem *item3 = [RTSettingItem itemWithIcon:@"" title:@"占用存储空间" subTitle:[RTOperationImage allSize] type:ZFSettingItemTypeArrow];
+    RTSettingItem *item3 = [RTSettingItem itemWithIcon:@"" title:@"占用存储空间" subTitle:@"计算中..." type:ZFSettingItemTypeArrow];
     item3.subTitleFontSize = 10;
     item3.operation = ^{
         RTSetFileSizeViewController *vc = [RTSetFileSizeViewController new];
         [self.navigationController pushViewController:vc animated:YES];
     };
-    RTSettingItem *item3_1 = [RTSettingItem itemWithIcon:@"" title:@"沙盒目录" subTitle:[RTOperationImage homeDirectorySize] type:ZFSettingItemTypeArrow];
+    RTSettingItem *item3_1 = [RTSettingItem itemWithIcon:@"" title:@"沙盒目录" subTitle:@"计算中..." type:ZFSettingItemTypeArrow];
     item3_1.subTitleFontSize = 10;
     item3_1.operation = ^{
         [self.navigationController pushViewController:[RTFileListVC new] animated:YES];
@@ -163,6 +164,15 @@
     group3.header = @"存储空间";
     group3.items = @[item3,item3_1];
     [self.allGroups addObject:group3];
+    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        //通知主线程刷新
+        item3.subTitle = [RTOperationImage allSize];
+        item3_1.subTitle = [RTOperationImage homeDirectorySize];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+    });
     
     RTSettingItem *item4 = [RTSettingItem itemWithIcon:@"" title:@"共享数据到其它设备" subTitle:nil type:ZFSettingItemTypeArrow];
     item4.subTitleFontSize = 10;
@@ -191,8 +201,10 @@
     RTSettingItem *item5 = [RTSettingItem itemWithIcon:@"" title:@"退出登录" subTitle:nil type:ZFSettingItemTypeArrow];
     item5.subTitleFontSize = 10;
     item5.operation = ^{
-        RTLoginViewController *vc = [RTLoginViewController new];
-        [self.navigationController pushViewController:vc animated:YES];
+//        RTLoginViewController *vc = [RTLoginViewController new];
+//        [self.navigationController pushViewController:vc animated:YES];
+        
+        [self.navigationController pushViewController:[RTFeedbackVC new] animated:YES];
     };
     RTSettingGroup *group5 = [[RTSettingGroup alloc] init];
     group5.header = @"账户";

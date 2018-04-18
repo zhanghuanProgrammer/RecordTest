@@ -2,6 +2,11 @@
 #import "RTRecordVideo.h"
 #import "RecordTestHeader.h"
 
+@interface RTRecordVideo ()
+@property (nonatomic,strong)NSMutableDictionary *videosCache;
+@property (nonatomic,strong)NSMutableDictionary *videosPlayBacksCache;
+@end
+
 @implementation RTRecordVideo
 
 + (RTRecordVideo *)shareInstance{
@@ -13,25 +18,47 @@
     return _sharedObject;
 }
 - (NSMutableDictionary *)videos{
+    if (self.videosCache) {
+        return self.videosCache;
+    }
     NSMutableDictionary *videos = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTVideo"];
     if (!videos) {
         videos = [NSMutableDictionary dictionary];
     }
+    self.videosCache = videos;
     return videos;
 }
+
++ (void)save{
+    [[RTRecordVideo shareInstance] save];
+}
+
+- (void)save{
+    if ([RTRecordVideo shareInstance].videosCache) {
+        [ZHSaveDataToFMDB insertDataWithData:[RTRecordVideo shareInstance].videosCache WithIdentity:@"RTVideo"];
+    }
+    if ([RTRecordVideo shareInstance].videosPlayBacksCache) {
+        [ZHSaveDataToFMDB insertDataWithData:[RTRecordVideo shareInstance].videosPlayBacksCache WithIdentity:@"RTVideoPlayBack"];
+    }
+}
+
 + (void)addVideosFromOtherDataBase:(NSString *)dataBase{
     NSDictionary *videosOther = [RTOpenDataBase selectDataWithIdentity:@"RTVideo" dataBasePath:dataBase];
     if (videosOther.count>0) {
         NSMutableDictionary *videos = [[RTRecordVideo shareInstance] videos];
         [videos setValuesForKeysWithDictionary:videosOther];
-        [ZHSaveDataToFMDB insertDataWithData:videos WithIdentity:@"RTVideo"];
+        [self save];
     }
 }
 - (NSMutableDictionary *)videosPlayBacks{
+    if (self.videosPlayBacksCache) {
+        return self.videosPlayBacksCache;
+    }
     NSMutableDictionary *videosPlayBacks = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTVideoPlayBack"];
     if (!videosPlayBacks) {
         videosPlayBacks = [NSMutableDictionary dictionary];
     }
+    self.videosPlayBacksCache = videosPlayBacks;
     return videosPlayBacks;
 }
 + (void)addVideosPlayBacksFromOtherDataBase:(NSString *)dataBase{
@@ -39,21 +66,21 @@
     if (videosPlayBacksOther.count>0) {
         NSMutableDictionary *videosPlayBacks = [[RTRecordVideo shareInstance] videosPlayBacks];
         [videosPlayBacks setValuesForKeysWithDictionary:videosPlayBacksOther];
-        [ZHSaveDataToFMDB insertDataWithData:videosPlayBacks WithIdentity:@"RTVideoPlayBack"];
+        [self save];
     }
 }
 - (void)saveVideoPlayBackForStamp:(NSString *)stamp videoPath:(NSString *)videoPath{
     if (stamp > 0 && videoPath.length > 0) {
         NSMutableDictionary *playBacks = [self videosPlayBacks];
         [playBacks setValue:[RTOperationImage savePlayBackVideo:videoPath] forKey:stamp];
-        [ZHSaveDataToFMDB insertDataWithData:playBacks WithIdentity:@"RTVideoPlayBack"];
+        [self save];
     }
 }
 - (void)saveVideoForIdentify:(RTIdentify *)identify videoPath:(NSString *)videoPath{
     if ([identify description] > 0 && videoPath.length > 0) {
         NSMutableDictionary *videos = [self videos];
         [videos setValue:[RTOperationImage saveVideo:videoPath] forKey:[identify description]];
-        [ZHSaveDataToFMDB insertDataWithData:videos WithIdentity:@"RTVideo"];
+        [self save];
     }
 }
 
@@ -64,7 +91,7 @@
             [videos removeObjectForKey:[identify description]];
         }
     }
-    [ZHSaveDataToFMDB insertDataWithData:videos WithIdentity:@"RTVideo"];
+    [self save];
     [RTOperationImage deleteOverdueVideo];
 }
 
@@ -75,7 +102,7 @@
             [videosPlayBacks removeObjectForKey:stamp];
         }
     }
-    [ZHSaveDataToFMDB insertDataWithData:videosPlayBacks WithIdentity:@"RTVideoPlayBack"];
+    [self save];
     [RTOperationImage deleteOverduePlayBackVideo];
 }
 

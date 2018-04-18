@@ -51,7 +51,7 @@
 }
 
 - (NSString *)debugDescription{
-    return [NSString stringWithFormat:@"%@-%@-%@",self.view,[self typeString],[self parameterString]];
+    return [NSString stringWithFormat:@"%@-%@-%@-%@",self.view,[self typeString],[self parameterString],self.vc];
 }
 
 - (NSString *)parameterString{
@@ -144,6 +144,7 @@
 @interface RTOperationQueue ()
 
 @property (nonatomic,strong)NSMutableArray *operationQueue;
+@property (nonatomic,strong)NSMutableDictionary *operationQueuesCache;//为了解决每次都要访问数据库而导致速度变慢
 
 @end
 
@@ -252,7 +253,7 @@
     model.viewId = view.layerDirector;
     model.parameters = parameters;
     model.view = NSStringFromClass(view.class);
-    model.vc = [view curViewController];
+    model.vc = [RTTopVC shareInstance].topVC;
     model.imagePath = [RTOperationImage saveOperationImage:[[RTViewHierarchy new] snap:[view targetViewWithOperation:model] type:type]];
     [[RTOperationQueue shareInstance].operationQueue addObject:model];
     if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {
@@ -262,11 +263,25 @@
 }
 
 + (NSMutableDictionary *)operationQueues{
+    if ([RTOperationQueue shareInstance].operationQueuesCache) {
+        return [RTOperationQueue shareInstance].operationQueuesCache;
+    }
     NSMutableDictionary *operationQueues = [ZHSaveDataToFMDB selectDataWithIdentity:@"operationQueue"];
     if (!operationQueues) {
         operationQueues = [NSMutableDictionary dictionary];
     }
+    [RTOperationQueue shareInstance].operationQueuesCache = operationQueues;
     return operationQueues;
+}
+
+- (void)save{
+    if ([RTOperationQueue shareInstance].operationQueuesCache) {
+        [ZHSaveDataToFMDB insertDataWithData:[RTOperationQueue shareInstance].operationQueuesCache WithIdentity:@"operationQueue"];
+    }
+}
+
++ (void)save{
+    [[RTOperationQueue shareInstance] save];
 }
 
 + (void)addOperationQueuesFromOtherDataBase:(NSString *)dataBase{
@@ -274,7 +289,7 @@
     if (operationQueuesOther.count>0) {
         NSMutableDictionary *operationQueues = [self operationQueues];
         [operationQueues setValuesForKeysWithDictionary:operationQueuesOther];
-        [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+        [self save];
     }
 }
 
@@ -285,7 +300,7 @@
         return NO;
     }
     [operationQueues setValue:[RTOperationQueue shareInstance].operationQueue forKey:[identify description]];
-    [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+    [self save];
     [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"保存成功!"];
     [[RTScreenRecorder sharedInstance] stopRecordingWithCompletion:^(NSString *videoPath) {
         [[RTRecordVideo shareInstance] saveVideoForIdentify:identify videoPath:videoPath];
@@ -316,7 +331,7 @@
     }
     if (isSuccess) {
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"删除成功!"];
-        [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+        [self save];
         [RTOperationImage deleteOverdueImage];
     }else{
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"删除下标不存在!"];
@@ -327,7 +342,7 @@
     if (operationQueues[[identify description]]) {
         [operationQueues removeObjectForKey:[identify description]];
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"删除成功!"];
-        [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+        [self save];
         [RTOperationImage deleteOverdueImage];
     }else{
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"删除对象不存在!"];
@@ -347,7 +362,7 @@
     }else{
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:[NSString stringWithFormat:@"成功删除了%zd个,%zd个不存在!",count,identifys.count - count]];
     }
-    [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+    [self save];
     [RTOperationImage deleteOverdueImage];
     [[RTRecordVideo shareInstance] deleteVideos:identifys];
 }
@@ -355,7 +370,7 @@
 + (BOOL)reChanggeOperationQueue:(RTIdentify *)identify{
     NSMutableDictionary *operationQueues = [self operationQueues];
     [operationQueues setValue:[RTOperationQueue shareInstance].operationQueue forKey:[identify description]];
-    [ZHSaveDataToFMDB insertDataWithData:operationQueues WithIdentity:@"operationQueue"];
+    [self save];
     [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"保存成功!"];
     return YES;
 }

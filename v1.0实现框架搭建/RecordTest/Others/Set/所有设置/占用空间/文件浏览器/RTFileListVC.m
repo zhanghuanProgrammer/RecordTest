@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSMutableArray    *fileList;
 @property (nonatomic, strong) UIView            *headerView;
 @property (nonatomic, strong) NSString *directoryStr;
+@property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;
 
 @end
 
@@ -30,6 +31,37 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.tableFooterView = [UIView new];
+    
+    self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [self.view addSubview:self.activityIndicatorView];
+    self.activityIndicatorView.center = self.view.center;
+    self.activityIndicatorView.y-=64;
+    [self.activityIndicatorView startAnimating];
+    
+    if (!self.directoryStr) self.directoryStr = NSHomeDirectory();
+    
+    UINavigationItem *navigationItem = self.navigationItem;
+    if (![self.navigationController isKindOfClass:[UINavigationController class]]) {
+        UINavigationItem *navigationItem = [[UINavigationItem alloc] initWithTitle:@""];
+        UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, HLNavigationBarHeight)];
+        [navigationBar pushNavigationItem:navigationItem animated:NO];
+        UIBarButtonItem *backBarItem = [[UIBarButtonItem alloc] initWithTitle:@"<返回" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+        navigationItem.leftBarButtonItem = backBarItem;
+        self.headerView = navigationBar;
+        [self.view addSubview:navigationBar];
+    }
+    if (self.directoryStr.length == NSHomeDirectory().length && [self.directoryStr isEqualToString:NSHomeDirectory()]) {
+        navigationItem.title = @"沙盒目录";
+    }else{
+        navigationItem.title = [self.directoryStr lastPathComponent];
+    }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self loadData];
+    });
+}
+
+- (void)loadData{
     NSArray *fileList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.directoryStr?:NSHomeDirectory() error:nil];
     NSMutableArray *directoryLists = [NSMutableArray array];
     NSMutableArray *fileLists = [NSMutableArray array];
@@ -50,23 +82,14 @@
     self.fileList = [NSMutableArray array];
     [self.fileList addObjectsFromArray:directoryLists];
     [self.fileList addObjectsFromArray:fileLists];
-
-    UINavigationItem *navigationItem = self.navigationItem;
-    if (![self.navigationController isKindOfClass:[UINavigationController class]]) {
-        UINavigationItem *navigationItem = [[UINavigationItem alloc] initWithTitle:@""];
-        UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, HLNavigationBarHeight)];
-        [navigationBar pushNavigationItem:navigationItem animated:NO];
-        UIBarButtonItem *backBarItem = [[UIBarButtonItem alloc] initWithTitle:@"<返回" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
-        navigationItem.leftBarButtonItem = backBarItem;
-        self.headerView = navigationBar;
-        [self.view addSubview:navigationBar];
-    }
-    if (self.directoryStr.length == NSHomeDirectory().length && [self.directoryStr isEqualToString:NSHomeDirectory()]) {
-        navigationItem.title = @"沙盒目录";
-    }else{
-        navigationItem.title = [self.directoryStr lastPathComponent];
-    }
+    
+    //通知主线程刷新
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.activityIndicatorView stopAnimating];
+        [self.tableView reloadData];
+    });
 }
+
 - (NSString *)getSendBoxPath:(NSString *)path{
     NSString *directoryStr = nil;
     if (!self.directoryStr) directoryStr = self.directoryStr = NSHomeDirectory();

@@ -12,6 +12,7 @@
 @property (nonatomic,strong)NSMutableString *topologyMore;//vc路径,连续的操作路径(这个可以存在相同的push)
 
 @end
+
 @implementation RTVCLearn
 
 + (RTVCLearn*)shareInstance{
@@ -88,7 +89,7 @@
 }
 
 - (void)setTopologyVCMore:(NSArray *)vcStack{
-    NSLog(@"%@",vcStack);
+//    NSLog(@"%@",vcStack);
     static NSString *lastVCMore = nil;
     if (vcStack.count > 0) {
         NSString *curVC = [vcStack lastObject];
@@ -100,7 +101,7 @@
         }
         lastVCMore = curVC;
     }
-    NSLog(@"👌%@",self.topologyMore);
+//    NSLog(@"👌%@",self.topologyMore);
 }
 
 - (NSString *)unionSuffix:(NSString *)unionVC topology:(NSString *)topology{
