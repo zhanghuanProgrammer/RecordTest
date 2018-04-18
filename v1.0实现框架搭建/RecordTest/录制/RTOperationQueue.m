@@ -47,7 +47,8 @@
 //}
 
 - (NSString *)description{
-    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,[self typeString],[self parameterString]];
+//    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,[self typeString],[self parameterString]];
+    return [NSString stringWithFormat:@"%@-%@-%@-%@",self.view,[self typeString],[self parameterString],self.vc];
 }
 
 - (NSString *)debugDescription{
@@ -226,6 +227,7 @@
 }
 
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat{
+    [RTSearchVCPath addOperation:view type:type parameters:parameters repeat:repeat];
     if (!IsRecord || (![RTOperationQueue shareInstance].isRecord) || ([RTOperationQueue shareInstance].isStopRecordTemp)) {
         return;
     }
