@@ -227,7 +227,7 @@
 }
 
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat{
-    [RTSearchVCPath addOperation:view type:type parameters:parameters repeat:repeat];
+//    [RTSearchVCPath addOperation:view type:type parameters:parameters repeat:repeat];
     if (!IsRecord || (![RTOperationQueue shareInstance].isRecord) || ([RTOperationQueue shareInstance].isStopRecordTemp)) {
         return;
     }
