@@ -6,8 +6,9 @@
 
 @property (nonatomic,strong)NSMutableArray *operationQueue;
 @property (nonatomic,assign)BOOL shouldSave;
+@property (nonatomic,assign)NSInteger identity;
 @property (nonatomic,copy)NSString *searchVCPath;
-
+@property (nonatomic,weak)UIViewController *curVC;
 @end
 
 @implementation RTSearchVCPath
@@ -17,8 +18,16 @@
     __strong static RTSearchVCPath *_sharedObject = nil;
     dispatch_once(&pred, ^{
         _sharedObject = [[RTSearchVCPath alloc] init];
-        _sharedObject.operationQueue = [NSMutableArray array];
         _sharedObject.searchVCPath = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/SearchVCPath"];
+        _sharedObject.operationQueue = [NSKeyedUnarchiver unarchiveObjectWithFile:_sharedObject.searchVCPath];
+        _sharedObject.identity = 1;
+        if (!_sharedObject.operationQueue) {
+            _sharedObject.operationQueue = [NSMutableArray array];
+        }
+        if (_sharedObject.operationQueue.count>0) {
+            RTOperationQueueModel *model = [_sharedObject.operationQueue lastObject];
+            _sharedObject.identity = model.runResult + 1;
+        }
         [_sharedObject autoSave];
     });
     return _sharedObject;
@@ -26,7 +35,7 @@
 
 - (void)autoSave{
     if (self.shouldSave) {
-        [self.operationQueue writeToFile:self.searchVCPath atomically:YES];
+        [[NSKeyedArchiver archivedDataWithRootObject:self.operationQueue] writeToFile:self.searchVCPath atomically:YES];
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self autoSave];
@@ -59,6 +68,7 @@
     model.parameters = parameters;
     model.view = NSStringFromClass(view.class);
     model.vc = [RTTopVC shareInstance].topVC;
+    model.runResult = [RTSearchVCPath shareInstance].identity;
     [[RTSearchVCPath shareInstance].operationQueue addObject:model];
     while ([RTSearchVCPath shareInstance].operationQueue.count>1000) {
         [[RTSearchVCPath shareInstance].operationQueue removeObjectAtIndex:0];
@@ -88,6 +98,8 @@
 }
 
 - (BOOL)canGoToVC:(NSString *)vc{
+    NSString *topVC = [RTTopVC shareInstance].topVC;
+    
     return NO;
 }
 

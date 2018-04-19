@@ -48,7 +48,7 @@
 
 - (NSString *)description{
 //    return [NSString stringWithFormat:@"%@-%@-%@",self.viewId,[self typeString],[self parameterString]];
-    return [NSString stringWithFormat:@"%@-%@-%@-%@",self.view,[self typeString],[self parameterString],self.vc];
+    return [NSString stringWithFormat:@"%@-%@-%@-%@",self.view,[self typeString],[self vc],@(self.runResult)];
 }
 
 - (NSString *)debugDescription{
@@ -301,7 +301,7 @@
         [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"已经存在!"];
         return NO;
     }
-    [operationQueues setValue:[RTOperationQueue shareInstance].operationQueue forKey:[identify description]];
+    [operationQueues setValue:[[RTOperationQueue shareInstance].operationQueue mutableCopy] forKey:[identify description]];
     [self save];
     [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"保存成功!"];
     [[RTScreenRecorder sharedInstance] stopRecordingWithCompletion:^(NSString *videoPath) {
@@ -371,7 +371,7 @@
 
 + (BOOL)reChanggeOperationQueue:(RTIdentify *)identify{
     NSMutableDictionary *operationQueues = [self operationQueues];
-    [operationQueues setValue:[RTOperationQueue shareInstance].operationQueue forKey:[identify description]];
+    [operationQueues setValue:[[RTOperationQueue shareInstance].operationQueue mutableCopy] forKey:[identify description]];
     [self save];
     [JohnAlertManager showAlertWithType:JohnTopAlertTypeSuccess title:@"保存成功!"];
     return YES;

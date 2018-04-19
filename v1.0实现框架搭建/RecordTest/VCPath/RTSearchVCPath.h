@@ -5,7 +5,6 @@
 @interface RTSearchVCPath : NSObject
 
 + (RTSearchVCPath *)shareInstance;
-@property (nonatomic,weak)UIViewController *curVC;
 
 @property (nonatomic,assign)BOOL isLearnVCPath;
 
