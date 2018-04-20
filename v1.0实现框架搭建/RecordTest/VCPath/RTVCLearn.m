@@ -30,6 +30,9 @@
 }
 
 - (NSString *)getVcIdentity:(NSString *)vc{
+    if (!vc) {
+        return @"";
+    }
     NSString *vcIdentity = self.vcIdentity[vc];
     if (!vcIdentity) {
         vcIdentity = [NSString stringWithFormat:@"%lu",(unsigned long)self.vcIdentity.count];
@@ -37,6 +40,14 @@
         [self.vcIdentityReverse addObject:vc];
     }
     return vcIdentity;
+}
+
+- (NSString *)getVcWithIdentity:(NSString *)identity{
+    NSInteger index = [identity integerValue];
+    if (self.vcIdentityReverse.count>index) {
+        return self.vcIdentityReverse[index];
+    }
+    return nil;
 }
 
 - (void)setUnionVC:(NSArray *)vcs{

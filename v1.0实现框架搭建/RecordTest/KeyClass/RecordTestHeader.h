@@ -27,7 +27,6 @@
 #import "RTRecordVideo.h"
 #import "RTOpenDataBase.h"
 #import "RTSearchVCPath.h"
-#import "RTConsole.h"
 #import "RTLoginViewController.h"
 #import "RTRegistViewController.h"
 #import "RTForgetPasswordViewController.h"

@@ -1,6 +1,8 @@
 
 #import "RTSearchVCPath.h"
 #import "RecordTestHeader.h"
+#import "RTVertex.h"
+#import "NSArray+ZH.h"
 
 @interface RTSearchVCPath ()
 
@@ -43,6 +45,7 @@
 }
 
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat{
+    [[RTSearchVCPath shareInstance]goToVC:nil];
     if (![RTSearchVCPath shareInstance].isLearnVCPath) {
         return;
     }
@@ -98,12 +101,25 @@
 }
 
 - (BOOL)canGoToVC:(NSString *)vc{
-    NSString *topVC = [RTTopVC shareInstance].topVC;
-    
     return NO;
 }
 
 - (void)goToVC:(NSString *)vc{
+    NSString *topVC = [RTTopVC shareInstance].topVC;
+    NSMutableArray *arr = [RTVertex shortestPath:[RTSearchVCPath shareInstance].operationQueue from:topVC to:@"CompanyLocationVC"].mutableCopy;
+    NSLog(@"😁👌%@",@"路径如下:");
+    [arr reverse];
+    if (arr.count>1) {
+        for (NSInteger i=0; i<arr.count-1; i++) {
+            NSString *cur = arr[i];
+            NSString *curNext = arr[i+1];
+            NSLog(@"%@👌%@",[NSString stringWithFormat:@"%@->%@",cur,curNext],[[RTVertex shareInstance].repearDictionary getValuesForKey:[NSString stringWithFormat:@"%@->%@",cur,curNext]]);
+        }
+    }
+    
+    for (NSString *vc in arr) {
+        NSLog(@"%@",[[RTVCLearn shareInstance] getVcWithIdentity:vc]);
+    }
     
 }
 
