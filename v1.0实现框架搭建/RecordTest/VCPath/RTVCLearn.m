@@ -61,7 +61,6 @@
         NSString *temp = [identitys substringToIndex:identitys.length-1];
         if (!self.vcUnion[temp]) {
             self.vcUnion[temp] = @"";
-//            NSLog(@"%@",self.vcUnion);
             [self setTopologyVC:vcs unionVC:temp];
         }else{
             if (temp.length != lastIdentitys.length ||![temp isEqualToString:lastIdentitys]) {
@@ -70,7 +69,10 @@
         }
         lastIdentitys = temp;
     }
+//    NSLog(@"%@",self.vcUnion);
 }
+
+
 
 - (void)setTopologyVC:(NSArray *)vcStack unionVC:(NSString *)unionVC{
     static NSString *lastVC = nil;

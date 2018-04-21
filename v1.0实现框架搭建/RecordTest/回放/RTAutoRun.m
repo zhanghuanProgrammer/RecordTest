@@ -24,13 +24,25 @@
 
 - (void)repeatAction{
     if (![RTCommandList shareInstance].isRunOperationQueue) {
-        if (self.autoRunQueue.count > self.index) {
-            RTIdentify *identify = self.autoRunQueue[self.index++];
-            [[RTCommandList shareInstance] setOperationQueue:identify];
-            //延迟1s,不然太快会导致录制屏幕那里的多线程和信号量提前被释放
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[RTCommandList shareInstance] runStep:YES];
-            });
+        if (self.autoRunQueue.count > self.index && ![RTAutoJump shareInstance].isJump) {
+            RTIdentify *identify = self.autoRunQueue[self.index];
+            if ([identify.forVC isEqualToString:[RTTopVC shareInstance].topVC]) {
+                self.index++;
+                [RTAutoJump shareInstance].canotJump = NO;
+                [[RTCommandList shareInstance] setOperationQueue:identify];
+                //延迟1s,不然太快会导致录制屏幕那里的多线程和信号量提前被释放
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [[RTCommandList shareInstance] runStep:YES];
+                });
+            }else{
+                if ([RTAutoJump shareInstance].canotJump) {
+                    self.index++;
+                    [RTAutoJump shareInstance].canotJump = NO;
+                }else{
+                    //开始自动寻址并跳转
+                    [[RTAutoJump shareInstance] gotoVC:identify.forVC];
+                }
+            }
         }else{
             [self stop];
         }

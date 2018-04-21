@@ -6,7 +6,6 @@
 
 @interface RTSearchVCPath ()
 
-@property (nonatomic,strong)NSMutableArray *operationQueue;
 @property (nonatomic,assign)BOOL shouldSave;
 @property (nonatomic,assign)NSInteger identity;
 @property (nonatomic,copy)NSString *searchVCPath;
@@ -45,7 +44,6 @@
 }
 
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat{
-    [[RTSearchVCPath shareInstance]goToVC:nil];
     if (![RTSearchVCPath shareInstance].isLearnVCPath) {
         return;
     }
@@ -60,7 +58,7 @@
             }
             if ([model.viewId isEqualToString:view.layerDirector] && model.type == type) {
                 model.parameters = parameters;
-                NSLog(@"%@",[RTSearchVCPath shareInstance].operationQueue);
+//                NSLog(@"%@",[RTSearchVCPath shareInstance].operationQueue);
                 return;
             }
         }
@@ -76,7 +74,7 @@
     while ([RTSearchVCPath shareInstance].operationQueue.count>1000) {
         [[RTSearchVCPath shareInstance].operationQueue removeObjectAtIndex:0];
     }
-    NSLog(@"%@",[RTSearchVCPath shareInstance].operationQueue);
+//    NSLog(@"%@",[RTSearchVCPath shareInstance].operationQueue);
 }
 
 - (void)goToRootVC{
@@ -105,22 +103,26 @@
 }
 
 - (void)goToVC:(NSString *)vc{
-    NSString *topVC = [RTTopVC shareInstance].topVC;
-    NSMutableArray *arr = [RTVertex shortestPath:[RTSearchVCPath shareInstance].operationQueue from:topVC to:@"CompanyLocationVC"].mutableCopy;
-    NSLog(@"😁👌%@",@"路径如下:");
+    
+}
+
+- (NSArray *)stepGoToVc:(NSString *)vc{
+    NSMutableArray *arr = [RTVertex shortestPath:[RTSearchVCPath shareInstance].operationQueue from:[RTTopVC shareInstance].topVC to:vc].mutableCopy;
     [arr reverse];
+    NSMutableArray *steps = [NSMutableArray array];
     if (arr.count>1) {
         for (NSInteger i=0; i<arr.count-1; i++) {
             NSString *cur = arr[i];
             NSString *curNext = arr[i+1];
-            NSLog(@"%@👌%@",[NSString stringWithFormat:@"%@->%@",cur,curNext],[[RTVertex shareInstance].repearDictionary getValuesForKey:[NSString stringWithFormat:@"%@->%@",cur,curNext]]);
+            NSDictionary *values = [[RTVertex shareInstance].repearDictionary getValuesForKey:[NSString stringWithFormat:@"%@->%@",cur,curNext]];
+            [steps addObject:[values allValues]];
         }
     }
-    
-    for (NSString *vc in arr) {
-        NSLog(@"%@",[[RTVCLearn shareInstance] getVcWithIdentity:vc]);
-    }
-    
+    return steps;
+}
+
+- (NSArray *)allCanGotoVcs{
+    return [RTVertex allShortestPath:[RTSearchVCPath shareInstance].operationQueue from:[RTTopVC shareInstance].topVC];
 }
 
 @end

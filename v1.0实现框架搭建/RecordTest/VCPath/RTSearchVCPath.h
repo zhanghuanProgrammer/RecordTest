@@ -5,6 +5,7 @@
 @interface RTSearchVCPath : NSObject
 
 + (RTSearchVCPath *)shareInstance;
+@property (nonatomic,strong)NSMutableArray *operationQueue;
 
 @property (nonatomic,assign)BOOL isLearnVCPath;
 
@@ -12,5 +13,8 @@
 
 - (BOOL)canGoToVC:(NSString *)vc;
 - (void)goToVC:(NSString *)vc;
+
+- (NSArray *)stepGoToVc:(NSString *)vc;
+- (NSArray *)allCanGotoVcs;
 
 @end

@@ -4,6 +4,7 @@
 @interface RTTopVC : NSObject
 
 + (RTTopVC *)shareInstance;
+- (BOOL)isContainVC:(NSString *)vc;
 - (void)updateTopVC:(BOOL)isNewVC;
 - (void)hookTopVC;
 - (void)removeNotShowInWindow:(NSMutableArray *)vcStack;

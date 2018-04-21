@@ -1,18 +1,15 @@
 
-#import "RTSetMainViewController.h"
+#import "RTJumpVC.h"
 #import "RTSegmentedSlideSwitch.h"
-#import "RTSettingViewController.h"
 #import "RecordTestHeader.h"
-#import "RTAllRecordVC.h"
-#import "RTPlaybackViewController.h"
-#import "RTMoreFuncVC.h"
+#import "RTJumpListVC.h"
 
-@interface RTSetMainViewController ()<RTSlideSwitchDelegate>
+@interface RTJumpVC ()<RTSlideSwitchDelegate>
 @property (nonatomic,strong)RTSegmentedSlideSwitch *slideSwitch;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;
 @end
 
-@implementation RTSetMainViewController
+@implementation RTJumpVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,25 +34,10 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSMutableArray *viewControllers = [NSMutableArray new];
             
-            RTMoreFuncVC *more_vc = [RTMoreFuncVC new];
-            more_vc.title = @"功能";
-            [viewControllers addObject:more_vc];
-            [self addChildViewController:more_vc];
-            
-            RTAllRecordVC *allRecord_vc = [RTAllRecordVC new];
-            allRecord_vc.title = @"录制";
-            [viewControllers addObject:allRecord_vc];
-            [self addChildViewController:allRecord_vc];
-            
-            RTPlaybackViewController *playback_vc = [RTPlaybackViewController new];
-            playback_vc.title = @"回放";
-            [viewControllers addObject:playback_vc];
-            [self addChildViewController:playback_vc];
-            
-            RTSettingViewController *set_vc = [RTSettingViewController new];
-            set_vc.title = @"设置";
-            [viewControllers addObject:set_vc];
-            [self addChildViewController:set_vc];
+            RTJumpListVC *jumplist_vc = [RTJumpListVC new];
+            jumplist_vc.title = @"跳转到";
+            [viewControllers addObject:jumplist_vc];
+            [self addChildViewController:jumplist_vc];
             
             _slideSwitch = [[RTSegmentedSlideSwitch alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 64)];
             _slideSwitch.backgroundColor = [UIColor whiteColor];

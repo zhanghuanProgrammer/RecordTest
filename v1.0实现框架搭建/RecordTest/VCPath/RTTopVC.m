@@ -29,6 +29,10 @@
     return [self rt_isKindOfClass:scls acls:acls];
 }
 
+- (BOOL)isContainVC:(NSString *)vc{
+    return [_vcStack containsObject:vc];
+}
+
 - (void)hookTopVC{
     if (Run) {
         [UIViewController aspect_hookSelector:@selector(viewDidAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
@@ -156,4 +160,3 @@
 }
 
 @end
-

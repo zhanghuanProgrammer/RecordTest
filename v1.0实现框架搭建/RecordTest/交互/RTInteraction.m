@@ -6,6 +6,7 @@
 #import "RTCommandListVCViewController.h"
 #import "RTSetMainViewController.h"
 #import "AutoTestProject.h"
+#import "RTJumpVC.h"
 
 @interface RTInteraction ()<SuspendBallDelegte>
 
@@ -24,7 +25,7 @@
 
 - (void)startInteraction{
     SuspendBall *suspendBall = [SuspendBall suspendBallWithFrame:CGRectMake(0, 64, 50, 50) delegate:self subBallImageArray:@[@"SuspendBall_down",@"SuspendBall_monkey",@"SuspendBall_list",@"SuspendBall_startrecord",@"SuspendBall_set"]];
-    suspendBall.titleGroup = @[@"下一步",@"自动测试",@"列表",@"开始录制",@"更多"];
+    suspendBall.titleGroup = @[@"下一步",@"跳转",@"列表",@"开始录制",@"更多"];
     [[UIApplication sharedApplication].keyWindow addSubview:suspendBall];
     suspendBall.isNoNeedKVO = suspendBall.isNoNeedSnap = YES;
     RTCommandList *list = [[RTCommandList alloc]initInKeyWindowWithFrame:CGRectMake(0, suspendBall.maxY, 200, 12*10)];
@@ -55,10 +56,7 @@
         }break;
         case 1:{
             [self hideAll];
-            [JohnAlertManager showAlertWithType:JohnTopAlertTypeError title:@"开始Monkey测试!"];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [[AutoTestProject shareInstance] autoTest];
-            });
+            [[UIViewController getCurrentVC] presentViewController:[[UINavigationController alloc] initWithRootViewController:[RTJumpVC new]] animated:YES completion:nil];
         }break;
         case 2:{
             [RTCommandList shareInstance].hidden = ![RTCommandList shareInstance].hidden;
