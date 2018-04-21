@@ -55,6 +55,9 @@
         self.headerView=[[RTPublicFooterButtonView new] publicFooterOneButtonViewWithFrame:CGRectMake(0, 0, self.view.width, 84) withTitle:@"停止" withTarget:self withSelector:@selector(stopAction)];
     }
     self.navigationController.navigationBar.translucent = NO;
+    if (![RTCommandList shareInstance].isRunOperationQueue) {
+        [self editAction];
+    }
 }
 
 - (void)delete{

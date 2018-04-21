@@ -52,7 +52,9 @@
              @"RTAllRecordVC",@"RTPlaybackViewController",@"RTPlayBackVC",
              @"RTCommandListVCViewController",@"RTJumpListVC",@"RTJumpVC",
              @"RTMoreFuncVC",@"RTSetFileSizeViewController",@"RTSetMainViewController",
-             @"RTSettingViewController",@"JDStatusBarNotificationViewController"
+             @"RTSettingViewController",@"JDStatusBarNotificationViewController",
+             @"RTOperationsVC",@"RTMutableRunVC",@"RTPhotosViewController",
+             @"RTMigrationDataVC",@"RTFileListVC",@"RTFilePreVC"
              ]
             containsObject:vc];
 }

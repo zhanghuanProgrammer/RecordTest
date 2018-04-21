@@ -65,7 +65,7 @@
     return result;
 }
 
-+ (void)popOrDismissViewController:(UIViewController *)viewController{
++ (BOOL)popOrDismissViewController:(UIViewController *)viewController{
     
     UIViewController *curVC=[self getCurrentVC];
     if (curVC==viewController) {
@@ -79,11 +79,12 @@
     if (viewcontrollers.count > 1){
         if ([viewcontrollers objectAtIndex:viewcontrollers.count - 1] == viewController){
             //push方式
-            [viewController.navigationController popViewControllerAnimated:YES];
+            return [viewController.navigationController popViewControllerAnimated:NO]?YES:NO;
         }
     }else{
-        [viewController dismissViewControllerAnimated:YES completion:nil];
+        [viewController dismissViewControllerAnimated:NO completion:nil];
     }
+    return NO;
 }
 
 @end

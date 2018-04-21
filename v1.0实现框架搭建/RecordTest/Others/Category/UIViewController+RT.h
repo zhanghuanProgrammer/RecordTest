@@ -13,6 +13,6 @@
 /**获取显示在window当前最顶部的viewController*/
 + (UIViewController *)getCurrentVC;
 /**退出显示在window当前最顶部的viewController*/
-+ (void)popOrDismissViewController:(UIViewController *)viewController;
++ (BOOL)popOrDismissViewController:(UIViewController *)viewController;
 
 @end

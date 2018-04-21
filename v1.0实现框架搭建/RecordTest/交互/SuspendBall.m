@@ -292,6 +292,7 @@ static CGFloat btnSmallImageWidth = 30;
     
     __weak typeof(self) weakSelf = self;
     if (_showFunction == NO) {
+        [RTCommandList shareInstance].hidden = NO;
         if ([RTOperationQueue shareInstance].isRecord) {
             [RTOperationQueue startOrStopRecord];
             return;
@@ -312,6 +313,7 @@ static CGFloat btnSmallImageWidth = 30;
         return;
         
     } else if (_showFunction == YES) { //full state
+        [RTCommandList shareInstance].hidden = YES;
         self.backgroundColor = _superBallBackColor;
         if(self.showImage){
             [self setImage:[self resizeImage:[UIImage imageNamed:@"SuspendBall_home"] wantSize:CGSizeMake(btnBigImageWidth, btnBigImageWidth)] forState:0];

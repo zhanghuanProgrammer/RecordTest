@@ -45,13 +45,13 @@
                     runFailure = 0;
                 }else{
                     runFailure ++;
-                    [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"执行失败 次数:%d/10",runFailure] dismissAfter:1 styleName:JDStatusBarStyleError];
+                    [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"跳转-执行失败 次数:%d/5",runFailure] dismissAfter:1 styleName:JDStatusBarStyleError];
                 }
             }else{
                 runFailure ++;
-                [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"没找到控件 次数:%d/10",runFailure] dismissAfter:1 styleName:JDStatusBarStyleWarning];
+                [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"跳转-没找到控件 次数:%d/5",runFailure] dismissAfter:1 styleName:JDStatusBarStyleWarning];
             }
-            if (runFailure >= 10) {//执行10次还是失败,说明这句命令是真的不能执行了,或者是因为网络问题,实在加载不出来对应的控件了,这个是用来自动运行的
+            if (runFailure >= 5) {//执行10次还是失败,说明这句命令是真的不能执行了,或者是因为网络问题,实在加载不出来对应的控件了,这个是用来自动运行的
                 runFailure = 0;
                 [self nextStep];
             }

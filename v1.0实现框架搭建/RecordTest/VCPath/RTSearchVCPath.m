@@ -72,17 +72,20 @@
     model.runResult = [RTSearchVCPath shareInstance].identity;
     [[RTSearchVCPath shareInstance].operationQueue addObject:model];
     while ([RTSearchVCPath shareInstance].operationQueue.count>1000) {
+        [RTSearchVCPath shareInstance].isLearnVCPath = NO;
         [[RTSearchVCPath shareInstance].operationQueue removeObjectAtIndex:0];
     }
 //    NSLog(@"%@",[RTSearchVCPath shareInstance].operationQueue);
 }
 
-- (void)goToRootVC{
-    if (self.curVC.navigationController && [self.curVC.navigationController isKindOfClass:[UINavigationController class]]) {
-        [self.curVC.navigationController popToRootViewControllerAnimated:NO];
-    }else{
-        [self.curVC dismissViewControllerAnimated:NO completion:nil];
+- (BOOL)popVC{
+    NSString *topVC = [RTTopVC shareInstance].topVC;
+    BOOL isPop = [UIViewController popOrDismissViewController:nil];
+    if(isPop)return YES;
+    if ([topVC isEqualToString:[RTTopVC shareInstance].topVC]) {
+        return NO;
     }
+    return YES;
 }
 
 - (BOOL)canPopToVC:(NSString *)vc{
@@ -96,14 +99,6 @@
         return YES;
     }
     return NO;
-}
-
-- (BOOL)canGoToVC:(NSString *)vc{
-    return NO;
-}
-
-- (void)goToVC:(NSString *)vc{
-    
 }
 
 - (NSArray *)stepGoToVc:(NSString *)vc{
