@@ -2,6 +2,8 @@
 #import "RTMoreFuncVC.h"
 #import "RecordTestHeader.h"
 #import "AutoTestProject.h"
+#import "RTUnionListVC.h"
+#import "RTTraceListVC.h"
 
 @implementation RTMoreFuncVC
 
@@ -26,9 +28,22 @@
             [weakSelf dismissViewControllerAnimated:NO completion:nil];
         });
     };
+    
+    RTSettingItem *item2 = [RTSettingItem itemWithIcon:@"" title:@"控制器轨迹" subTitle:nil type:ZFSettingItemTypeArrow];
+    item2.subTitleFontSize = 10;
+    item2.operation = ^{
+        [weakSelf.navigationController pushViewController:[RTTraceListVC new] animated:YES];
+    };
+    
+    RTSettingItem *item3 = [RTSettingItem itemWithIcon:@"" title:@"并存控制器" subTitle:nil type:ZFSettingItemTypeArrow];
+    item3.subTitleFontSize = 10;
+    item3.operation = ^{
+        [weakSelf.navigationController pushViewController:[RTUnionListVC new] animated:YES];
+    };
+    
     RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
     group1.header = @"更多功能";
-    group1.items = @[item1];
+    group1.items = @[item1,item2,item3];
     [self.allGroups addObject:group1];
 }
 

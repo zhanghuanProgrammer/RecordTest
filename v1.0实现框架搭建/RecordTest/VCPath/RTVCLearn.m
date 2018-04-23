@@ -29,6 +29,45 @@
     return _sharedObject;
 }
 
+- (NSArray *)unionVC{
+    NSArray *allKeys = self.vcUnion.allKeys;
+    NSMutableArray *unionVC = [NSMutableArray array];
+    for (NSString *key in allKeys) {
+        if ([key rangeOfString:@","].location!=NSNotFound) {
+            NSArray *splits = [key componentsSeparatedByString:@","];
+            NSMutableArray *subArr = [NSMutableArray arrayWithCapacity:splits.count];
+            for (NSString *split in splits) {
+                if (split.length>0) {
+                    NSString *vc = [self getVcWithIdentity:split];
+                    if (vc.length>0) {
+                        [subArr addObject:vc];
+                    }
+                }
+            }
+            if (subArr.count>0) {
+                [unionVC addObject:subArr];
+            }
+        }
+    }
+    return unionVC;
+}
+
+- (NSArray *)traceVC{
+    NSMutableArray *traceVC = [NSMutableArray array];
+    if ([self.topology rangeOfString:@","].location!=NSNotFound) {
+        NSArray *splits = [self.topology componentsSeparatedByString:@","];
+        for (NSString *split in splits) {
+            if (split.length>0) {
+                NSString *vc = [self getVcWithIdentity:split];
+                if (vc.length>0) {
+                    [traceVC addObject:vc];
+                }
+            }
+        }
+    }
+    return traceVC;
+}
+
 - (NSString *)getVcIdentity:(NSString *)vc{
     if (!vc) {
         return @"";
@@ -136,6 +175,22 @@
         return [self unionSuffix:[unionVC substringFromIndex:range.location+1] topology:topology];
     }
     return unionVC;
+}
+
++ (BOOL)filter:(NSString *)vc{
+    static NSArray *filters = nil;
+    if (!filters) {
+        filters = @[
+                    @"RTAllRecordVC",@"RTPlaybackViewController",@"RTPlayBackVC",
+                    @"RTCommandListVCViewController",@"RTJumpListVC",@"RTJumpVC",
+                    @"RTMoreFuncVC",@"RTSetFileSizeViewController",@"RTSetMainViewController",
+                    @"RTSettingViewController",@"JDStatusBarNotificationViewController",
+                    @"RTOperationsVC",@"RTMutableRunVC",@"RTPhotosViewController",
+                    @"RTMigrationDataVC",@"RTFileListVC",@"RTFilePreVC",@"RTTraceListVC",
+                    @"RTUnionListVC"
+                    ];
+    }
+    return [filters containsObject:vc];
 }
 
 @end

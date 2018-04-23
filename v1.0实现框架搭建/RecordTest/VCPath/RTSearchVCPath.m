@@ -44,7 +44,7 @@
 }
 
 + (void)addOperation:(UIView *)view type:(RTOperationQueueType)type parameters:(NSArray *)parameters repeat:(BOOL)repeat{
-    if (![RTSearchVCPath shareInstance].isLearnVCPath) {
+    if (![RTSearchVCPath shareInstance].isLearnVCPath || [RTOperationQueue shareInstance].isRecord || [RTAutoJump shareInstance].isJump) {
         return;
     }
     [RTSearchVCPath shareInstance].shouldSave = YES;
@@ -79,13 +79,18 @@
 }
 
 - (BOOL)popVC{
-    NSString *topVC = [RTTopVC shareInstance].topVC;
-    BOOL isPop = [UIViewController popOrDismissViewController:nil];
-    if(isPop)return YES;
-    if ([topVC isEqualToString:[RTTopVC shareInstance].topVC]) {
-        return NO;
+    return [UIViewController popOrDismissViewController:nil];
+}
+
+- (void)popToRootVC{
+    self.isPopToRoot = YES;
+    if ([UIViewController popOrDismissViewController:nil]) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self popToRootVC];
+        });
+    }else{
+        self.isPopToRoot = NO;
     }
-    return YES;
 }
 
 - (BOOL)canPopToVC:(NSString *)vc{
@@ -110,7 +115,16 @@
             NSString *cur = arr[i];
             NSString *curNext = arr[i+1];
             NSDictionary *values = [[RTVertex shareInstance].repearDictionary getValuesForKey:[NSString stringWithFormat:@"%@->%@",cur,curNext]];
-            [steps addObject:[values allValues]];
+            NSMutableArray * allValues = [values allValues].mutableCopy;
+            [allValues sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+                NSNumber *num1 = obj1 , *num2 = obj2;
+                return [num1 intValue]<[num2 intValue];
+            }];
+            NSLog(@"allValues = %@",allValues);
+            while (allValues.count>3) {
+                [allValues removeLastObject];
+            }
+            [steps addObject:allValues];
         }
     }
     return steps;

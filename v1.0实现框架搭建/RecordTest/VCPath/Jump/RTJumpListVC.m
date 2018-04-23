@@ -11,7 +11,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    // 1.第0组：3个
+    [self addRootVC];
     [self add0SectionItems];
 }
 
@@ -23,7 +23,7 @@
     NSMutableArray *items = [NSMutableArray array];
     for (NSString *vcIdentity in allCanGotoVcs) {
         NSString *vc = [[RTVCLearn shareInstance] getVcWithIdentity:vcIdentity];
-        if ([self filter:vc] || [[RTTopVC shareInstance] isContainVC:vc]) {
+        if ([RTVCLearn filter:vc] || [[RTTopVC shareInstance] isContainVC:vc]) {
             continue;
         }
         RTSettingItem *item1 = [RTSettingItem itemWithIcon:@"" title:vc subTitle:nil type:ZFSettingItemTypeArrow];
@@ -42,21 +42,27 @@
     }
     
     RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
-    group1.header = @"更多功能";
+    group1.header = @"跳转到VC";
     group1.items = items;
     [self.allGroups addObject:group1];
 }
 
-- (BOOL)filter:(NSString *)vc{
-    return [@[
-             @"RTAllRecordVC",@"RTPlaybackViewController",@"RTPlayBackVC",
-             @"RTCommandListVCViewController",@"RTJumpListVC",@"RTJumpVC",
-             @"RTMoreFuncVC",@"RTSetFileSizeViewController",@"RTSetMainViewController",
-             @"RTSettingViewController",@"JDStatusBarNotificationViewController",
-             @"RTOperationsVC",@"RTMutableRunVC",@"RTPhotosViewController",
-             @"RTMigrationDataVC",@"RTFileListVC",@"RTFilePreVC"
-             ]
-            containsObject:vc];
+- (void)addRootVC{
+    __weak typeof(self)weakSelf=self;
+    RTSettingItem *item1 = [RTSettingItem itemWithIcon:@"" title:@"RootVC(根控制器)" subTitle:nil type:ZFSettingItemTypeArrow];
+    item1.subTitleFontSize = 10;
+    __weak typeof(item1)weakitem1=item1;
+    item1.operation = ^{
+        NSString *targetVC = weakitem1.title;
+        [[RTInteraction shareInstance] showAll];
+        [weakSelf dismissViewControllerAnimated:NO completion:^{
+            [[RTAutoJump shareInstance] gotoVC:targetVC];
+        }];
+    };
+    RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
+    group1.header = @"根目录";
+    group1.items = @[item1];
+    [self.allGroups addObject:group1];
 }
 
 @end

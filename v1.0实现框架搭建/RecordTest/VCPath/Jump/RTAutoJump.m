@@ -14,13 +14,16 @@
 @implementation RTAutoJump
 
 - (void)gotoVC:(NSString *)vc{
-    if (vc.length>0) {
-        self.steps = [[RTSearchVCPath shareInstance] stepGoToVc:vc];
-        NSLog(@"%@",self.steps);
-        self.isJump = YES;
-        self.canotJump = NO;
-        self.indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-        [self runStep];
+    if ([vc isEqualToString:@"RootVC(根控制器)"]) {
+        [[RTSearchVCPath shareInstance] popToRootVC];
+    }else{
+        if (vc.length>0) {
+            self.steps = [[RTSearchVCPath shareInstance] stepGoToVc:vc];
+            self.isJump = YES;
+            self.canotJump = NO;
+            self.indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            [self runStep];
+        }
     }
 }
 
@@ -34,9 +37,8 @@
                 operationQueue = [RTSearchVCPath shareInstance].operationQueue[[num intValue]];
             }else{
                 runFailure ++;
-                [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"这步跳转不存在 次数:%d/10",runFailure] dismissAfter:1 styleName:JDStatusBarStyleWarning];
+                [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"这步跳转不存在 次数:%d/5",runFailure] dismissAfter:1 styleName:JDStatusBarStyleWarning];
             }
-            NSLog(@"😄:%@",operationQueue);
             UIView *targetView = [[RTGetTargetView new] getTargetView:operationQueue.viewId];
             if (targetView) {
                 if ([targetView runOperation:operationQueue]) {
@@ -98,7 +100,8 @@
     if (self.steps.count > self.indexPath.section) {
         NSArray *subArr = self.steps[self.indexPath.section];
         if (subArr && subArr.count<=self.indexPath.row) {
-            self.indexPath=[NSIndexPath indexPathForRow:0 inSection:self.indexPath.section+1];
+            self.canotJump = YES;
+            [self stop];
         }
     }else{
         self.canotJump = YES;

@@ -79,10 +79,17 @@
     if (viewcontrollers.count > 1){
         if ([viewcontrollers objectAtIndex:viewcontrollers.count - 1] == viewController){
             //push方式
-            return [viewController.navigationController popViewControllerAnimated:NO]?YES:NO;
+            [viewController.navigationController popViewControllerAnimated:NO];
+            return YES;
         }
     }else{
+        UIViewController *currentVC = [UIViewController getCurrentVC];
         [viewController dismissViewControllerAnimated:NO completion:nil];
+        if ([currentVC isEqual:[UIViewController getCurrentVC]]) {
+            return NO;
+        }else{
+            return YES;
+        }
     }
     return NO;
 }

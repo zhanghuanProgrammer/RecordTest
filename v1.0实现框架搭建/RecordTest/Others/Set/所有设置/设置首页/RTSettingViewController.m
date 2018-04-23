@@ -153,12 +153,12 @@
     item3.subTitleFontSize = 10;
     item3.operation = ^{
         RTSetFileSizeViewController *vc = [RTSetFileSizeViewController new];
-        [self.navigationController pushViewController:vc animated:YES];
+        [weakSelf.navigationController pushViewController:vc animated:YES];
     };
     RTSettingItem *item3_1 = [RTSettingItem itemWithIcon:@"" title:@"沙盒目录" subTitle:@"计算中..." type:ZFSettingItemTypeArrow];
     item3_1.subTitleFontSize = 10;
     item3_1.operation = ^{
-        [self.navigationController pushViewController:[RTFileListVC new] animated:YES];
+        [weakSelf.navigationController pushViewController:[RTFileListVC new] animated:YES];
     };
     RTSettingGroup *group3 = [[RTSettingGroup alloc] init];
     group3.header = @"存储空间";
@@ -178,7 +178,7 @@
     item4.subTitleFontSize = 10;
     item4.operation = ^{
         RTMigrationDataVC *vc = [RTMigrationDataVC new];
-        [self.navigationController pushViewController:vc animated:YES];
+        [weakSelf.navigationController pushViewController:vc animated:YES];
     };
     
     RTSettingItem *item4_1 = [RTSettingItem itemWithIcon:@"" title:@"是否共享录制和回放截屏" subTitle:@"" type:ZFSettingItemTypeSwitch];
@@ -203,8 +203,7 @@
     item5.operation = ^{
 //        RTLoginViewController *vc = [RTLoginViewController new];
 //        [self.navigationController pushViewController:vc animated:YES];
-        
-        [self.navigationController pushViewController:[RTFeedbackVC new] animated:YES];
+        [weakSelf.navigationController pushViewController:[RTFeedbackVC new] animated:YES];
     };
     RTSettingGroup *group5 = [[RTSettingGroup alloc] init];
     group5.header = @"账户";
