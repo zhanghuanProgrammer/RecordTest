@@ -220,30 +220,23 @@
 - (void)setIsAutoDelete:(BOOL)isAutoDelete{
     [RTConfigManager shareInstance].isAutoDelete = isAutoDelete;
 }
-
 - (void)setIsRecoderVideo:(BOOL)isRecoderVideo{
     [RTConfigManager shareInstance].isRecoderVideo = isRecoderVideo;
 }
-
 - (void)setIsRecoderVideoPlayBack:(BOOL)isRecoderVideoPlayBack{
     [RTConfigManager shareInstance].isRecoderVideoPlayBack = isRecoderVideoPlayBack;
 }
-
 - (void)setCompressionQualityRecoderVideo:(NSInteger)compressionQualityRecoderVideo{
     [RTConfigManager shareInstance].compressionQualityRecoderVideo = compressionQualityRecoderVideo;
 }
-
 - (void)setCompressionQualityRecoderVideoPlayBack:(NSInteger)compressionQualityRecoderVideoPlayBack{
     [RTConfigManager shareInstance].compressionQualityRecoderVideoPlayBack = compressionQualityRecoderVideoPlayBack;
 }
-
 - (void)setIsMigrationImage:(BOOL)isMigrationImage{
     [RTConfigManager shareInstance].isMigrationImage = isMigrationImage;
 }
-
 - (void)setIsMigrationVideo:(BOOL)isMigrationVideo{
     [RTConfigManager shareInstance].isMigrationVideo = isMigrationVideo;
 }
-
 
 @end

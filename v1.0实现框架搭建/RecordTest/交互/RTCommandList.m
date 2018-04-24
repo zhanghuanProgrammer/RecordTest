@@ -100,7 +100,7 @@
         
         UILabel *curCommand = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 12)];
         curCommand.textColor = [UIColor redColor];
-        curCommand.font = [UIFont systemFontOfSize:12];
+        curCommand.font = [UIFont systemFontOfSize:10];
         [self addSubview:curCommand];
         curCommand.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
         self.curCommand = curCommand;
@@ -327,7 +327,7 @@
 - (void)initData{
     if (self.isRunOperationQueue) return;
     [self.dataArr removeAllObjects];
-    self.curCommand.text = [NSString stringWithFormat:@"当前控制器:%@",[RTTopVC shareInstance].topVC];
+    self.curCommand.text = [NSString stringWithFormat:@"VC:%@",[RTTopVC shareInstance].topVC];
     self.draggable = NO;
     NSArray *identifys = [RTOperationQueue allIdentifyModelsForVC:[RTTopVC shareInstance].topVC];
     for (RTIdentify *identify in identifys) {

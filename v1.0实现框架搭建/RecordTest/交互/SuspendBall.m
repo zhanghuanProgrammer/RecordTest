@@ -435,12 +435,12 @@ static CGFloat btnSmallImageWidth = 30;
             [_functionMenu addSubview:functionBtn];
             [self.buttons addObject:functionBtn];
             
-            UILabel *badge = [[UILabel alloc] initWithFrame:CGRectMake(functionBtn.lhz_x, functionBtn.lhz_y, fullButtonWidth, 10)];
+            UILabel *badge = [[UILabel alloc] initWithFrame:CGRectMake(functionBtn.lhz_x, functionBtn.lhz_y+4, fullButtonWidth, 10)];
             badge.isNoNeedKVO = badge.isNoNeedSnap = YES;
             badge.backgroundColor = [UIColor clearColor];
             badge.textColor = [UIColor redColor];
             badge.textAlignment = NSTextAlignmentCenter;
-            badge.font = [UIFont systemFontOfSize:10];
+            badge.font = [UIFont systemFontOfSize:8];
             [_functionMenu addSubview:badge];
             [self.badges addObject:badge];
         }

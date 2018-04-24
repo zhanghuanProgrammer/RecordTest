@@ -13,6 +13,11 @@
 @property (nonatomic,assign)BOOL isMigrationImage; //是否共享录制截屏
 @property (nonatomic,assign)BOOL isMigrationVideo; //是否共享回放视频
 
+@property (nonatomic,assign)BOOL isShowCpu; //是否显示CPU使用率
+@property (nonatomic,assign)BOOL isShowMemory; //是否显示内存使用
+@property (nonatomic,assign)BOOL isShowNetDelay; //是否显示网络延迟
+@property (nonatomic,assign)BOOL isShowFPS; //是否显示网络延迟
+
 + (RTConfigManager *)shareInstance;
 
 @end

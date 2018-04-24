@@ -33,6 +33,7 @@
 #import "RTSystemClass.h"
 #import "RTVCLearn.h"
 #import "RTAutoJump.h"
+#import "RTDeviceInfo.h"
 
 #define Run 1
 

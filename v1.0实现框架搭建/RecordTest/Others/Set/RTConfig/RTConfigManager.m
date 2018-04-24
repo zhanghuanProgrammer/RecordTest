@@ -45,6 +45,22 @@
         NSString *isMigrationVideo = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTIsMigrationVideo"];
         if(isMigrationVideo.length > 0) _sharedObject.isMigrationVideo = [isMigrationVideo boolValue];
         else _sharedObject.isMigrationVideo = YES;
+        
+        NSString *isShowCpu = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTIsShowCpu"];
+        if(isShowCpu.length > 0) _sharedObject.isShowCpu = [isShowCpu boolValue];
+        else _sharedObject.isShowCpu = NO;
+        
+        NSString *isShowMemory = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTIsShowMemory"];
+        if(isShowMemory.length > 0) _sharedObject.isShowMemory = [isShowMemory boolValue];
+        else _sharedObject.isShowMemory = NO;
+        
+        NSString *isShowNetDelay = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTIsShowNetDelay"];
+        if(isShowNetDelay.length > 0) _sharedObject.isShowNetDelay = [isShowNetDelay boolValue];
+        else _sharedObject.isShowNetDelay = NO;
+        
+        NSString *isShowFPS = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTIsShowFPS"];
+        if(isShowFPS.length > 0) _sharedObject.isShowFPS = [isShowFPS boolValue];
+        else _sharedObject.isShowFPS = NO;
     });
     return _sharedObject;
 }
@@ -92,6 +108,26 @@
 - (void)setIsMigrationVideo:(BOOL)isMigrationVideo{
     _isMigrationVideo = isMigrationVideo;
     [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%d",isMigrationVideo] WithIdentity:@"RTIsMigrationVideo"];
+}
+
+- (void)setIsShowCpu:(BOOL)isShowCpu{
+    _isShowCpu = isShowCpu;
+    [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%d",isShowCpu] WithIdentity:@"RTIsShowCpu"];
+}
+
+- (void)setIsShowMemory:(BOOL)isShowMemory{
+    _isShowMemory = isShowMemory;
+    [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%d",isShowMemory] WithIdentity:@"RTIsShowMemory"];
+}
+
+- (void)setIsShowNetDelay:(BOOL)isShowNetDelay{
+    _isShowNetDelay = isShowNetDelay;
+    [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%d",isShowNetDelay] WithIdentity:@"RTIsShowNetDelay"];
+}
+
+- (void)setIsShowFPS:(BOOL)isShowFPS{
+    _isShowFPS = isShowFPS;
+    [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%d",isShowFPS] WithIdentity:@"RTIsShowFPS"];
 }
 
 @end

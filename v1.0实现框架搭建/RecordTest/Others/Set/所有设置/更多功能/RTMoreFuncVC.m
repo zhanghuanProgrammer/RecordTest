@@ -41,10 +41,62 @@
         [weakSelf.navigationController pushViewController:[RTUnionListVC new] animated:YES];
     };
     
+    RTSettingItem *item4_1 = [RTSettingItem itemWithIcon:@"" title:@"是否显示CPU使用率" subTitle:@"显示在第1个球上方" type:ZFSettingItemTypeSwitch];
+    item4_1.on = [RTConfigManager shareInstance].isShowCpu;
+    item4_1.subTitleFontSize = 10;
+    //开关事件
+    item4_1.switchBlock = ^(BOOL on) {
+        weakSelf.isShowCpu = on;
+    };
+    
+    RTSettingItem *item4_2 = [RTSettingItem itemWithIcon:@"" title:@"是否显示内存使用" subTitle:@"显示在第2个球上方" type:ZFSettingItemTypeSwitch];
+    item4_2.on = [RTConfigManager shareInstance].isShowMemory;
+    item4_2.subTitleFontSize = 10;
+    //开关事件
+    item4_2.switchBlock = ^(BOOL on) {
+        weakSelf.isShowMemory = on;
+    };
+    
+    RTSettingItem *item4_3 = [RTSettingItem itemWithIcon:@"" title:@"是否显示网络延迟" subTitle:@"显示在第3个球上方" type:ZFSettingItemTypeSwitch];
+    item4_3.on = [RTConfigManager shareInstance].isShowNetDelay;
+    item4_3.subTitleFontSize = 10;
+    //开关事件
+    item4_3.switchBlock = ^(BOOL on) {
+        weakSelf.isShowNetDelay = on;
+    };
+    
+    RTSettingItem *item4_4 = [RTSettingItem itemWithIcon:@"" title:@"是否显示网络延迟" subTitle:@"显示在第4个球上方" type:ZFSettingItemTypeSwitch];
+    item4_4.on = [RTConfigManager shareInstance].isShowFPS;
+    item4_4.subTitleFontSize = 10;
+    //开关事件
+    item4_4.switchBlock = ^(BOOL on) {
+        weakSelf.isShowFPS = on;
+    };
+    
     RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
     group1.header = @"更多功能";
-    group1.items = @[item1,item2,item3];
+    group1.items = @[item1,item2,item3,item4_1,item4_2,item4_3,item4_4];
     [self.allGroups addObject:group1];
+}
+
+- (void)setIsShowCpu:(BOOL)isShowCpu{
+    [RTConfigManager shareInstance].isShowCpu = isShowCpu;
+    [[SuspendBall shareInstance] setBadge:@"" index:0];
+}
+
+- (void)setIsShowMemory:(BOOL)isShowMemory{
+    [RTConfigManager shareInstance].isShowMemory = isShowMemory;
+    [[SuspendBall shareInstance] setBadge:@"" index:1];
+}
+
+- (void)setIsShowNetDelay:(BOOL)isShowNetDelay{
+    [RTConfigManager shareInstance].isShowNetDelay = isShowNetDelay;
+    [[SuspendBall shareInstance] setBadge:@"" index:2];
+}
+
+- (void)setIsShowFPS:(BOOL)isShowFPS{
+    [RTConfigManager shareInstance].isShowFPS = isShowFPS;
+    [[SuspendBall shareInstance] setBadge:@"" index:3];
 }
 
 @end

@@ -3,7 +3,7 @@
 #import "RTSettingCell.h"
 
 @interface RTBaseSettingViewController ()
-
+@property (nonatomic,strong)UILabel *emptylabel;
 @end
 
 @implementation RTBaseSettingViewController
@@ -22,8 +22,20 @@
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
 }
 
+- (UILabel *)emptylabel{
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.tableView.width, self.tableView.height - 64)];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = @"无数据...";
+    return label;
+}
+
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView{
+    if (_allGroups.count == 0) {
+        self.tableView.tableFooterView = self.emptylabel;
+    }else{
+        self.tableView.tableFooterView = [UIView new];
+    }
     return _allGroups.count;
 }
 

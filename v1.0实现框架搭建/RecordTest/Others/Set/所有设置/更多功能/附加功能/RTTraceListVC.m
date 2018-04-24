@@ -29,7 +29,7 @@
         [items addObject:item1];
         lastVC = vc;
     }
-    
+    [items reverse];
     RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
     group1.header = @"控制器轨迹";
     group1.items = items;
