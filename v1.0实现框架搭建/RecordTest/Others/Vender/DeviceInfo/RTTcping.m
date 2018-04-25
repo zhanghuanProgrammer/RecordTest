@@ -161,9 +161,9 @@ static const int ping_default_time = 2000; //ms
     uint64_t endTime = rt_cpu_time_ms();
     uint64_t cost = endTime - beginTime;
     if( theErr == kCFSocketSuccess ) {
-        NSLog(@"connect success cost:%llu ms!", cost);
+//        NSLog(@"connect success cost:%llu ms!", cost);
     } else {
-        NSLog(@"connect faild cost:%llu ms", cost);
+//        NSLog(@"connect faild cost:%llu ms", cost);
         cost = ping_default_time;
     }
     

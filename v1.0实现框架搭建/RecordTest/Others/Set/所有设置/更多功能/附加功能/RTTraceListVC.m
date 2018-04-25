@@ -13,10 +13,17 @@
 - (void)add0SectionItems{
     
     NSArray *traceVC = [[RTVCLearn shareInstance] traceVC];
+    NSArray *traceMemory = [[RTVCLearn shareInstance] traceMemory];
     NSMutableArray *items = [NSMutableArray array];
     NSInteger index = 1;
+    NSInteger cur = 0;
     NSString *lastVC = nil;
     for (NSString *vc in traceVC) {
+        NSString *subTitle = nil;
+        if (traceMemory.count > cur+1) {
+            subTitle = traceMemory[cur+1];
+        }
+        cur ++;
         if ([RTVCLearn filter:vc]) {
             continue;
         }
@@ -24,7 +31,7 @@
             continue;
         }
         NSString *title = [NSString stringWithFormat:@"%zd : %@",index++,vc];
-        RTSettingItem *item1 = [RTSettingItem itemWithIcon:@"" title:title subTitle:nil type:ZFSettingItemTypeNone];
+        RTSettingItem *item1 = [RTSettingItem itemWithIcon:@"" title:title subTitle:subTitle type:ZFSettingItemTypeNone];
         item1.subTitleFontSize = 10;
         [items addObject:item1];
         lastVC = vc;

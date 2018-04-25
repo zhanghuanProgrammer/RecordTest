@@ -168,13 +168,13 @@
     return tot_cpu;
 }
 
-- (void)update {
+- (BOOL)update {
     //500毫秒以内不重复取值
     static uint32_t ppi_time = 0;
     mach_timebase_info_data_t timebase;
     mach_timebase_info(&timebase);
     uint32_t now = mach_absolute_time() * timebase.numer / timebase.denom /1e6;
-    if (ppi_time == 0 || (now - ppi_time) > 500) {
+    if (ppi_time == 0 || (now - ppi_time) >= 1000) {
         _systemAvailableMemory = [self rt_systemAvailableMemoryInfo];
         _appMemory = [self rt_appMemoryInfo];
         _systemCpu = [self rt_systemCpuInfo];
@@ -183,7 +183,9 @@
             _appCpu = _systemCpu;
         }
         ppi_time = now;
+        return YES;
     }
+    return NO;
 }
 
 
@@ -192,6 +194,12 @@
     __strong static RTDeviceInfo *_sharedObject = nil;
     dispatch_once(&pred, ^{
         _sharedObject = [[RTDeviceInfo alloc] init];
+        _sharedObject.cupMonitor = [NSMutableArray array];
+        _sharedObject.memoryMonitor = [NSMutableArray array];
+        _sharedObject.netMonitor = [NSMutableArray array];
+        _sharedObject.fpsMonitor = [NSMutableArray array];
+        _sharedObject.minTime = 0;
+        _sharedObject.curTime = 0;
     });
     return _sharedObject;
 }
@@ -220,6 +228,7 @@
     _count = 0;
     dispatch_async(dispatch_get_main_queue(), ^{
         [[SuspendBall shareInstance] setBadge:[NSString stringWithFormat:@"%dfps",(int)round(fps)] index:3];
+        [self.fpsMonitor addObject:[NSString stringWithFormat:@"%d",(int)round(fps)]];
     });
 }
 
@@ -228,34 +237,62 @@
 }
 
 - (void)showDeviceInfo{
-    [self update];
-    if ([RTConfigManager shareInstance].isShowCpu) [self showCpu];
-    if ([RTConfigManager shareInstance].isShowMemory) [self showMemory];
-    if ([RTConfigManager shareInstance].isShowNetDelay) [self showNetDelay];
-    if (![RTConfigManager shareInstance].isShowFPS)[_link setPaused:YES];
-    else [_link setPaused:NO];
+    if ([self update]) {
+        self.curTime ++;
+        [self showCpu];
+        [self showMemory];
+        [self showNetDelay];
+        if (![RTConfigManager shareInstance].isShowFPS){
+            [_link setPaused:YES];
+            [self.fpsMonitor addObject:[NSString stringWithFormat:@"%d",0]];
+        }else [_link setPaused:NO];
+        while (self.cupMonitor.count > 3600) {
+            [self.cupMonitor removeFirstObject];
+            self.minTime ++;
+        }
+        while (self.memoryMonitor.count > 3600) [self.memoryMonitor removeFirstObject];
+        while (self.netMonitor.count > 3600) [self.netMonitor removeFirstObject];
+        while (self.fpsMonitor.count > 3600) [self.fpsMonitor removeFirstObject];
+    }
 }
 
 /**显示CPU使用率*/
 - (void)showCpu{
-    [[SuspendBall shareInstance] setBadge:[NSString stringWithFormat:@"%0.1f%%",[self rt_appCpuInfo]] index:0];
+    if ([RTConfigManager shareInstance].isShowCpu) {
+        float cup = [self rt_appCpuInfo];
+        [[SuspendBall shareInstance] setBadge:[NSString stringWithFormat:@"%0.1f%%",cup] index:0];
+        [self.cupMonitor addObject:[NSString stringWithFormat:@"%0.1f",cup]];
+    }else{
+        [self.cupMonitor addObject:[NSString stringWithFormat:@"%0.1f",0.0]];
+    }
 }
 
 /**显示内存使用*/
 - (void)showMemory{
-    [[SuspendBall shareInstance] setBadge:[NSString stringWithFormat:@"%0.1fM",[self appMemory]] index:1];
+    if ([RTConfigManager shareInstance].isShowMemory) {
+        float memory = [self appMemory];
+        [[SuspendBall shareInstance] setBadge:[NSString stringWithFormat:@"%0.1fM",memory] index:1];
+        [self.memoryMonitor addObject:[NSString stringWithFormat:@"%0.1f",memory]];
+    }else{
+        [self.memoryMonitor addObject:[NSString stringWithFormat:@"%0.1f",0.0]];
+    }
 }
 
 /**显示网络延迟*/
 - (void)showNetDelay{
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        // 处理耗时操作的代码块...
-        int delay = [[RTTcping sharedObj] tcpingDefaultHost];
-        //通知主线程刷新
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[SuspendBall shareInstance] setBadge:[NSString stringWithFormat:@"%dms",delay] index:2];
+    if ([RTConfigManager shareInstance].isShowNetDelay) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            // 处理耗时操作的代码块...
+            int delay = [[RTTcping sharedObj] tcpingDefaultHost];
+            //通知主线程刷新
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[SuspendBall shareInstance] setBadge:[NSString stringWithFormat:@"%dms",delay] index:2];
+                [self.netMonitor addObject:[NSString stringWithFormat:@"%d",delay]];
+            });
         });
-    });
+    }else{
+        [self.netMonitor addObject:[NSString stringWithFormat:@"%d",0]];
+    }
 }
 
 @end

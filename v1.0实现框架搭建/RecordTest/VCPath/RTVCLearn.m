@@ -1,6 +1,7 @@
 
 #import "RTVCLearn.h"
 #import "RecordTestHeader.h"
+#import "ZHNSString.h"
 
 @interface RTVCLearn ()
 
@@ -9,6 +10,8 @@
 
 @property (nonatomic,strong)NSMutableDictionary *vcUnion;//页面相互共存的
 @property (nonatomic,strong)NSMutableString *topology;//vc路径,连续的操作路径
+@property (nonatomic,strong)NSMutableArray *topologyMemory;
+@property (nonatomic,strong)NSMutableArray *topologyPerformance;
 @property (nonatomic,strong)NSMutableString *topologyMore;//vc路径,连续的操作路径(这个可以存在相同的push)
 
 @end
@@ -25,6 +28,8 @@
         _sharedObject.vcUnion = [NSMutableDictionary dictionary];
         _sharedObject.topology = [NSMutableString string];
         _sharedObject.topologyMore = [NSMutableString string];
+        _sharedObject.topologyMemory = [NSMutableArray array];
+        _sharedObject.topologyPerformance = [NSMutableArray array];
     });
     return _sharedObject;
 }
@@ -66,6 +71,19 @@
         }
     }
     return traceVC;
+}
+
+- (NSArray *)traceMemory{
+    NSMutableArray *arrM = [NSMutableArray arrayWithArray:self.topologyMemory];
+    NSString *memory = [NSString stringWithFormat:@"内存:%0.1fM",[RTDeviceInfo shareInstance].appMemory];
+    [arrM addObject:memory];
+    return arrM;
+}
+
+- (NSArray *)tracePerformance{
+    NSMutableArray *arrM = [NSMutableArray arrayWithArray:self.topologyPerformance];
+    [arrM addObject:[NSNumber numberWithInteger:[RTDeviceInfo shareInstance].curTime]];
+    return arrM;
 }
 
 - (NSString *)getVcIdentity:(NSString *)vc{
@@ -111,8 +129,6 @@
 //    NSLog(@"%@",self.vcUnion);
 }
 
-
-
 - (void)setTopologyVC:(NSArray *)vcStack unionVC:(NSString *)unionVC{
     static NSString *lastVC = nil;
     if (vcStack.count > 0) {
@@ -134,10 +150,30 @@
             [self.topology replaceCharactersInRange:NSMakeRange(self.topology.length - unionSuffix.length , unionSuffix.length) withString:appendString];
 //            NSLog(@"💣:%@",appendString);
         }
+        [self updataMemoryForTopology];
         lastVC = curVC;
     }
 //    NSLog(@"当前最顶部的控制器%@",[RTTopVC shareInstance].topVC);
 //    NSLog(@"👌%@",self.topology);
+}
+
+- (void)updataMemoryForTopology{
+    NSInteger count = 0;
+    NSArray *split = [self.topology componentsSeparatedByString:@","];
+    for (NSString *str in split) {
+        if(str.length>0) count++;
+    }
+    if(count>0)count--;
+    NSString *memory = [NSString stringWithFormat:@"内存:%0.1fM",[RTDeviceInfo shareInstance].appMemory];
+    if(self.topologyMemory.count > count) {
+        self.topologyMemory[count] = memory;
+        self.topologyPerformance[count] = [NSNumber numberWithInteger:[RTDeviceInfo shareInstance].curTime];
+    }else {
+        [self.topologyMemory addObject:memory];
+        [self.topologyPerformance addObject:[NSNumber numberWithInteger:[RTDeviceInfo shareInstance].curTime]];
+    }
+//    NSLog(@"👌%@",self.topology);
+//    NSLog(@"👌%@",self.topologyPerformance);
 }
 
 - (void)setTopologyVCMore:(NSArray *)vcStack{

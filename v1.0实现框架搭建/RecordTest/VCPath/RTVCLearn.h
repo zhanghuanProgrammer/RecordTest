@@ -12,6 +12,8 @@
 
 - (NSArray *)unionVC;
 - (NSArray *)traceVC;
+- (NSArray *)traceMemory;
+- (NSArray *)tracePerformance;
 
 + (BOOL)filter:(NSString *)vc;
 

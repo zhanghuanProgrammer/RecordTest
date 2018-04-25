@@ -120,7 +120,7 @@
                 NSNumber *num1 = obj1 , *num2 = obj2;
                 return [num1 intValue]<[num2 intValue];
             }];
-            NSLog(@"allValues = %@",allValues);
+//            NSLog(@"allValues = %@",allValues);
             while (allValues.count>3) {
                 [allValues removeLastObject];
             }

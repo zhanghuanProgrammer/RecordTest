@@ -4,6 +4,9 @@
 #import "AutoTestProject.h"
 #import "RTUnionListVC.h"
 #import "RTTraceListVC.h"
+#import "RTPerformanceVC.h"
+#import "RTVCPerformanceVC.h"
+#import "RTDeviceInfoVC.h"
 
 @implementation RTMoreFuncVC
 
@@ -73,9 +76,27 @@
         weakSelf.isShowFPS = on;
     };
     
+    RTSettingItem *item5 = [RTSettingItem itemWithIcon:@"" title:@"性能数据收集展示" subTitle:nil type:ZFSettingItemTypeArrow];
+    item5.subTitleFontSize = 10;
+    item5.operation = ^{
+        [weakSelf.navigationController pushViewController:[RTPerformanceVC new] animated:YES];
+    };
+    
+    RTSettingItem *item6 = [RTSettingItem itemWithIcon:@"" title:@"页面性能分析" subTitle:nil type:ZFSettingItemTypeArrow];
+    item6.subTitleFontSize = 10;
+    item6.operation = ^{
+        [weakSelf.navigationController pushViewController:[RTVCPerformanceVC new] animated:YES];
+    };
+    
+    RTSettingItem *item7 = [RTSettingItem itemWithIcon:@"" title:@"手机设备信息" subTitle:nil type:ZFSettingItemTypeArrow];
+    item7.subTitleFontSize = 10;
+    item7.operation = ^{
+        [weakSelf.navigationController pushViewController:[RTDeviceInfoVC new] animated:YES];
+    };
+    
     RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
     group1.header = @"更多功能";
-    group1.items = @[item1,item2,item3,item4_1,item4_2,item4_3,item4_4];
+    group1.items = @[item1,item2,item3,item4_1,item4_2,item4_3,item4_4,item5,item6,item7];
     [self.allGroups addObject:group1];
 }
 
