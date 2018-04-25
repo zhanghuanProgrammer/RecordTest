@@ -1,13 +1,13 @@
 
-#import "Device.h"
-#import "LANProperties.h"
-#import "MACOperation.h"
-#import "MMLANScanner.h"
-#import "MacFinder.h"
-#import "PingOperation.h"
+#import "RTDeviceModel.h"
+#import "RTLANProperties.h"
+#import "RTMACOperation.h"
+#import "RTLANScanner.h"
+#import "RTMacFinder.h"
+#import "RTPingOperation.h"
 
-@interface MMLANScanner ()
-@property (nonatomic, strong) Device* device;
+@interface RTLANScanner ()
+@property (nonatomic, strong) RTDeviceModel* device;
 @property (nonatomic, strong) NSArray* ipsToPing;
 @property (nonatomic, assign) float currentHost;
 @property (nonatomic, strong) NSDictionary* brandDictionary;
@@ -15,13 +15,13 @@
 @property (nonatomic, assign, readwrite) BOOL isScanning;
 @end
 
-@implementation MMLANScanner {
+@implementation RTLANScanner {
     BOOL isFinished;
     BOOL isCancelled;
 }
 
 #pragma mark - Initialization method
-- (instancetype)initWithDelegate:(id<MMLANScannerDelegate>)delegate{
+- (instancetype)initWithDelegate:(id<RTLANScannerDelegate>)delegate{
 
     self = [super init];
 
@@ -54,22 +54,22 @@
     isCancelled = NO;
     self.isScanning = YES;
 
-    self.device = [LANProperties localIPAddress];
+    self.device = [RTLANProperties localIPAddress];
 
     if (!self.device) {
         [self.delegate lanScanDidFailedToScan];
         return;
     }
 
-    self.ipsToPing = [LANProperties getAllHostsForIP:self.device.ipAddress andSubnet:self.device.subnetMask];
+    self.ipsToPing = [RTLANProperties getAllHostsForIP:self.device.ipAddress andSubnet:self.device.subnetMask];
 
     self.currentHost = 0;
 
-    MMLANScanner* __weak weakSelf = self;
+    RTLANScanner* __weak weakSelf = self;
 
     for (NSString* ipStr in self.ipsToPing) {
 
-        PingOperation* pingOperation = [[PingOperation alloc] initWithIPToPing:ipStr
+        RTPingOperation* pingOperation = [[RTPingOperation alloc] initWithIPToPing:ipStr
                                                           andCompletionHandler:^(NSError* _Nullable error, NSString* _Nonnull ip) {
                                                               if (!weakSelf) {
                                                                   return;
@@ -78,9 +78,9 @@
 
                                                           }];
 
-        MACOperation* macOperation = [[MACOperation alloc] initWithIPToRetrieveMAC:ipStr
+        RTMACOperation* macOperation = [[RTMACOperation alloc] initWithIPToRetrieveMAC:ipStr
                                                                 andBrandDictionary:self.brandDictionary
-                                                              andCompletionHandler:^(NSError* _Nullable error, NSString* _Nonnull ip, Device* _Nonnull device) {
+                                                              andCompletionHandler:^(NSError* _Nullable error, NSString* _Nonnull ip, RTDeviceModel* _Nonnull device) {
 
                                                                   if (!weakSelf) {
                                                                       return;

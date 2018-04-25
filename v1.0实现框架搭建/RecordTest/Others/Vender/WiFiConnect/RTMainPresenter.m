@@ -1,28 +1,28 @@
 
-#import "Device.h"
-#import "LANProperties.h"
-#import "MMLANScanner.h"
-#import "MainPresenter.h"
+#import "RTDeviceModel.h"
+#import "RTLANProperties.h"
+#import "RTLANScanner.h"
+#import "RTMainPresenter.h"
 
-@interface MainPresenter () <MMLANScannerDelegate>
+@interface RTMainPresenter () <RTLANScannerDelegate>
 
-@property (nonatomic, weak) id<MainPresenterDelegate> delegate;
-@property (nonatomic, strong) MMLANScanner* lanScanner;
+@property (nonatomic, weak) id<RTMainPresenterDelegate> delegate;
+@property (nonatomic, strong) RTLANScanner* lanScanner;
 @property (nonatomic, assign, readwrite) BOOL isScanRunning;
 @property (nonatomic, assign, readwrite) float progressValue;
 @end
 
-@implementation MainPresenter {
+@implementation RTMainPresenter {
     NSMutableArray* connectedDevicesMutable;
 }
 
 #pragma mark - Init method
-- (instancetype)initWithDelegate:(id<MainPresenterDelegate>)delegate{
+- (instancetype)initWithDelegate:(id<RTMainPresenterDelegate>)delegate{
     self = [super init];
     if (self) {
         self.isScanRunning = NO;
         self.delegate = delegate;
-        self.lanScanner = [[MMLANScanner alloc] initWithDelegate:self];
+        self.lanScanner = [[RTLANScanner alloc] initWithDelegate:self];
     }
     return self;
 }
@@ -39,7 +39,7 @@
     self.isScanRunning = YES;
     connectedDevicesMutable = [[NSMutableArray alloc] init];
     [self.lanScanner start];
-};
+}
 
 - (void)stopNetworkScan{
     [self.lanScanner stop];
@@ -48,11 +48,11 @@
 
 #pragma mark - SSID
 - (NSString*)ssidName{
-    return [NSString stringWithFormat:@"%@", [LANProperties fetchSSIDInfo]];
+    return [NSString stringWithFormat:@"%@", [RTLANProperties fetchSSIDInfo]];
 }
 
-#pragma mark - MMLANScannerDelegate methods
-- (void)lanScanDidFindNewDevice:(Device*)device{
+#pragma mark - RTLANScannerDelegate methods
+- (void)lanScanDidFindNewDevice:(RTDeviceModel*)device{
     if (![connectedDevicesMutable containsObject:device]) {
         [connectedDevicesMutable addObject:device];
     }

@@ -1,18 +1,18 @@
 
-#import "Device.h"
-#import "LANProperties.h"
-#import "NetworkCalculator.h"
+#import "RTDeviceModel.h"
+#import "RTLANProperties.h"
+#import "RTNetworkCalculator.h"
 #import <SystemConfiguration/CaptiveNetwork.h>
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #include <netdb.h>
 
-@implementation LANProperties
+@implementation RTLANProperties
 
 #pragma mark - Public methods
-+ (Device*)localIPAddress{
++ (RTDeviceModel*)localIPAddress{
 
-    Device* localDevice = [[Device alloc] init];
+    RTDeviceModel* localDevice = [[RTDeviceModel alloc] init];
 
     localDevice.ipAddress = @"error";
 
@@ -72,7 +72,7 @@
     return @"No WiFi Available";
 }
 + (NSArray*)getAllHostsForIP:(NSString*)ipAddress andSubnet:(NSString*)subnetMask{
-    return [NetworkCalculator getAllHostsForIP:ipAddress andSubnet:subnetMask];
+    return [RTNetworkCalculator getAllHostsForIP:ipAddress andSubnet:subnetMask];
 }
 
 #pragma mark - Get Host from IP

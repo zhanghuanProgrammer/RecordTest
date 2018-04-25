@@ -1,7 +1,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol MainPresenterDelegate
+@protocol RTMainPresenterDelegate
 
 - (void)mainPresenterIPSearchFinished;
 
@@ -11,7 +11,7 @@
 
 @end
 
-@interface MainPresenter : NSObject
+@interface RTMainPresenter : NSObject
 
 @property (nonatomic, strong) NSArray* connectedDevices;
 
@@ -19,7 +19,7 @@
 
 @property (nonatomic, assign, readonly) BOOL isScanRunning;
 
-- (instancetype)initWithDelegate:(id<MainPresenterDelegate>)delegate;
+- (instancetype)initWithDelegate:(id<RTMainPresenterDelegate>)delegate;
 
 - (void)scanButtonClicked;
 

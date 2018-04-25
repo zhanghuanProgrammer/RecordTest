@@ -10,14 +10,14 @@
 
 #include <AssertMacros.h>
 
-#pragma mark* SimplePing
+#pragma mark* RTSimplePing
 
 @protocol SimplePingDelegate;
 
-@interface SimplePing : NSObject
+@interface RTSimplePing : NSObject
 
-+ (SimplePing*)simplePingWithHostName:(NSString*)hostName;
-+ (SimplePing*)simplePingWithHostAddress:(NSData*)hostAddress;
++ (RTSimplePing*)simplePingWithHostName:(NSString*)hostName;
++ (RTSimplePing*)simplePingWithHostAddress:(NSData*)hostAddress;
 
 @property (nonatomic, weak, readwrite) id<SimplePingDelegate> delegate;
 
@@ -35,7 +35,7 @@
 
 - (void)stop;
 
-+ (const struct ICMPHeader*)icmpInPacket:(NSData*)packet;
++ (const struct RTICMPHeader*)icmpInPacket:(NSData*)packet;
 
 @end
 
@@ -43,23 +43,23 @@
 
 @optional
 
-- (void)simplePing:(SimplePing*)pinger didStartWithAddress:(NSData*)address;
+- (void)simplePing:(RTSimplePing*)pinger didStartWithAddress:(NSData*)address;
 
-- (void)simplePing:(SimplePing*)pinger didFailWithError:(NSError*)error;
+- (void)simplePing:(RTSimplePing*)pinger didFailWithError:(NSError*)error;
 
-- (void)simplePing:(SimplePing*)pinger didSendPacket:(NSData*)packet;
+- (void)simplePing:(RTSimplePing*)pinger didSendPacket:(NSData*)packet;
 
-- (void)simplePing:(SimplePing*)pinger didFailToSendPacket:(NSData*)packet error:(NSError*)error;
+- (void)simplePing:(RTSimplePing*)pinger didFailToSendPacket:(NSData*)packet error:(NSError*)error;
 
-- (void)simplePing:(SimplePing*)pinger didReceivePingResponsePacket:(NSData*)packet;
+- (void)simplePing:(RTSimplePing*)pinger didReceivePingResponsePacket:(NSData*)packet;
 
-- (void)simplePing:(SimplePing*)pinger didReceiveUnexpectedPacket:(NSData*)packet;
+- (void)simplePing:(RTSimplePing*)pinger didReceiveUnexpectedPacket:(NSData*)packet;
 
 @end
 
 #pragma mark* IP and ICMP On-The-Wire Format
 
-struct IPHeader {
+struct RTIPHeader {
     uint8_t versionAndHeaderLength;
 
     uint8_t differentiatedServices;
@@ -81,14 +81,14 @@ struct IPHeader {
     uint8_t destinationAddress[4];
 };
 
-typedef struct IPHeader IPHeader;
+typedef struct RTIPHeader RTIPHeader;
 
 enum {
     kICMPTypeEchoReply = 0,
     kICMPTypeEchoRequest = 8
 };
 
-struct ICMPHeader {
+struct RTICMPHeader {
     uint8_t type;
 
     uint8_t code;
@@ -100,4 +100,4 @@ struct ICMPHeader {
     uint16_t sequenceNumber;
 };
 
-typedef struct ICMPHeader ICMPHeader;
+typedef struct RTICMPHeader RTICMPHeader;

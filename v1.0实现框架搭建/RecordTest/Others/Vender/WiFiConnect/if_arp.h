@@ -53,7 +53,6 @@ struct arpstat {
 	uint32_t rxreplies;	
 	uint32_t received;	
 
-	
 	uint32_t txconflicts;	
 	uint32_t invalidreqs;	
 	uint32_t reqnobufs;	

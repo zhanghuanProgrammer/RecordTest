@@ -1,32 +1,32 @@
 
-#import "MACOperation.h"
-#import "LANProperties.h"
-#import "MacFinder.h"
-#import "Device.h"
+#import "RTMACOperation.h"
+#import "RTLANProperties.h"
+#import "RTMacFinder.h"
+#import "RTDeviceModel.h"
 
-@interface MACOperation ()
+@interface RTMACOperation ()
 @property (nonatomic,strong) NSString *ipStr;
-@property (nonatomic, copy) void (^result)(NSError  * _Nullable error, NSString  * _Nonnull ip,Device * _Nonnull device);
-@property(nonatomic,strong)Device *device;
+@property (nonatomic, copy) void (^result)(NSError  * _Nullable error, NSString  * _Nonnull ip,RTDeviceModel * _Nonnull device);
+@property(nonatomic,strong)RTDeviceModel *device;
 @property(nonatomic,weak)NSDictionary *brandDictionary;
 @end
 
-@interface MACOperation()
+@interface RTMACOperation()
 - (void)finish;
 @end
 
-@implementation MACOperation {
+@implementation RTMACOperation {
 
     NSError *errorMessage;
 }
 
--(instancetype)initWithIPToRetrieveMAC:(NSString*)ip andBrandDictionary:(NSDictionary*)brandDictionary andCompletionHandler:(nullable void (^)(NSError  * _Nullable error, NSString  * _Nonnull ip,Device * _Nonnull device))result;{
+-(instancetype)initWithIPToRetrieveMAC:(NSString*)ip andBrandDictionary:(NSDictionary*)brandDictionary andCompletionHandler:(nullable void (^)(NSError  * _Nullable error, NSString  * _Nonnull ip,RTDeviceModel * _Nonnull device))result;{
 
     self = [super init];
     
     if (self) {
         
-        self.device = [[Device alloc]init];
+        self.device = [[RTDeviceModel alloc]init];
         self.name = ip;
         self.ipStr= ip;
         self.result = result;
@@ -37,7 +37,7 @@
     }
     
     return self;
-};
+}
 
 -(void)start {
 
@@ -94,8 +94,8 @@
 -(void)getMACDetails{
     
     self.device.ipAddress=self.ipStr;
-    self.device.macAddress =[[MacFinder ip2mac:self.device.ipAddress] uppercaseString];
-    self.device.hostname = [LANProperties getHostFromIPAddress:self.ipStr];
+    self.device.macAddress =[[RTMacFinder ip2mac:self.device.ipAddress] uppercaseString];
+    self.device.hostname = [RTLANProperties getHostFromIPAddress:self.ipStr];
     
     if (!self.device.macAddress) {
  

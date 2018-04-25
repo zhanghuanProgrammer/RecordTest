@@ -1,6 +1,6 @@
  
 
-#import "SimplePing.h"
+#import "RTSimplePing.h"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -45,9 +45,9 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 	return answer;
 }
 
-#pragma mark * SimplePing
+#pragma mark * RTSimplePing
 
-@interface SimplePing ()
+@interface RTSimplePing ()
 
 @property (nonatomic, copy,   readwrite) NSData *           hostAddress;
 @property (nonatomic, assign, readwrite) uint16_t           nextSequenceNumber;
@@ -57,7 +57,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 
 @end
 
-@implementation SimplePing
+@implementation RTSimplePing
 {
     CFHostRef               _host;
     CFSocketRef             _socket;
@@ -89,14 +89,14 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     assert(self->_socket == NULL);
 }
 
-+ (SimplePing *)simplePingWithHostName:(NSString *)hostName
++ (RTSimplePing *)simplePingWithHostName:(NSString *)hostName
 {
-    return [[SimplePing alloc] initWithHostName:hostName address:nil];
+    return [[RTSimplePing alloc] initWithHostName:hostName address:nil];
 }
 
-+ (SimplePing *)simplePingWithHostAddress:(NSData *)hostAddress
++ (RTSimplePing *)simplePingWithHostAddress:(NSData *)hostAddress
 {
-    return [[SimplePing alloc] initWithHostName:NULL address:hostAddress];
+    return [[RTSimplePing alloc] initWithHostName:NULL address:hostAddress];
 }
 
 - (void)noop
@@ -140,7 +140,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     int             err;
     NSData *        payload;
     NSMutableData * packet;
-    ICMPHeader *    icmpPtr;
+    RTICMPHeader *    icmpPtr;
     ssize_t         bytesSent;
     
     
@@ -214,34 +214,34 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
     self.nextSequenceNumber += 1;
 }
 
-+ (NSUInteger)icmpHeaderOffsetInPacket:(NSData *)packet
++ (NSUInteger)RTICMPHeaderOffsetInPacket:(NSData *)packet
 {
     NSUInteger              result;
-    const struct IPHeader * ipPtr;
-    size_t                  ipHeaderLength;
+    const struct RTIPHeader * ipPtr;
+    size_t                  RTIPHeaderLength;
     
     result = NSNotFound;
-    if ([packet length] >= (sizeof(IPHeader) + sizeof(ICMPHeader))) {
-        ipPtr = (const IPHeader *) [packet bytes];
+    if ([packet length] >= (sizeof(RTIPHeader) + sizeof(RTICMPHeader))) {
+        ipPtr = (const RTIPHeader *) [packet bytes];
         assert((ipPtr->versionAndHeaderLength & 0xF0) == 0x40);     
         assert(ipPtr->protocol == 1);                               
-        ipHeaderLength = (ipPtr->versionAndHeaderLength & 0x0F) * sizeof(uint32_t);
-        if ([packet length] >= (ipHeaderLength + sizeof(ICMPHeader))) {
-            result = ipHeaderLength;
+        RTIPHeaderLength = (ipPtr->versionAndHeaderLength & 0x0F) * sizeof(uint32_t);
+        if ([packet length] >= (RTIPHeaderLength + sizeof(RTICMPHeader))) {
+            result = RTIPHeaderLength;
         }
     }
     return result;
 }
 
-+ (const struct ICMPHeader *)icmpInPacket:(NSData *)packet
++ (const struct RTICMPHeader *)icmpInPacket:(NSData *)packet
 {
-    const struct ICMPHeader *   result;
-    NSUInteger                  icmpHeaderOffset;
+    const struct RTICMPHeader *   result;
+    NSUInteger                  RTICMPHeaderOffset;
     
     result = nil;
-    icmpHeaderOffset = [self icmpHeaderOffsetInPacket:packet];
-    if (icmpHeaderOffset != NSNotFound) {
-        result = (const struct ICMPHeader *) (((const uint8_t *)[packet bytes]) + icmpHeaderOffset);
+    RTICMPHeaderOffset = [self RTICMPHeaderOffsetInPacket:packet];
+    if (RTICMPHeaderOffset != NSNotFound) {
+        result = (const struct RTICMPHeader *) (((const uint8_t *)[packet bytes]) + RTICMPHeaderOffset);
     }
     return result;
 }
@@ -249,20 +249,20 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 - (BOOL)isValidPingResponsePacket:(NSMutableData *)packet
 {
     BOOL                result;
-    NSUInteger          icmpHeaderOffset;
-    ICMPHeader *        icmpPtr;
+    NSUInteger          RTICMPHeaderOffset;
+    RTICMPHeader *        icmpPtr;
     uint16_t            receivedChecksum;
     uint16_t            calculatedChecksum;
     
     result = NO;
     
-    icmpHeaderOffset = [[self class] icmpHeaderOffsetInPacket:packet];
-    if (icmpHeaderOffset != NSNotFound) {
-        icmpPtr = (struct ICMPHeader *) (((uint8_t *)[packet mutableBytes]) + icmpHeaderOffset);
+    RTICMPHeaderOffset = [[self class] RTICMPHeaderOffsetInPacket:packet];
+    if (RTICMPHeaderOffset != NSNotFound) {
+        icmpPtr = (struct RTICMPHeader *) (((uint8_t *)[packet mutableBytes]) + RTICMPHeaderOffset);
 
         receivedChecksum   = icmpPtr->checksum;
         icmpPtr->checksum  = 0;
-        calculatedChecksum = in_cksum(icmpPtr, [packet length] - icmpHeaderOffset);
+        calculatedChecksum = in_cksum(icmpPtr, [packet length] - RTICMPHeaderOffset);
         icmpPtr->checksum  = receivedChecksum;
         
         if (receivedChecksum == calculatedChecksum) {
@@ -332,10 +332,10 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen)
 
 static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void *data, void *info)
 {
-    SimplePing *    obj;
+    RTSimplePing *    obj;
     
-    obj = (__bridge SimplePing *) info;
-    assert([obj isKindOfClass:[SimplePing class]]);
+    obj = (__bridge RTSimplePing *) info;
+    assert([obj isKindOfClass:[RTSimplePing class]]);
     
     #pragma unused(s)
     assert(s == obj->_socket);
@@ -438,11 +438,11 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
 
 static void HostResolveCallback(CFHostRef theHost, CFHostInfoType typeInfo, const CFStreamError *error, void *info)
 {
-    SimplePing *    obj;
+    RTSimplePing *    obj;
 
     
-    obj = (__bridge SimplePing *) info;
-    assert([obj isKindOfClass:[SimplePing class]]);
+    obj = (__bridge RTSimplePing *) info;
+    assert([obj isKindOfClass:[RTSimplePing class]]);
     
     #pragma unused(theHost)
     assert(theHost == obj->_host);

@@ -1,11 +1,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class Device;
+@class RTDeviceModel;
 
-@interface LANProperties : NSObject
+@interface RTLANProperties : NSObject
 
-+ (Device*)localIPAddress;
++ (RTDeviceModel*)localIPAddress;
 
 + (NSString*)getHostFromIPAddress:(NSString*)ipAddress;
 

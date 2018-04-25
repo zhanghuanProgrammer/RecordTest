@@ -1,7 +1,7 @@
 
-#import "NetworkCalculator.h"
+#import "RTNetworkCalculator.h"
 
-@implementation NetworkCalculator
+@implementation RTNetworkCalculator
 
 + (NSArray*)getAllHostsForIP:(NSString*)ipAddress andSubnet:(NSString*)subnetMask{
 
@@ -153,7 +153,7 @@
     str = [[NSString stringWithFormat:@"%s", array12] substringWithRange:NSMakeRange(0, 8)];
 
     return str;
-};
+}
 
 + (NSArray*)ipToBinary:(NSString*)ipAddress{
 
@@ -174,22 +174,15 @@
     NSMutableArray* ipBinary = [[NSMutableArray alloc] initWithCapacity:32];
 
     for (int i = 0; i <= 7; i++) {
-
         [ipBinary addObject:[NSNumber numberWithInt:[t1 characterAtIndex:i] - '0']];
     }
-
     for (int i = 0; i <= 7; i++) {
-
         [ipBinary addObject:[NSNumber numberWithInt:[t2 characterAtIndex:i] - '0']];
     }
-
     for (int i = 0; i <= 7; i++) {
-
         [ipBinary addObject:[NSNumber numberWithInt:[t3 characterAtIndex:i] - '0']];
     }
-
     for (int i = 0; i <= 7; i++) {
-
         [ipBinary addObject:[NSNumber numberWithInt:[t4 characterAtIndex:i] - '0']];
     }
 
@@ -197,13 +190,9 @@
 }
 
 + (NSString*)binaryToIP:(NSArray*)binaryArray{
-
     int bits = 128;
-
     int t1 = 0, t2 = 0, t3 = 0, t4 = 0;
-
     for (int i = 0; i <= 7; i++) {
-
         if ([binaryArray[i] intValue] == 1)
             t1 += bits;
         if ([binaryArray[i + 8] intValue] == 1)
@@ -212,7 +201,6 @@
             t3 += bits;
         if ([binaryArray[i + 24] intValue] == 1)
             t4 += bits;
-
         bits = bits / 2;
     }
 
@@ -221,11 +209,8 @@
 
 + (BOOL)isEqualBinary:(NSArray*)binArray1
                      :(NSArray*)binArray2{
-
     for (int i = 0; i < [binArray1 count]; i++) {
-
         if ([binArray1[i] intValue] != [binArray2[i] intValue]) {
-
             return NO;
         }
     }
@@ -234,22 +219,15 @@
 }
 
 + (NSArray*)subnetToWildCard:(NSArray*)subnetArray{
-
     NSMutableArray* subArray = [NSMutableArray arrayWithArray:subnetArray];
-
     for (int i = 0; i < [subArray count]; i++) {
-
         int intNum = [[subArray objectAtIndex:i] intValue];
-
         if (intNum == 0) {
-
             [subArray replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:1]];
         } else {
-
             [subArray replaceObjectAtIndex:i withObject:[NSNumber numberWithInt:0]];
         }
     }
-
     return subArray;
 }
 @end

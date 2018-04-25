@@ -1,5 +1,6 @@
 
-#import "MacFinder.h"
+#import "RTMacFinder.h"
+
 #define BUFLEN (sizeof(struct rt_msghdr) + 512)
 #define SEQ 9999
 #define RTM_VERSION	5	
@@ -8,7 +9,7 @@
 #define RTF_IFSCOPE 0x1000000 
 #define RTA_DST	0x1	
 
-@implementation MacFinder
+@implementation RTMacFinder
 
 +(NSString*)ip2mac: (NSString*)strIP {
     
@@ -52,5 +53,5 @@
     }
     return nil;
 }
-@end
 
+@end

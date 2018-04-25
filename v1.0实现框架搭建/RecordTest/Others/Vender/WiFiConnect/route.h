@@ -56,7 +56,6 @@ struct rt_metrics {
 #define	RTF_IFREF	0x4000000	
 #define	RTF_PROXY	0x8000000	
 #define	RTF_ROUTER	0x10000000	
-					
 
 #define	RTF_BITS \
 	"\020\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE" \
@@ -169,9 +168,7 @@ struct rt_msghdr2 {
 #else
 struct rt_addrinfo {
 	int	rti_addrs;
-
 	struct	sockaddr *rti_info[RTAX_MAX];
-
 };
 
 #endif

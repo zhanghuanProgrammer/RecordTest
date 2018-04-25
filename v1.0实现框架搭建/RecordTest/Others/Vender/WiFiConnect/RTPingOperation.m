@@ -1,23 +1,23 @@
 
-#import "Device.h"
-#import "LANProperties.h"
-#import "MacFinder.h"
-#import "PingOperation.h"
+#import "RTDeviceModel.h"
+#import "RTLANProperties.h"
+#import "RTMacFinder.h"
+#import "RTPingOperation.h"
 
 static const float PING_TIMEOUT = 1;
 
-@interface PingOperation ()
+@interface RTPingOperation ()
 @property (nonatomic, strong) NSString* ipStr;
 @property (nonatomic, strong) NSDictionary* brandDictionary;
-@property (nonatomic, strong) SimplePing* simplePing;
+@property (nonatomic, strong) RTSimplePing* simplePing;
 @property (nonatomic, copy) void (^result)(NSError* _Nullable error, NSString* _Nonnull ip);
 @end
 
-@interface PingOperation ()
+@interface RTPingOperation ()
 - (void)finish;
 @end
 
-@implementation PingOperation {
+@implementation RTPingOperation {
     BOOL _stopRunLoop;
     NSTimer* _keepAliveTimer;
     NSError* errorMessage;
@@ -31,7 +31,7 @@ static const float PING_TIMEOUT = 1;
     if (self) {
         self.name = ip;
         self.ipStr = ip;
-        self.simplePing = [SimplePing simplePingWithHostName:ip];
+        self.simplePing = [RTSimplePing simplePingWithHostName:ip];
         self.simplePing.delegate = self;
         self.result = result;
         _isExecuting = NO;
@@ -39,7 +39,7 @@ static const float PING_TIMEOUT = 1;
     }
 
     return self;
-};
+}
 
 - (void)start{
 
@@ -112,7 +112,7 @@ static const float PING_TIMEOUT = 1;
 }
 #pragma mark - Pinger delegate
 
-- (void)simplePing:(SimplePing*)pinger didStartWithAddress:(NSData*)address{
+- (void)simplePing:(RTSimplePing*)pinger didStartWithAddress:(NSData*)address{
     if (self.isCancelled) {
         [self finish];
         return;
@@ -120,25 +120,25 @@ static const float PING_TIMEOUT = 1;
     [pinger sendPingWithData:nil];
 }
 
-- (void)simplePing:(SimplePing*)pinger didFailWithError:(NSError*)error{
+- (void)simplePing:(RTSimplePing*)pinger didFailWithError:(NSError*)error{
     [pingTimer invalidate];
     errorMessage = error;
     [self finishedPing];
 }
 
-- (void)simplePing:(SimplePing*)pinger didFailToSendPacket:(NSData*)packet error:(NSError*)error{
+- (void)simplePing:(RTSimplePing*)pinger didFailToSendPacket:(NSData*)packet error:(NSError*)error{
 
     [pingTimer invalidate];
     errorMessage = error;
     [self finishedPing];
 }
 
-- (void)simplePing:(SimplePing*)pinger didReceivePingResponsePacket:(NSData*)packet{
+- (void)simplePing:(RTSimplePing*)pinger didReceivePingResponsePacket:(NSData*)packet{
     [pingTimer invalidate];
     [self finishedPing];
 }
 
-- (void)simplePing:(SimplePing*)pinger didSendPacket:(NSData*)packet{
+- (void)simplePing:(RTSimplePing*)pinger didSendPacket:(NSData*)packet{
     pingTimer = [NSTimer scheduledTimerWithTimeInterval:PING_TIMEOUT target:self selector:@selector(pingTimeOut:) userInfo:nil repeats:NO];
 }
 

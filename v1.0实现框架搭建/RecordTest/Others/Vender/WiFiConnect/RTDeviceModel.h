@@ -1,7 +1,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Device : NSObject
+@interface RTDeviceModel : NSObject
 
 @property (nonatomic, strong) NSString* hostname;
 

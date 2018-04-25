@@ -1,10 +1,10 @@
 
-#import "Device.h"
+#import "RTDeviceModel.h"
 
-@implementation Device
+@implementation RTDeviceModel
 
 - (BOOL)isEqual:(id)object{
-    return ([object isKindOfClass:[Device class]] && [[object ipAddress] isEqualToString:_ipAddress]);
+    return ([object isKindOfClass:[RTDeviceModel class]] && [[object ipAddress] isEqualToString:_ipAddress]);
 }
 
 - (NSUInteger)hash{

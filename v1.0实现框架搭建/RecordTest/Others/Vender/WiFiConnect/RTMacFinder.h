@@ -10,8 +10,8 @@
 #include "if_ether.h"
 #include <arpa/inet.h>
 
-@interface MacFinder : NSObject;
+@interface RTMacFinder : NSObject
 
-+(NSString*)ip2mac: (NSString*)strIP;
++ (NSString*)ip2mac:(NSString*)strIP;
 
 @end

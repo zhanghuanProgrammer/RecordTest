@@ -6,15 +6,15 @@ typedef enum {
 
 #import <Foundation/Foundation.h>
 
-@class Device;
+@class RTDeviceModel;
 
-@protocol MMLANScannerDelegate;
+@protocol RTLANScannerDelegate;
 
-#pragma mark - MMLANScanner Protocol
-@protocol MMLANScannerDelegate <NSObject>
+#pragma mark - RTLANScanner Protocol
+@protocol RTLANScannerDelegate <NSObject>
 @required
 
-- (void)lanScanDidFindNewDevice:(Device*)device;
+- (void)lanScanDidFindNewDevice:(RTDeviceModel*)device;
 
 - (void)lanScanDidFinishScanningWithStatus:(MMLanScannerStatus)status;
 
@@ -27,11 +27,11 @@ typedef enum {
 @end
 
 #pragma mark - Public methods
-@interface MMLANScanner : NSObject
+@interface RTLANScanner : NSObject
 
-@property (nonatomic, weak) id<MMLANScannerDelegate> delegate;
+@property (nonatomic, weak) id<RTLANScannerDelegate> delegate;
 
-- (instancetype)initWithDelegate:(id<MMLANScannerDelegate>)delegate;
+- (instancetype)initWithDelegate:(id<RTLANScannerDelegate>)delegate;
 
 @property (nonatomic, assign, readonly) BOOL isScanning;
 
