@@ -11,6 +11,12 @@
 
 @implementation RTMacFinder
 
+#if TARGET_IPHONE_SIMULATOR
++(NSString*)ip2mac: (NSString*)strIP{
+    return @"";
+}
+#else
+
 +(NSString*)ip2mac: (NSString*)strIP {
     
     const char *ip = [strIP UTF8String];
@@ -34,6 +40,7 @@
     rtm->rtm_pid = 1234;
     rtm->rtm_seq = SEQ;
     
+    
     sin = (struct sockaddr_in *) (rtm + 1);
     sin->sin_len = sizeof(struct sockaddr_in);
     sin->sin_family = AF_INET;
@@ -54,4 +61,5 @@
     return nil;
 }
 
+#endif
 @end

@@ -51,7 +51,9 @@
     NSString * wifiName = [RTDeviceDetailInfo wifiName];
     NSString * hint = @"";
     if (![wifiName isEqualToString:@"当前没有连接Wifi"]) {
-        hint = @"点击查看连接人数";
+        if (!TARGET_IPHONE_SIMULATOR) {
+            hint = @"点击查看连接人数";
+        }
     }
     [datas addObject:@{[NSString stringWithFormat:@"Wifi名称 : %@",wifiName]:hint}];
     [datas addObject:@{[NSString stringWithFormat:@"Wifi Ip : %@",[RTDeviceDetailInfo localWifiIpAddress]]:@""}];
