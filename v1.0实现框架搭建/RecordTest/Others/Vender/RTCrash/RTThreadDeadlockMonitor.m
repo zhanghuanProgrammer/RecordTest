@@ -1,17 +1,16 @@
 
-#import "RTCrashDeadlock.h"
+#import "RTThreadDeadlockMonitor.h"
 #import "RTReporter.h"
 #import <mach/mach_time.h>
+#import "RTCrashReporter.h"
+#import "RTCrashLag.h"
+#import "ZHStatusBarNotification.h"
+#import "RTOperationImage.h"
+#import "RTViewHierarchy.h"
 
 typedef NS_ENUM(NSUInteger, RTThreadState) {
     NOT_STUCK,
     STUCK
-};
-
-typedef NS_ENUM(NSUInteger, RTAppState) {
-    RTAppState_willEnterForeground,
-    RTAppState_enterBackground,
-    RTAppState_crash,
 };
 
 static dispatch_semaphore_t mainThreadMonitorSemaphore;
@@ -24,12 +23,6 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
     lastTrick = mach_absolute_time();
     dispatch_semaphore_signal(mainThreadMonitorSemaphore);
 }
-
-@interface RTThreadDeadlockMonitor ()
-
-@property (nonatomic, assign) enum RTAppState appState;
-
-@end
 
 @implementation RTThreadDeadlockMonitor
 
@@ -47,7 +40,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 - (void)startThreadMonitor{
 
     //卡顿阀值，默认为5s
-    float __block lagInterval = 5.0;
+    float __block lagInterval = 5;
     //前一次卡顿检测状态
     previousState = NOT_STUCK;
     //非交互性卡顿
@@ -67,7 +60,6 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
             while (YES) {
-
                 //将卡顿判断阀值缩小0.01s，防止卡顿结束了才获取堆栈信息，此时堆栈信息不能准确的反映卡顿的方法调用情况
                 long hadStuck = dispatch_semaphore_wait(mainThreadMonitorSemaphore, dispatch_time(DISPATCH_TIME_NOW, (lagInterval - 0.01) * NSEC_PER_SEC));
                 uint64_t localLastTrick = lastTrick;
@@ -100,11 +92,30 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
                         NSArray* callStacks = [stackTrace componentsSeparatedByString:@"\n"];
                         NSString* causeBy = ([callStacks firstObject] == NULL) ? @"unKnown reason" : [callStacks firstObject];
                         NSString* callStackStr = [NSString stringWithFormat:@"callStackSymbols: {\n%@}\n", stackTrace];
-
-                        //                        [[RTDataManager sharedObj] lag:rt_cpu_time_us()
-                        //                                                callStack:callStackStr
-                        //                                                     type:nil
-                        //                                                   reason:causeBy];
+                        
+                        NSMutableString *lagM = [NSMutableString string];
+                        if (stackTrace && stackTrace.length>0) {
+                            if(causeBy.length>0)[lagM appendFormat:@"causeBy = \n%@\n",causeBy];
+                            if(callStackStr.length>0)[lagM appendFormat:@"callStackStr = \n%@\n",callStackStr];
+                        }
+                        RTCrashThreadInfo *mainThread = [RTCrashReporter rt_backtraceOfMainThread];
+                        if (mainThread && mainThread.description.length>0) {
+                            [lagM appendFormat:@"MainThread(线程):\n%@",mainThread];
+                        }
+                        for (RTCrashThreadInfo *info in [RTCrashReporter rt_backtraceOfAllThread]) {
+                            [lagM appendFormat:@"\n\nThread(线程):\n%@",info];
+                        }
+                        
+                        dispatch_sync(dispatch_get_main_queue(), ^{
+                            RTLagModel *model = [RTLagModel new];
+                            model.lagStack = lagM.copy;
+                            model.imagePath = [RTOperationImage saveLag:[[RTViewHierarchy new] snap:nil type:0]];
+                            [[RTCrashLag shareInstance] addLag:model];
+                        });
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [ZHStatusBarNotification showWithStatus:@"发生卡顿" dismissAfter:1 styleName:JDStatusBarStyleError];
+                        });
                     }
                 } else {
                     //卡顿结束
@@ -117,10 +128,6 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
             }
         });
     });
-}
-
-- (void)stopThreadMonitor{
-    self.appState = RTAppState_crash;
 }
 
 @end

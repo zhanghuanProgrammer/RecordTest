@@ -57,16 +57,36 @@
     group4.items = @[item4];
     [self.allGroups addObject:group4];
     
+    RTSettingItem *item5 = [RTSettingItem itemWithIcon:@"" title:title subTitle:subTitle type:ZFSettingItemTypeNone];
+    item5.subTitleFontSize = 12;
+    RTSettingGroup *group5 = [[RTSettingGroup alloc] init];
+    group5.header = @"所有崩溃截图占用的存储空间";
+    group5.footer = [NSString stringWithFormat:@"总占用空间: %@",@"计算中..."];
+    group5.items = @[item5];
+    [self.allGroups addObject:group5];
+    
+    RTSettingItem *item6 = [RTSettingItem itemWithIcon:@"" title:title subTitle:subTitle type:ZFSettingItemTypeNone];
+    item6.subTitleFontSize = 12;
+    RTSettingGroup *group6 = [[RTSettingGroup alloc] init];
+    group6.header = @"所有卡顿截图占用的存储空间";
+    group6.footer = [NSString stringWithFormat:@"总占用空间: %@",@"计算中..."];
+    group6.items = @[item6];
+    [self.allGroups addObject:group6];
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         item1.title = [NSString stringWithFormat:@"总个数: %@   截图张数: %@",[NSString stringWithFormat:@"%zd",[RTOperationQueue operationQueues].count],[RTOperationImage imagesFileCount]];
         item2.title = [NSString stringWithFormat:@"总个数: %@   截图张数: %@",[NSString stringWithFormat:@"%zd",[[RTPlayBack shareInstance] playBacks].count],[RTOperationImage imagesPlayBackFileCount]];
         item3.title = [NSString stringWithFormat:@"总个数: %@",[RTOperationImage videoFileCount]];
         item4.title = [NSString stringWithFormat:@"总个数: %@",[RTOperationImage videoPlayBackFileCount]];
+        item5.title = [NSString stringWithFormat:@"崩溃截图张数: %@",[RTOperationImage crashFileCount]];
+        item6.title = [NSString stringWithFormat:@"卡顿截图张数: %@",[RTOperationImage lagFileCount]];
         
         item1.subTitle = [NSString stringWithFormat:@"%@",[RTOperationImage imagesFileSize]];
         item2.subTitle = [NSString stringWithFormat:@"%@",[RTOperationImage imagesPlayBackFileSize]];
         item3.subTitle = [NSString stringWithFormat:@"%@",[RTOperationImage videoFileSize]];
         item4.subTitle = [NSString stringWithFormat:@"%@",[RTOperationImage videoPlayBackFileSize]];
+        item5.subTitle = [NSString stringWithFormat:@"%@",[RTOperationImage crashFileSize]];
+        item6.subTitle = [NSString stringWithFormat:@"%@",[RTOperationImage lagFileSize]];
         
         group4.footer = [NSString stringWithFormat:@"总占用空间: %@",[RTOperationImage allSize]];
         

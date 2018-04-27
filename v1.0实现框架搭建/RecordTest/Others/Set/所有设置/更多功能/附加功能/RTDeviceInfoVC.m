@@ -44,10 +44,10 @@
     [datas addObject:@{[NSString stringWithFormat:@"App Vesion : %@",[RTDeviceDetailInfo applicationVersion]]:@""}];
     [datas addObject:@{[NSString stringWithFormat:@"iOS Vesion : %@",[RTDeviceDetailInfo phoneSystemVersion]]:@""}];
     [datas addObject:@{[NSString stringWithFormat:@"是否越狱 : %@",[RTDeviceDetailInfo jailbrokenDevice]?@"已越狱":@"未越狱"]:@""}];
-    [datas addObject:@{[NSString stringWithFormat:@"app占用内存 : %.2f",[RTDeviceInfo shareInstance].appMemory]:@""}];
-    [datas addObject:@{[NSString stringWithFormat:@"系统可用内存 : %.2f",[RTDeviceInfo shareInstance].systemAvailableMemory]:@""}];
-    [datas addObject:@{[NSString stringWithFormat:@"app占用cpu : %.2f",[RTDeviceInfo shareInstance].appCpu]:@""}];
-    [datas addObject:@{[NSString stringWithFormat:@"系统占用cpu : %.2f",[RTDeviceInfo shareInstance].systemCpu]:@""}];
+    [datas addObject:@{[NSString stringWithFormat:@"app占用内存 : %.2f MB",[RTDeviceInfo shareInstance].appMemory]:@""}];
+    [datas addObject:@{[NSString stringWithFormat:@"系统可用内存 : %.2f MB",[RTDeviceInfo shareInstance].systemAvailableMemory]:@""}];
+    [datas addObject:@{[NSString stringWithFormat:@"app占用cpu : %.2f%%",[RTDeviceInfo shareInstance].appCpu]:@""}];
+    [datas addObject:@{[NSString stringWithFormat:@"系统占用cpu : %.2f%%",[RTDeviceInfo shareInstance].systemCpu]:@""}];
     NSString * wifiName = [RTDeviceDetailInfo wifiName];
     NSString * hint = @"";
     if (![wifiName isEqualToString:@"当前没有连接Wifi"]) {

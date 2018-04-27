@@ -1,8 +1,8 @@
-#import "ZHCountDownButton.h"
+#import "RTCountDownButton.h"
 
 #import "MBProgressHUD.h"
 
-@interface ZHCountDownButton ()
+@interface RTCountDownButton ()
 
 /** 保存起始状态下的title */
 @property (nonatomic, copy) NSString *originalTitle;
@@ -14,7 +14,7 @@
 @property (nonatomic,assign) int count;
 @end
 
-@implementation ZHCountDownButton
+@implementation RTCountDownButton
 
 
 /**
@@ -112,13 +112,13 @@
     [[NSRunLoop currentRunLoop] addTimer:self.ccpCountDownTimer forMode:NSRunLoopCommonModes];
 }
 
-//更新ZHCountDownButton的title为倒计时剩余的时间
+//更新RTCountDownButton的title为倒计时剩余的时间
 - (void)updateCCPCountDownButtonTitle {
     if (self.tempDurationOfCountDown == 0) {
-        // 设置ZHCountDownButton的title为开始倒计时前的title
+        // 设置RTCountDownButton的title为开始倒计时前的title
         [self setTitle:self.originalTitle forState:UIControlStateNormal];
         [self setTitleColor:self.originalColor forState:UIControlStateNormal];
-        // 恢复ZHCountDownButton开始倒计时
+        // 恢复RTCountDownButton开始倒计时
         self.tempDurationOfCountDown = self.durationOfCountDown;
         self.ccpCountDownTimer.fireDate=[NSDate distantFuture];
         [self.ccpCountDownTimer invalidate];
@@ -126,7 +126,7 @@
         self.count = 0;
         self.enabled = YES;
     } else {
-        // 设置ZHCountDownButton的title为当前倒计时剩余的时间
+        // 设置RTCountDownButton的title为当前倒计时剩余的时间
         [self setTitle:[NSString stringWithFormat:@"重新发送(%zds)", self.tempDurationOfCountDown--] forState:UIControlStateNormal];
         if (self.processColor) {
             [self setTitleColor:self.processColor forState:UIControlStateNormal];

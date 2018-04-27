@@ -11,8 +11,6 @@
         _threadId = 0;
         _errorCode = 0;
         _threadName = @"";
-        _causeBy = @"";
-        _needInsertKeyStackLine = NO;
     }
     return self;
 }

@@ -7,8 +7,6 @@
 @property (nonatomic, assign) uint64_t threadId;
 @property (nonatomic, copy) NSString *threadName;
 @property (nonatomic, assign) BOOL isCrashThread;
-@property (nonatomic, assign) BOOL needInsertKeyStackLine;
 @property (nonatomic, assign) int errorCode;
-@property (nonatomic, copy) NSString *causeBy;
 
 @end

@@ -1,6 +1,8 @@
 
 #import "AutoRecordTest.h"
 #import "RecordTestHeader.h"
+#import "RTCrash.h"
+#import "RTThreadDeadlockMonitor.h"
 
 @implementation AutoRecordTest
 
@@ -20,6 +22,11 @@
 }
 
 - (void)run{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        rt_installExceptionHandler();
+        [[RTThreadDeadlockMonitor shareObj] startThreadMonitor];
+    });
     if (!Run) {
         return;
     }

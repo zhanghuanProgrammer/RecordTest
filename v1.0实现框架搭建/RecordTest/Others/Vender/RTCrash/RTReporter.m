@@ -491,7 +491,6 @@ uintptr_t rt_segmentBaseOfImageIndex(const uint32_t idx) {
 
 
 +(instancetype)shareObject{
-    
     static RTCrashReporter * reporter = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -512,58 +511,50 @@ uintptr_t rt_segmentBaseOfImageIndex(const uint32_t idx) {
         //image头
         reporter.imageHeader = [reporter getTheImageHeader];
         reporter.crashLock = [[NSLock alloc] init];
-        //是否处于崩溃状态
-        reporter.isCrash = NO;
     });
     return reporter;
 }
 
 - (const struct mach_header *)getTheImageHeader {
     uint32_t count = _dyld_image_count();
-    
     for(uint32_t i = 0; i < count; i++) {
         const struct mach_header *idx = _dyld_get_image_header(i);
         if (idx->filetype == MH_EXECUTE) {
             return idx;
         }
     }
-    
     return NULL;
 }
 
 - (NSString *)getDSYMUUID{
-    
     if ([_dSYMUUID length] <= 0) {
         //dSYM文件uuid(模块加载地址获取也包含在里面)
-            if (!_imageHeader)
-                return nil;
-            
-            BOOL is64bit = _imageHeader->magic == MH_MAGIC_64 || _imageHeader->magic == MH_CIGAM_64;
-            uintptr_t cursor = (uintptr_t)_imageHeader + (is64bit ? sizeof(struct mach_header_64) : sizeof(struct mach_header));
-            const struct segment_command *segmentCommand = NULL;
-            for (uint32_t i = 0; i < _imageHeader->ncmds; i++, cursor += segmentCommand->cmdsize)
+        if (!_imageHeader)
+            return nil;
+        
+        BOOL is64bit = _imageHeader->magic == MH_MAGIC_64 || _imageHeader->magic == MH_CIGAM_64;
+        uintptr_t cursor = (uintptr_t)_imageHeader + (is64bit ? sizeof(struct mach_header_64) : sizeof(struct mach_header));
+        const struct segment_command *segmentCommand = NULL;
+        for (uint32_t i = 0; i < _imageHeader->ncmds; i++, cursor += segmentCommand->cmdsize)
+        {
+            segmentCommand = (struct segment_command *)cursor;
+            if (segmentCommand->cmd == LC_UUID)
             {
-                segmentCommand = (struct segment_command *)cursor;
-                if (segmentCommand->cmd == LC_UUID)
-                {
-                    const struct uuid_command *uuidCommand = (const struct uuid_command *)segmentCommand;
-                    NSString *temp = [[[[NSUUID alloc] initWithUUIDBytes:uuidCommand->uuid] UUIDString] lowercaseString];
-                    
-                    _dSYMUUID = [temp stringByReplacingOccurrencesOfString:@"-" withString:@""];
-                    break;
-                }
+                const struct uuid_command *uuidCommand = (const struct uuid_command *)segmentCommand;
+                NSString *temp = [[[[NSUUID alloc] initWithUUIDBytes:uuidCommand->uuid] UUIDString] lowercaseString];
+                
+                _dSYMUUID = [temp stringByReplacingOccurrencesOfString:@"-" withString:@""];
+                break;
             }
+        }
     }
-    
     return _dSYMUUID;
 }
 
 - (NSString *)getBaseAddress {
-    
     if ([_baseAddress length] <= 0) {
         _baseAddress = [NSString stringWithFormat:@"0x%016lx",(intptr_t)self.imageHeader];
     }
-    
     return _baseAddress;
 }
 
@@ -585,7 +576,7 @@ uintptr_t rt_segmentBaseOfImageIndex(const uint32_t idx) {
     return [stackTrace copy];
 }
 
-+(void)start{
++ (void)start{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         //获取主线程id

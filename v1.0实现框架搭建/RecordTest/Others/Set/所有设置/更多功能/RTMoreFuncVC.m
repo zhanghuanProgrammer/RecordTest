@@ -7,6 +7,8 @@
 #import "RTPerformanceVC.h"
 #import "RTVCPerformanceVC.h"
 #import "RTDeviceInfoVC.h"
+#import "RTLagVC.h"
+#import "RTCrashCollectionVC.h"
 
 @implementation RTMoreFuncVC
 
@@ -88,6 +90,18 @@
         [weakSelf.navigationController pushViewController:[RTVCPerformanceVC new] animated:YES];
     };
     
+    RTSettingItem *item6_1 = [RTSettingItem itemWithIcon:@"" title:@"卡顿分析" subTitle:nil type:ZFSettingItemTypeArrow];
+    item6_1.subTitleFontSize = 10;
+    item6_1.operation = ^{
+        [weakSelf.navigationController pushViewController:[RTLagVC new] animated:YES];
+    };
+    
+    RTSettingItem *item6_2 = [RTSettingItem itemWithIcon:@"" title:@"崩溃收集" subTitle:nil type:ZFSettingItemTypeArrow];
+    item6_2.subTitleFontSize = 10;
+    item6_2.operation = ^{
+        [weakSelf.navigationController pushViewController:[RTCrashCollectionVC new] animated:YES];
+    };
+    
     RTSettingItem *item7 = [RTSettingItem itemWithIcon:@"" title:@"手机设备信息" subTitle:nil type:ZFSettingItemTypeArrow];
     item7.subTitleFontSize = 10;
     item7.operation = ^{
@@ -96,7 +110,7 @@
     
     RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
     group1.header = @"更多功能";
-    group1.items = @[item1,item2,item3,item4_1,item4_2,item4_3,item4_4,item5,item6,item7];
+    group1.items = @[item1,item2,item3,item4_1,item4_2,item4_3,item4_4,item5,item6,item6_1,item6_2,item7];
     [self.allGroups addObject:group1];
 }
 

@@ -201,9 +201,9 @@
     RTSettingItem *item5 = [RTSettingItem itemWithIcon:@"" title:@"退出登录" subTitle:nil type:ZFSettingItemTypeArrow];
     item5.subTitleFontSize = 10;
     item5.operation = ^{
-//        RTLoginViewController *vc = [RTLoginViewController new];
-//        [self.navigationController pushViewController:vc animated:YES];
-        [weakSelf.navigationController pushViewController:[RTFeedbackVC new] animated:YES];
+        RTLoginViewController *vc = [RTLoginViewController new];
+        [self.navigationController pushViewController:vc animated:YES];
+//        [weakSelf.navigationController pushViewController:[RTFeedbackVC new] animated:YES];
     };
     RTSettingGroup *group5 = [[RTSettingGroup alloc] init];
     group5.header = @"账户";

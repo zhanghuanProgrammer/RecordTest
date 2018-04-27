@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 #import "RTReporter.h"
+#import "RTCrashLag.h"
+#import "RTOperationImage.h"
+#import "RTViewHierarchy.h"
 
 static volatile sig_atomic_t g_installed = 0;
 static stack_t g_signalStack = {0};
@@ -105,34 +108,28 @@ static const char* rt_signal_signalName(const int sigNum) {
 
 static void rt_signalHandler(int sigNum,siginfo_t* signalInfo,void* userContext) {
     if(g_installed) {
-            [RTCrashReporter shareObject].isCrash = YES;
         
-            NSMutableArray *stackArray = [NSMutableArray arrayWithArray:[[RTCrashReporter shareObject].crashThreadInfo.stackTrace componentsSeparatedByString:@"\n"]];
-            if ([stackArray count] <= 2) {
-                stackArray = [[NSThread callStackSymbols] mutableCopy];
-            }
-            BOOL shouldUpload = YES;
-            if ([stackArray count] >= 4) {
-                NSString *stack = [stackArray objectAtIndex:3];
-                if ([stack rangeOfString:@"-[rt_"].location != NSNotFound &&
-                    [stack rangeOfString:@"startLoading]"].location != NSNotFound) {
-                    shouldUpload = NO;
-                }
-            }
-            if (shouldUpload == YES) {
-                if ([[stackArray firstObject] rangeOfString:@"rt_signalHandler"].location != NSNotFound ||
-                    ([[stackArray firstObject] rangeOfString:@"-[rt_"].location != NSNotFound &&
-                    [[stackArray firstObject] rangeOfString:@"setFields:]"].location != NSNotFound)) {
-                    [stackArray removeObject:[stackArray firstObject]];
-                }
-                NSString *stack=[NSString stringWithFormat:@"callStackSymbols: {\n%@}\n",[stackArray componentsJoinedByString:@"\n"]];
-                
-//                [[RTDataManager sharedObj] crash:rt_cpu_time_us()
-//                                        callStack:stack
-//                                       callStack2:origStack
-//                                             type:type
-//                                           reason:exceptionReason];
-            }
+        NSMutableArray *stackArray = [NSMutableArray arrayWithArray:[[RTCrashReporter shareObject].crashThreadInfo.stackTrace componentsSeparatedByString:@"\n"]];
+        if ([stackArray count] <= 2) {
+            stackArray = [[NSThread callStackSymbols] mutableCopy];
+        }
+        NSString *stack=[NSString stringWithFormat:@"callStackSymbols: {\n%@}\n",[stackArray componentsJoinedByString:@"\n"]];
+        NSMutableString *lagM = [NSMutableString string];
+        [lagM appendFormat:@"\n(C 崩溃堆栈):\n%@",stack];
+        
+        if (![NSThread isMainThread]) {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                RTCrashModel *model = [RTCrashModel new];
+                model.crashStack = lagM.copy;
+                model.imagePath = [RTOperationImage saveCrash:[[RTViewHierarchy new] snap:nil type:0]];
+                [[RTCrashLag shareInstance] addCrash:model];
+            });
+        }else{
+            RTCrashModel *model = [RTCrashModel new];
+            model.crashStack = lagM.copy;
+            model.imagePath = [RTOperationImage saveCrash:[[RTViewHierarchy new] snap:nil type:0]];
+            [[RTCrashLag shareInstance] addCrash:model];
+        }
         
         rt_uninstallSignalHandler();//恢复其他SDK注册的信号量回调函数
     }

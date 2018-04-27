@@ -2,7 +2,7 @@
 
 typedef void(^BeginBlock)();
 
-@interface ZHCountDownButton : UIButton
+@interface RTCountDownButton : UIButton
 
 /** 验证码倒计时的时长 */
 @property (nonatomic, assign) NSInteger durationOfCountDown;

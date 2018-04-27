@@ -23,6 +23,14 @@
     if (![[NSFileManager defaultManager] fileExistsAtPath:videoPlayBackPath]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:videoPlayBackPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
+    NSString *crashPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtCrashPath"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:crashPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:crashPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *lagPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtLagPath"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:lagPath]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:lagPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
 }
 
 + (NSString *)documentsPath{
@@ -50,6 +58,14 @@
     NSString *videoPlaBackPath = [[self documentsPath] stringByAppendingPathComponent:@"/rtVideoPlayBackPath"];
     return videoPlaBackPath;
 }
++ (NSString *)crashPath{
+    NSString *path= [[self documentsPath] stringByAppendingPathComponent:@"/rtCrashPath"];
+    return path;
+}
++ (NSString *)lagPath{
+    NSString *path = [[self documentsPath] stringByAppendingPathComponent:@"/rtLagPath"];
+    return path;
+}
 + (NSString *)imagesFileSize{
     return [ZHFileManager fileSizeString:[self imagesPath]];
 }
@@ -62,12 +78,20 @@
 + (NSString *)videoPlayBackFileSize{
     return [ZHFileManager fileSizeString:[self videoPlayBackPath]];
 }
++ (NSString *)crashFileSize{
+    return [ZHFileManager fileSizeString:[self crashPath]];
+}
++ (NSString *)lagFileSize{
+    return [ZHFileManager fileSizeString:[self lagPath]];
+}
 + (NSString *)allSize{
     CGFloat totol =
     [ZHFileManager getFileSize:[self imagesPath]] +
     [ZHFileManager getFileSize:[self playBackImagesPath]] +
     [ZHFileManager getFileSize:[self videoPath]] +
-    [ZHFileManager getFileSize:[self videoPlayBackPath]] ;
+    [ZHFileManager getFileSize:[self videoPlayBackPath]] +
+    [ZHFileManager getFileSize:[self crashPath]] +
+    [ZHFileManager getFileSize:[self lagPath]];
     return [ZHFileManager sizeOfByte:totol];
 }
 + (NSString *)homeDirectorySize{
@@ -87,6 +111,14 @@
 }
 + (NSString *)videoPlayBackFileCount{
     NSInteger count = [ZHFileManager subPathFileArrInDirector:[self videoPlayBackPath] hasPathExtension:@[@".mp4"]].count;
+    return [NSString stringWithFormat:@"%zd",count];
+}
++ (NSString *)crashFileCount{
+    NSInteger count = [ZHFileManager subPathFileArrInDirector:[self crashPath] hasPathExtension:@[@".png",@".jpg"]].count;
+    return [NSString stringWithFormat:@"%zd",count];
+}
++ (NSString *)lagFileCount{
+    NSInteger count = [ZHFileManager subPathFileArrInDirector:[self lagPath] hasPathExtension:@[@".png",@".jpg"]].count;
     return [NSString stringWithFormat:@"%zd",count];
 }
 + (BOOL)isExsitImageName:(NSString *)imageName{
@@ -112,6 +144,20 @@
 }
 + (BOOL)isExsitPlayBackVideo:(NSString *)video{
     NSString *path = [[self videoPlayBackPath] stringByAppendingPathComponent:video];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return YES;
+    }
+    return NO;
+}
++ (BOOL)isExsitCrash:(NSString *)crash{
+    NSString *path = [[self crashPath] stringByAppendingPathComponent:crash];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return YES;
+    }
+    return NO;
+}
++ (BOOL)isExsitLag:(NSString *)lag{
+    NSString *path = [[self lagPath] stringByAppendingPathComponent:lag];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         return YES;
     }
@@ -146,6 +192,20 @@
     }
     return videoName;
 }
++ (NSString *)getRandomCrashName{
+    NSString *videoName = [self getCharacterFileName];
+    while ([self isExsitCrash:videoName]) {
+        videoName = [self getCharacterFileName];
+    }
+    return videoName;
+}
++ (NSString *)getRandomLagName{
+    NSString *videoName = [self getCharacterFileName];
+    while ([self isExsitLag:videoName]) {
+        videoName = [self getCharacterFileName];
+    }
+    return videoName;
+}
 
 + (NSString *)getCharacterFileName{
     NSInteger len=25;
@@ -163,7 +223,7 @@
     NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomImageName]];
     NSString *savePath = [[self imagesPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];
-    NSLog(@"图片大小:%@kb",@(imageData.length/1024.0));
+    NSLog(@"录制 - 图片大小:%@kb",@(imageData.length/1024.0));
     return imageName;
 }
 
@@ -173,7 +233,7 @@
     NSString *savePath = [[self playBackImagesPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];
     NSLog(@"%@",savePath);
-    NSLog(@"图片大小:%@kb",@(imageData.length/1024.0));
+    NSLog(@"回放 - 图片大小:%@kb",@(imageData.length/1024.0));
     return imageName;
 }
 
@@ -192,6 +252,24 @@
     return videoName;
 }
 
++ (NSString *)saveCrash:(UIImage *)image{
+    NSData *imageData = UIImageJPEGRepresentation(image,1);
+    NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomCrashName]];
+    NSString *savePath = [[self crashPath] stringByAppendingPathComponent:imageName];
+    [imageData writeToFile:savePath atomically:YES];
+    NSLog(@"崩溃 - 图片大小:%@kb",@(imageData.length/1024.0));
+    return imageName;
+}
+
++ (NSString *)saveLag:(UIImage *)image{
+    NSData *imageData = UIImageJPEGRepresentation(image,1);
+    NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomLagName]];
+    NSString *savePath = [[self lagPath] stringByAppendingPathComponent:imageName];
+    [imageData writeToFile:savePath atomically:YES];
+    NSLog(@"卡顿 - 图片大小:%@kb",@(imageData.length/1024.0));
+    return imageName;
+}
+
 + (UIImage *)imageWithName:(NSString *)name{
     NSString *path = [[self imagesPath] stringByAppendingPathComponent:name];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -208,12 +286,35 @@
     return [UIImage new];
 }
 
++ (UIImage *)imageWithCrash:(NSString *)name{
+    NSString *path = [[self crashPath] stringByAppendingPathComponent:name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return [UIImage imageWithContentsOfFile:path];
+    }
+    return [UIImage new];
+}
+
++ (UIImage *)imageWithLag:(NSString *)name{
+    NSString *path = [[self lagPath] stringByAppendingPathComponent:name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        return [UIImage imageWithContentsOfFile:path];
+    }
+    return [UIImage new];
+}
+
 + (NSString *)imagePathWithName:(NSString *)name{
     return [[self imagesPath] stringByAppendingPathComponent:name];
 }
 
 + (NSString *)imagePathWithPlayBackName:(NSString *)name{
     return [[self playBackImagesPath] stringByAppendingPathComponent:name];
+}
+
++ (NSString *)imagePathWithCrash:(NSString *)name{
+    return [[self crashPath] stringByAppendingPathComponent:name];
+}
++ (NSString *)imagePathWithLag:(NSString *)name{
+    return [[self lagPath] stringByAppendingPathComponent:name];
 }
 
 + (NSString *)videoPathWithName:(NSString *)name{
@@ -381,6 +482,17 @@
         }
     }
     return NO;
+}
+
++ (void)removeCrash:(NSString *)name{
+    if (name && name.length>0 &&[self isExsitCrash:name]) {
+        [[NSFileManager defaultManager] removeItemAtPath:[self imagePathWithCrash:name] error:nil];
+    }
+}
++ (void)removeLag:(NSString *)name{
+    if (name && name.length>0 &&[self isExsitLag:name]) {
+        [[NSFileManager defaultManager] removeItemAtPath:[self imagePathWithLag:name] error:nil];
+    }
 }
 
 @end

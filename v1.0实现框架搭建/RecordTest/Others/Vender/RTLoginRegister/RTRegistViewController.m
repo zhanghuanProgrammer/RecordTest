@@ -1,7 +1,7 @@
 #import "RTLoginViewController.h"
 #import "RTRegistViewController.h"
 #import "RecordTestHeader.h"
-#import "ZHCountDownButton.h"
+#import "RTCountDownButton.h"
 #import "ZHNSString.h"
 
 @interface RTRegistViewController () {
@@ -11,7 +11,7 @@
     UITextField* verificationCode;
     UINavigationBar* customNavigationBar;
     UIButton* yzButton;
-    ZHCountDownButton* getVerficationCodeButton;
+    RTCountDownButton* getVerficationCodeButton;
 }
 @end
 
@@ -152,7 +152,7 @@
     verificationCodeLabel.textAlignment = NSTextAlignmentLeft;
     verificationCodeLabel.font = [UIFont systemFontOfSize:14];
 
-    getVerficationCodeButton = [[ZHCountDownButton alloc] initWithFrame:CGRectMake(bgView.width - 100 - 20, 62 + 50, 100, 25)];
+    getVerficationCodeButton = [[RTCountDownButton alloc] initWithFrame:CGRectMake(bgView.width - 100 - 20, 62 + 50, 100, 25)];
     getVerficationCodeButton.originalColor = [UIColor whiteColor];
     getVerficationCodeButton.processColor = [UIColor grayColor];
     [getVerficationCodeButton setTitleColor:[UIColor whiteColor] forState:(UIControlStateNormal)];
