@@ -27,7 +27,7 @@
                                     view = (UIView *)obj;
                                 }
                             }
-                            NSLog(@"%@ - %@ : %@",@"👌Control evevnt",target,NSStringFromSelector(sel));
+//                            NSLog(@"%@ - %@ : %@",@"👌Control evevnt",target,NSStringFromSelector(sel));
                             [RTOperationQueue addOperation:view type:(RTOperationQueueTypeSlide) parameters:@[NSStringFromSelector(sel),@(self.value)] repeat:NO];
                         } after:nil error:nil];
                     }
@@ -50,7 +50,7 @@
                 if (model.type == RTOperationQueueTypeSlide) {
                     NSString *selString = model.parameters[0];
                     CGFloat value = [model.parameters[1] floatValue];
-                    NSLog(@"selString = %@",selString);
+//                    NSLog(@"selString = %@",selString);
                     SEL ori_sel = NSSelectorFromString(selString);
                     NSSet *allTargets=[self allTargets];
                     if (allTargets.count>0) {

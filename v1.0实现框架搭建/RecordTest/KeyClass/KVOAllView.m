@@ -2,6 +2,7 @@
 #import "KVOAllView.h"
 #import "RecordTestHeader.h"
 #import "RTRepearDictionary.h"
+#import "AutoTestHeader.h"
 
 @interface KVOAllView ()
 

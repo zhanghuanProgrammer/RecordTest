@@ -24,7 +24,7 @@
                                 [target aspect_hookSelector:targetAction.action withOptions:AspectPositionAfter usingBlock:^{
                                     
                                 } before:^(id target, SEL sel, NSArray *args, int deep) {
-                                    NSLog(@"%@",@"👌Tap evevnt");
+//                                    NSLog(@"%@",@"👌Tap evevnt");
                                     UIView *view = weakView;
                                     if (args.count>0) {
                                         id obj = args[0];

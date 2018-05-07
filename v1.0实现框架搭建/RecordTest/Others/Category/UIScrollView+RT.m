@@ -1,5 +1,6 @@
 
 #import "UIScrollView+RT.h"
+#import <objc/runtime.h>
 
 static const int UIScrollView_OrginalPoint;
 

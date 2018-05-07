@@ -1,6 +1,7 @@
 
 #import "RTSettingCell.h"
 #import "RTSettingItem.h"
+#import "AutoTestHeader.h"
 
 @interface RTSettingCell () {
     UISwitch* _switch;

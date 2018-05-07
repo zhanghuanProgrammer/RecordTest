@@ -1,5 +1,6 @@
 
 #import "JohnAlertManager.h"
+#import "UIColor+SDColor.h"
 
 static JohnTopAlert *_alert = nil;
 @implementation JohnAlertManager

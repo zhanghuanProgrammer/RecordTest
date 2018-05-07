@@ -21,6 +21,9 @@
         _sharedObject = [[RTSearchVCPath alloc] init];
         _sharedObject.searchVCPath = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/SearchVCPath"];
         _sharedObject.operationQueue = [NSKeyedUnarchiver unarchiveObjectWithFile:_sharedObject.searchVCPath];
+        while (_sharedObject.operationQueue.count>1000) {
+            [_sharedObject.operationQueue removeObjectAtIndex:0];
+        }
         _sharedObject.identity = 1;
         if (!_sharedObject.operationQueue) {
             _sharedObject.operationQueue = [NSMutableArray array];
@@ -71,10 +74,6 @@
     model.vc = [RTTopVC shareInstance].topVC;
     model.runResult = [RTSearchVCPath shareInstance].identity;
     [[RTSearchVCPath shareInstance].operationQueue addObject:model];
-    while ([RTSearchVCPath shareInstance].operationQueue.count>1000) {
-        [RTSearchVCPath shareInstance].isLearnVCPath = NO;
-        [[RTSearchVCPath shareInstance].operationQueue removeObjectAtIndex:0];
-    }
 //    NSLog(@"%@",[RTSearchVCPath shareInstance].operationQueue);
 }
 

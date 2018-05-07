@@ -1,5 +1,5 @@
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 typedef NS_OPTIONS(NSUInteger, AspectOptions) {
     AspectPositionAfter   = 0,            /// Called after the original implementation (default)

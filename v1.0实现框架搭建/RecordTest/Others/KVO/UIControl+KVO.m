@@ -2,8 +2,6 @@
 #import "UIControl+KVO.h"
 #import "RecordTestHeader.h"
 #import "ANYMethodLog.h"
-#import "CJOLActionSheetBirthdayView.h"
-#import "ANYMethodLog.h"
 
 @implementation UIControl (KVO)
 
@@ -31,7 +29,7 @@
                                     view = (UIView *)obj;
                                 }
                             }
-                            NSLog(@"%@ - %@ : %@",@"-------👌Control evevnt",target,NSStringFromSelector(sel));
+//                            NSLog(@"%@ - %@ : %@",@"-------👌Control evevnt",target,NSStringFromSelector(sel));
                             [RTOperationQueue addOperation:view type:(RTOperationQueueTypeEvent) parameters:@[NSStringFromSelector(sel)] repeat:YES];
                         } after:nil error:nil];
                     }

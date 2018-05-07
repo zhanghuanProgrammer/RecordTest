@@ -1,5 +1,6 @@
 
 #import "RTChartView.h"
+#import "AutoTestHeader.h"
 
 #define UULabelHeight       20
 #define UUYLabelwidth       25

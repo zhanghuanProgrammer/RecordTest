@@ -326,19 +326,19 @@
 
 - (RACSignal *)logNext {
 	return [[self doNext:^(id x) {
-		NSLog(@"%@ next: %@", self, x);
+//        NSLog(@"%@ next: %@", self, x);
 	}] setNameWithFormat:@"%@", self.name];
 }
 
 - (RACSignal *)logError {
 	return [[self doError:^(NSError *error) {
-		NSLog(@"%@ error: %@", self, error);
+//        NSLog(@"%@ error: %@", self, error);
 	}] setNameWithFormat:@"%@", self.name];
 }
 
 - (RACSignal *)logCompleted {
 	return [[self doCompleted:^{
-		NSLog(@"%@ completed", self);
+//        NSLog(@"%@ completed", self);
 	}] setNameWithFormat:@"%@", self.name];
 }
 

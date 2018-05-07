@@ -125,7 +125,7 @@ static NSString * const RACKVOChannelDataDictionaryKey = @"RACKVOChannelKey";
 			NSCAssert(NO, @"Received error in %@: %@", self, error);
 
 			// Log the error if we're running with assertions disabled.
-			NSLog(@"Received error in %@: %@", self, error);
+            NSLog(@"Received error in %@: %@", self, error);
 		}];
 
 	// Capture `self` weakly for the target's deallocation disposable, so we can

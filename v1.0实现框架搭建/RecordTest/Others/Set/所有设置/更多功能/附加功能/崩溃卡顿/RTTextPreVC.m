@@ -1,6 +1,7 @@
 
 #import "RTTextPreVC.h"
 #import "RTCrashLag.h"
+#import "AutoTestHeader.h"
 
 @implementation RTTextPreVC
 

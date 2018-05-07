@@ -1,6 +1,7 @@
 
 #import "RTBaseSettingViewController.h"
 #import "RTSettingCell.h"
+#import "AutoTestHeader.h"
 
 @interface RTBaseSettingViewController ()
 @property (nonatomic,strong)UILabel *emptylabel;

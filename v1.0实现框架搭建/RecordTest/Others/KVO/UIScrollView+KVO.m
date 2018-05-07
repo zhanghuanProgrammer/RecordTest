@@ -24,7 +24,7 @@
                 if (model.type == RTOperationQueueTypeScroll) {
                     CGPoint point = [model.parameters[0] CGPointValue];
                     if (!CGRectContainsPoint(CGRectMake(0, 0, self.contentSize.width, self.contentSize.height), point)) {
-                        NSLog(@"%@",@"滚动的位置 超出 可滚动的区域");
+//                        NSLog(@"%@",@"滚动的位置 超出 可滚动的区域");
                     }
                     CGFloat verScrollOffsetY=point.y-self.contentOffset.y,horScrollOffsetX=point.x-self.contentOffset.x;
                     NSInteger direction=0;//direction 1左 2上 3右 4下

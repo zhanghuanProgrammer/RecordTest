@@ -1,4 +1,6 @@
 #import "RTPublicFooterButtonView.h"
+#import "AutoTestHeader.h"
+#import "RecordTestHeader.h"
 
 @interface RTPublicFooterButtonView ()
 

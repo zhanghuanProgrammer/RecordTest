@@ -17,7 +17,7 @@
                 UICollectionView *collectionView = args[0];
                 NSIndexPath *indexPath = args[1];
                 [RTOperationQueue addOperation:collectionView type:(RTOperationQueueTypeCollectionViewCellTap) parameters:@[@(indexPath.section),@(indexPath.row)] repeat:YES];
-                NSLog(@"%@",@"👌collectionView:didSelectRowAtIndexPath:");
+//                NSLog(@"%@",@"👌collectionView:didSelectRowAtIndexPath:");
             } after:nil error:nil];
         }
     }

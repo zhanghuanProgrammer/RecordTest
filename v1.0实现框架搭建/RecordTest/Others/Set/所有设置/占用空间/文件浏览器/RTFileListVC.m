@@ -4,6 +4,7 @@
 #import "ZHFileManager.h"
 #import "RTFilePreVC.h"
 #import "RTFileInfo.h"
+#import "AutoTestHeader.h"
 
 #define HLNavigationBarHeight (self.navigationController ? 0 :64)
 

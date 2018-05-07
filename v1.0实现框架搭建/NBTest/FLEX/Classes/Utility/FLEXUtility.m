@@ -324,7 +324,7 @@
 {
     BOOL includeInternalWindows = YES;
     BOOL onlyVisibleWindows = NO;
-
+    
     NSArray *allWindowsComponents = @[@"al", @"lWindo", @"wsIncl", @"udingInt", @"ernalWin", @"dows:o", @"nlyVisi", @"bleWin", @"dows:"];
     SEL allWindowsSelector = NSSelectorFromString([allWindowsComponents componentsJoinedByString:@""]);
 

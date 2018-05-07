@@ -1,5 +1,5 @@
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 typedef void (^VideoCompletionBlock)(NSString *videoPath);
 @protocol ASScreenRecorderDelegate;
 

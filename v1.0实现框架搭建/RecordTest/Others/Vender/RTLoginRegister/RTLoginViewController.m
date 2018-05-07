@@ -3,8 +3,9 @@
 #import "RTLoginViewController.h"
 #import "RTRegistViewController.h"
 #import "RecordTestHeader.h"
-#import "SDSingletonTool.h"
-#import "ZHNSString.h"
+//#import "SDSingletonTool.h"
+#import "TabBarAndNavagation.h"
+//#import "ZHNSString.h"
 
 @interface RTLoginViewController () {
     UIImageView* View;
@@ -42,21 +43,21 @@
 }
 
 - (void)loginWith:(NSString*)userName password:(NSString*)password{
-    [SDNetworking postIsShowProgress:NO WithUrl:[NSString stringWithFormat:@"http://192.168.1.12:8080/KBDAutoTest/Login"]
-        parameters:@{ @"username" : @"13077821373",
-            @"password" : @"123456" }
-        success:^(id json) {
-            NSLog(@"%@", @"登录成功");
-            NSDictionary* dic = (NSDictionary*)json;
-            if ([dic[@"errcode"] longValue] == 200) {
-                
-            } else {
-                NSLog(@"%@", @"登录失败");
-            }
-        }
-        failure:^(NSError* error) {
-            NSLog(@"%@", error);
-        }];
+//    [SDNetworking postIsShowProgress:NO WithUrl:[NSString stringWithFormat:@"http://192.168.1.12:8080/KBDAutoTest/Login"]
+//        parameters:@{ @"username" : @"13077821373",
+//            @"password" : @"123456" }
+//        success:^(id json) {
+//            NSLog(@"%@", @"登录成功");
+//            NSDictionary* dic = (NSDictionary*)json;
+//            if ([dic[@"errcode"] longValue] == 200) {
+//
+//            } else {
+//                NSLog(@"%@", @"登录失败");
+//            }
+//        }
+//        failure:^(NSError* error) {
+//            NSLog(@"%@", error);
+//        }];
 }
 
 - (void)viewDidLoad{
@@ -73,10 +74,10 @@
 
     self.title = @"登录";
 
-    [ZHBlockSingleCategroy addBlockWithTwoNSString:^(NSString* str1, NSString* str2) {
-        user.text = str1;
-        pwd.text = str2;
-    } WithIdentity:@"regisetSuccess"];
+//    [ZHBlockSingleCategroy addBlockWithTwoNSString:^(NSString* str1, NSString* str2) {
+//        user.text = str1;
+//        pwd.text = str2;
+//    } WithIdentity:@"regisetSuccess"];
 }
 
 - (void)registerAccount{
@@ -126,14 +127,14 @@
 }
 
 - (void)createButtons{
-    UIButton* landBtn = [self createButtonFrame:CGRectMake(10, 170, self.view.frame.size.width - 20, 37) backImageName:nil title:@"登录" titleColor:[UIColor whiteColor] font:[UIFont systemFontOfSize:17] target:self action:@selector(landClick)];
-    landBtn.backgroundColor = CurrentAppThemeColor;
-    landBtn.layer.cornerRadius = 5.0f;
-    [self.view addSubview:landBtn];
-
-    UIButton* forgetBtn = [self createButtonFrame:CGRectMake(10, landBtn.maxY + 10, self.view.frame.size.width - 20, 37) backImageName:nil title:@"忘记密码" titleColor:CurrentAppThemeColor font:[UIFont systemFontOfSize:15] target:self action:@selector(forgetClick)];
-    forgetBtn.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:forgetBtn];
+//    UIButton* landBtn = [self createButtonFrame:CGRectMake(10, 170, self.view.frame.size.width - 20, 37) backImageName:nil title:@"登录" titleColor:[UIColor whiteColor] font:[UIFont systemFontOfSize:17] target:self action:@selector(landClick)];
+//    landBtn.backgroundColor = CurrentAppThemeColor;
+//    landBtn.layer.cornerRadius = 5.0f;
+//    [self.view addSubview:landBtn];
+//
+//    UIButton* forgetBtn = [self createButtonFrame:CGRectMake(10, landBtn.maxY + 10, self.view.frame.size.width - 20, 37) backImageName:nil title:@"忘记密码" titleColor:CurrentAppThemeColor font:[UIFont systemFontOfSize:15] target:self action:@selector(forgetClick)];
+//    forgetBtn.backgroundColor = [UIColor clearColor];
+//    [self.view addSubview:forgetBtn];
 }
 
 - (UITextField*)createTextFielfFrame:(CGRect)frame font:(UIFont*)font placeholder:(NSString*)placeholder{

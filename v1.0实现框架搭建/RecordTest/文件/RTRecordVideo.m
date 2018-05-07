@@ -1,6 +1,7 @@
 
 #import "RTRecordVideo.h"
 #import "RecordTestHeader.h"
+#import "ZHSaveDataToFMDB.h"
 
 @interface RTRecordVideo ()
 @property (nonatomic,strong)NSMutableDictionary *videosCache;

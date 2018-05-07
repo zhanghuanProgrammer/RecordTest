@@ -57,7 +57,7 @@
 - (void)applicationBecomeActive{
     if (self.isPaused) {
         [self resumeRecording];
-        NSLog(@"%@",@"app从后台进入前台");
+//        NSLog(@"%@",@"app从后台进入前台");
     }
 }
 
@@ -65,7 +65,7 @@
     if (self.isRecording) {
         [self pauseRecording];
         self.shouldReInit = YES;
-        NSLog(@"%@",@"app进入后台");
+//        NSLog(@"%@",@"app进入后台");
     }
 }
 
@@ -101,7 +101,7 @@
 
 - (BOOL)startRecording{
     if (!_isRecording) {
-        NSLog(@"%@",@"视频录制开始");
+//        NSLog(@"%@",@"视频录制开始");
         [self initData];
         [self setUpWriter];
         _isRecording = (_videoWriter.status == AVAssetWriterStatusWriting);
@@ -126,7 +126,7 @@
 - (void)stopRecordingWithCompletion:(VideoCompletionBlock)completionBlock;{
     if (_isRecording) {
         _isRecording = NO;
-        NSLog(@"%@",@"视频录制结束");
+//        NSLog(@"%@",@"视频录制结束");
         [_displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         [self completeRecordingSession:completionBlock];
         self.pauseResumeTimeRanges = nil;
@@ -215,10 +215,10 @@
 - (void)removeTempFilePath:(NSString*)filePath{
     NSFileManager* fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:filePath]) {
-        NSLog(@"大小:%@", [ZHFileManager fileSizeString:filePath]);
+//        NSLog(@"大小:%@", [ZHFileManager fileSizeString:filePath]);
         NSError* error;
         if ([fileManager removeItemAtPath:filePath error:&error] == NO) {
-            NSLog(@"Could not delete old recording:%@", [error localizedDescription]);
+//            NSLog(@"Could not delete old recording:%@", [error localizedDescription]);
         }
     }
 }
@@ -309,7 +309,7 @@
             dispatch_async(_append_pixelBuffer_queue, ^{
                 BOOL success = [_avAdaptor appendPixelBuffer:pixelBuffer withPresentationTime:time];
                 if (!success) {
-                    NSLog(@"Warning: Unable to write buffer to video");
+//                    NSLog(@"Warning: Unable to write buffer to video");
                 }
                 CGContextRelease(bitmapContext);
                 CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);

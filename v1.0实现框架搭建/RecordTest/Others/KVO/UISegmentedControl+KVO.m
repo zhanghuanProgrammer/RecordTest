@@ -29,7 +29,7 @@
                                     selectedSegmentIndex = segment.selectedSegmentIndex;
                                 }
                             }
-                            NSLog(@"%@ - %@ : %@",@"👌Control evevnt",target,NSStringFromSelector(sel));
+//                            NSLog(@"%@ - %@ : %@",@"👌Control evevnt",target,NSStringFromSelector(sel));
                             [RTOperationQueue addOperation:view type:(RTOperationQueueTypeEvent) parameters:@[NSStringFromSelector(sel),@(selectedSegmentIndex)] repeat:YES];
                         } after:nil error:nil];
                     }
@@ -53,7 +53,7 @@
                     NSString *selString = model.parameters[0];
                     NSInteger selectedSegmentIndex = [model.parameters[1] integerValue];
                     self.selectedSegmentIndex = selectedSegmentIndex;
-                    NSLog(@"selString = %@",selString);
+//                    NSLog(@"selString = %@",selString);
                     SEL ori_sel = NSSelectorFromString(selString);
                     NSSet *allTargets=[self allTargets];
                     if (allTargets.count>0) {

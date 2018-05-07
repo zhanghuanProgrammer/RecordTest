@@ -1,5 +1,6 @@
 
 #import "RTSlideSwitch.h"
+#import "AutoTestHeader.h"
 
 //button间隔
 static const CGFloat ButtonMargin = 10.0f;

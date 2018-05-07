@@ -25,7 +25,7 @@
         if([[NSFileManager defaultManager] fileExistsAtPath:filePath]){
             _dataArr=[NSMutableArray arrayWithContentsOfFile:filePath];
         }else{
-            NSLog(@"%@",@"没有找到系统所有类的plist文件");
+//            NSLog(@"%@",@"没有找到系统所有类的plist文件");
             _dataArr=[NSMutableArray array];
         }
     }
@@ -47,7 +47,7 @@ static BOOL rtsc_isKindOfClass(Class cls, Class acls) {
     if (self.defineClass.count>0) {
         return self.defineClass;
     }
-    NSLog(@"%@",@"开始");
+//    NSLog(@"%@",@"开始");
     //获取所有的已注册的类
     int count=objc_getClassList(NULL, 0);
     if (!count) return nil;
@@ -74,7 +74,7 @@ static BOOL rtsc_isKindOfClass(Class cls, Class acls) {
     }
     //筛选自定义类
     free(classes);
-    NSLog(@"%@",@"检查工程里面的所有自定义类--完成");
+//    NSLog(@"%@",@"检查工程里面的所有自定义类--完成");
     
     return self.defineClass;
 }
@@ -112,7 +112,7 @@ static BOOL rtsc_isKindOfClass(Class cls, Class acls) {
     
     //筛选自定义类
     free(classes);
-    NSLog(@"%@",@"保存系统工的所有类--完成");
+//    NSLog(@"%@",@"保存系统工的所有类--完成");
 }
 - (void)saveSystemClassArr:(NSArray *)systemClassArr{
     
@@ -126,7 +126,7 @@ static BOOL rtsc_isKindOfClass(Class cls, Class acls) {
     
     [self.dataArr writeToFile:filePath atomically:YES];
     
-    NSLog(@"%@",@"保存自定义类系统的类--完成");
+//    NSLog(@"%@",@"保存自定义类系统的类--完成");
 }
 
 /**二分查找(判断是不是白名单)*/

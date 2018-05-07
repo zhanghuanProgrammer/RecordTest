@@ -88,6 +88,8 @@
         [weakSelf.navigationController pushViewController:[RTCrashCollectionVC new] animated:YES];
     };
     
+    [items addObjectsFromArray:@[item6,item6_1,item6_2]];
+    
     RTSettingItem *item6_3 = [RTSettingItem itemWithIcon:@"" title:@"网络性能" subTitle:nil type:ZFSettingItemTypeArrow];
     item6_3.subTitleFontSize = 10;
     item6_3.operation = ^{
@@ -97,13 +99,16 @@
         [weakSelf.navigationController pushViewController:statck_vc animated:YES];
     };
     
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10) {
+        [items addObjectsFromArray:@[item6_3]];
+    }
+    
     RTSettingItem *item7 = [RTSettingItem itemWithIcon:@"" title:@"手机设备信息" subTitle:nil type:ZFSettingItemTypeArrow];
     item7.subTitleFontSize = 10;
     item7.operation = ^{
         [weakSelf.navigationController pushViewController:[RTDeviceInfoVC new] animated:YES];
     };
-    
-    [items addObjectsFromArray:@[item6,item6_1,item6_2,item6_3,item7]];
+    [items addObjectsFromArray:@[item7]];
     
     RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
     group1.header = @"更多功能";

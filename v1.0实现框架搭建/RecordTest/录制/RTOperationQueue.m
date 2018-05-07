@@ -242,7 +242,7 @@
             }
             if ([model.viewId isEqualToString:view.layerDirector] && model.type == type) {
                 model.parameters = parameters;
-                NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
+//                NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
                 if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {
                     [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"%@",[model debugDescription]] dismissAfter:1 styleName:JDStatusBarStyleSuccess];
                 }
@@ -261,7 +261,7 @@
     if (model.type != RTOperationQueueTypeScroll && [RTOperationQueue shareInstance].isRecord) {
         [ZHStatusBarNotification showWithStatus:[NSString stringWithFormat:@"%@",[model debugDescription]] dismissAfter:1 styleName:JDStatusBarStyleSuccess];
     }
-    NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
+//    NSLog(@"%@",[RTOperationQueue shareInstance].operationQueue);
 }
 
 + (NSMutableDictionary *)operationQueues{

@@ -35,6 +35,21 @@
 #import "RTAutoJump.h"
 #import "RTDeviceInfo.h"
 #import "RTCrashLag.h"
+#import "DateTools.h"
+#import "ZHSaveDataToFMDB.h"
+#import "TabBarAndNavagation.h"
+#import "NSArray+ZH.h"
+#import "NSDictionary+ZH.h"
+#import "UIColor+SDColor.h"
+
+//获取屏幕 宽度、高度
+#define CurrentScreen_Width ([UIScreen mainScreen].bounds.size.width)
+#define CurrentScreen_Height ([UIScreen mainScreen].bounds.size.height)
+
+// 获取RGB颜色
+#define RGBA(r,g,b,a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+#define RGB(r,g,b) RGBA(r,g,b,1.0f)
+#define RGBOnly(color) RGB(color,color,color)
 
 #define Run 1
 

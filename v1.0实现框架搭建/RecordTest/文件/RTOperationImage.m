@@ -223,7 +223,7 @@
     NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomImageName]];
     NSString *savePath = [[self imagesPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];
-    NSLog(@"录制 - 图片大小:%@kb",@(imageData.length/1024.0));
+//    NSLog(@"录制 - 图片大小:%@kb",@(imageData.length/1024.0));
     return imageName;
 }
 
@@ -232,8 +232,8 @@
     NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomPlayBackImageName]];
     NSString *savePath = [[self playBackImagesPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];
-    NSLog(@"%@",savePath);
-    NSLog(@"回放 - 图片大小:%@kb",@(imageData.length/1024.0));
+//    NSLog(@"%@",savePath);
+//    NSLog(@"回放 - 图片大小:%@kb",@(imageData.length/1024.0));
     return imageName;
 }
 
@@ -241,14 +241,14 @@
     NSString *videoName=[NSString stringWithFormat:@"%@.mp4",[self getRandomVideoName]];
     NSString *savePath = [[self videoPath] stringByAppendingPathComponent:videoName];
     [[NSFileManager defaultManager] copyItemAtPath:video toPath:savePath error:nil];
-    NSLog(@"录制视频路径:%@",savePath);
+//    NSLog(@"录制视频路径:%@",savePath);
     return videoName;
 }
 + (NSString *)savePlayBackVideo:(NSString *)video{
     NSString *videoName=[NSString stringWithFormat:@"%@.mp4",[self getRandomVideoPlayBackName]];
     NSString *savePath = [[self videoPlayBackPath] stringByAppendingPathComponent:videoName];
     [[NSFileManager defaultManager] copyItemAtPath:video toPath:savePath error:nil];
-    NSLog(@"运行回放视频路径:%@",savePath);
+//    NSLog(@"运行回放视频路径:%@",savePath);
     return videoName;
 }
 
@@ -257,7 +257,7 @@
     NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomCrashName]];
     NSString *savePath = [[self crashPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];
-    NSLog(@"崩溃 - 图片大小:%@kb",@(imageData.length/1024.0));
+//    NSLog(@"崩溃 - 图片大小:%@kb",@(imageData.length/1024.0));
     return imageName;
 }
 
@@ -266,7 +266,7 @@
     NSString *imageName=[NSString stringWithFormat:@"%@.png",[self getRandomLagName]];
     NSString *savePath = [[self lagPath] stringByAppendingPathComponent:imageName];
     [imageData writeToFile:savePath atomically:YES];
-    NSLog(@"卡顿 - 图片大小:%@kb",@(imageData.length/1024.0));
+//    NSLog(@"卡顿 - 图片大小:%@kb",@(imageData.length/1024.0));
     return imageName;
 }
 

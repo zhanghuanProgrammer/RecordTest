@@ -1,6 +1,7 @@
 
 #import "RTSetFileSizeViewController.h"
 #import "RecordTestHeader.h"
+#import "AutoTestHeader.h"
 
 @interface RTSetFileSizeViewController ()
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;

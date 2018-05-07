@@ -2,7 +2,7 @@
 #import "RTRegistViewController.h"
 #import "RecordTestHeader.h"
 #import "RTCountDownButton.h"
-#import "ZHNSString.h"
+//#import "ZHNSString.h"
 
 @interface RTRegistViewController () {
     UIView* bgView;
@@ -18,17 +18,17 @@
 @implementation RTRegistViewController
 
 - (void)regsiter{
-    StringEmptyAlert(phone.text, @"手机号不能为空!");
-    StringEmptyAlert(code.text, @"密码不能为空!");
-    StringEmptyAlert(verificationCode.text, @"验证码不能为空!");
-    ConditionAlert([ZHNSString isValidateNumber:phone.text] == NO, @"手机号码不存在!");
-    [self registerWith:phone.text password:code.text verCode:verificationCode.text];
+//    StringEmptyAlert(phone.text, @"手机号不能为空!");
+//    StringEmptyAlert(code.text, @"密码不能为空!");
+//    StringEmptyAlert(verificationCode.text, @"验证码不能为空!");
+//    ConditionAlert([ZHNSString isValidateNumber:phone.text] == NO, @"手机号码不存在!");
+//    [self registerWith:phone.text password:code.text verCode:verificationCode.text];
 }
 - (void)getVerficationCodeAction{
-    StringEmptyAlert(phone.text, @"手机号不能为空!");
-    ConditionAlert([ZHNSString isValidateNumber:phone.text] == NO, @"手机号不存在!");
-    getVerficationCodeButton.enabled = YES;
-    getVerficationCodeButton.custom_acceptEventInterval = 1;
+//    StringEmptyAlert(phone.text, @"手机号不能为空!");
+//    ConditionAlert([ZHNSString isValidateNumber:phone.text] == NO, @"手机号不存在!");
+//    getVerficationCodeButton.enabled = YES;
+//    getVerficationCodeButton.custom_acceptEventInterval = 1;
 
     //    NSString *urlMd5=[NSString stringWithFormat:@"http://dk.juyoux.cn/DKapi/SendVerification?UserPhone=%@&Types=%@&device=%@&version=%@&timestamp=%@",phone.text,@"0",[SDTool deviceID],[SDTool version],[NSString stringWithFormat:@"%lld",[DateTools getCurInterval]]];
     //    NSString *md5=[ZHNSString md5:urlMd5];
@@ -161,7 +161,7 @@
     getVerficationCodeButton.durationOfCountDown = 60;
     [getVerficationCodeButton addUITapGestureRecognizerWithTarget:self withAction:@selector(getVerficationCodeAction)];
     getVerficationCodeButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    getVerficationCodeButton.backgroundColor = CurrentAppThemeColor;
+//    getVerficationCodeButton.backgroundColor = CurrentAppThemeColor;
     [getVerficationCodeButton cornerRadiusWithFloat:2.5];
 
     UIImageView* line1 = [self createImageViewFrame:CGRectMake(20, 50, bgView.frame.size.width - 40, 1) imageName:nil color:[UIColor colorWithRed:180 / 255.0f green:180 / 255.0f blue:180 / 255.0f alpha:.3]];
@@ -169,7 +169,7 @@
     UIImageView* line2 = [self createImageViewFrame:CGRectMake(20, 50 + 50, bgView.frame.size.width - 40, 1) imageName:nil color:[UIColor colorWithRed:180 / 255.0f green:180 / 255.0f blue:180 / 255.0f alpha:.3]];
 
     UIButton* landBtn = [self createButtonFrame:CGRectMake(10, bgView.frame.size.height + bgView.frame.origin.y + 30, self.view.frame.size.width - 20, 37) backImageName:nil title:@"注册" titleColor:[UIColor whiteColor] font:[UIFont systemFontOfSize:17] target:self action:@selector(regsiter)];
-    landBtn.backgroundColor = CurrentAppThemeColor;
+//    landBtn.backgroundColor = CurrentAppThemeColor;
     landBtn.layer.cornerRadius = 5.0f;
 
     [bgView addSubview:phone];

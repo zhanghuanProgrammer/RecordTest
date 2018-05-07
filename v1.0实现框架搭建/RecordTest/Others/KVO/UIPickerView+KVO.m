@@ -19,7 +19,7 @@
                 NSInteger component = [args[2] integerValue];
                 
                 [RTOperationQueue addOperation:pickerView type:(RTOperationQueueTypePickerViewItemTap) parameters:@[@(row),@(component)] repeat:YES];
-                NSLog(@"%@",@"👌pickerView:didSelectRow:inComponent:");
+//                NSLog(@"%@",@"👌pickerView:didSelectRow:inComponent:");
             } after:nil error:nil];
         }
     }

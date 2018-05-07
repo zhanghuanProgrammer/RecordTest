@@ -657,7 +657,7 @@ static RACDisposable *subscribeForever (RACSignal *signal, void (^next)(id), voi
 		NSCAssert(NO, @"Received error from %@ in binding for key path \"%@\" on %@: %@", self, keyPath, object, error);
 
 		// Log the error if we're running with assertions disabled.
-		NSLog(@"Received error from %@ in binding for key path \"%@\" on %@: %@", self, keyPath, object, error);
+//        NSLog(@"Received error from %@ in binding for key path \"%@\" on %@: %@", self, keyPath, object, error);
 
 		[disposable dispose];
 	} completed:^{

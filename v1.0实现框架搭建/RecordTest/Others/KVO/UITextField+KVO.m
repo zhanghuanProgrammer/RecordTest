@@ -10,7 +10,7 @@
     }
     if (KVO_TextField) {
         [[self.rac_textSignal distinctUntilChanged] subscribeNext:^(id x) {
-            NSLog(@"👌TextField 文字改变了%@",x);
+//            NSLog(@"👌TextField 文字改变了%@",x);
             [RTOperationQueue addOperation:self type:(RTOperationQueueTypeTextChange) parameters:@[x] repeat:NO];
         }];
         id delegate= self.delegate;
@@ -20,7 +20,7 @@
             } before:^(id target, SEL sel, NSArray *args, int deep) {
                 UITextField *textField = args[0];
                 [RTOperationQueue addOperation:textField type:(RTOperationQueueTypeTextFieldDidReturn) parameters:@[@"textFieldShouldReturn:"] repeat:YES];
-                NSLog(@"%@",@"👌textFieldShouldReturn:");
+//                NSLog(@"%@",@"👌textFieldShouldReturn:");
             } after:nil error:nil];
         }
     }
@@ -56,7 +56,7 @@
                 }
                 if (model.type == RTOperationQueueTypeTextFieldDidReturn) {
                     NSString *selString = model.parameters[0];
-                    NSLog(@"selString = %@",selString);
+//                    NSLog(@"selString = %@",selString);
                     SEL ori_sel = NSSelectorFromString(selString);
                     id delegate= self.delegate;
                     if (delegate) {

@@ -11,6 +11,7 @@
 #import <netinet/in.h>
 #import <dns_sd.h>
 #import "RTDeviceDetailInfo.h"
+#import "DateTools.h"
 
 #define StringInt(value) [NSString stringWithFormat:@"%ld",(long)value]
 

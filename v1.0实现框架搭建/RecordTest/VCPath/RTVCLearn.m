@@ -1,7 +1,7 @@
 
 #import "RTVCLearn.h"
 #import "RecordTestHeader.h"
-#import "ZHNSString.h"
+//#import "ZHNSString.h"
 
 @interface RTVCLearn ()
 
@@ -238,7 +238,10 @@
                     @"RTSettingViewController",@"JDStatusBarNotificationViewController",
                     @"RTOperationsVC",@"RTMutableRunVC",@"RTPhotosViewController",
                     @"RTMigrationDataVC",@"RTFileListVC",@"RTFilePreVC",@"RTTraceListVC",
-                    @"RTUnionListVC"
+                    @"RTUnionListVC",@"RTFeedbackVC",@"RTLoginViewController",@"RTRegistViewController",
+                    @"RTForgetPasswordViewController",@"RTImagePreVC",@"RTTextPreVC",@"RTCrashLagIndexVC",
+                    @"RTVCDetailVC",@"RTPerformanceVC",@"RTPerformanceAVGVC",@"RTBaseSettingViewController",
+                    @"RTCrashCollectionVC",@"RTLagVC",@"RTWifiConnectionDevicesVC",@"RTDeviceInfoVC",@"RTVCPerformanceVC"
                     ];
     }
     return [filters containsObject:vc];

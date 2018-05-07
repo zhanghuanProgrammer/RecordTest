@@ -2,6 +2,8 @@
 #import "RTTopVC.h"
 #import "RecordTestHeader.h"
 #import <mach/mach.h>
+#import <objc/runtime.h>
+#import "AutoTestHeader.h"
 
 @interface RTTopVC ()
 
@@ -76,7 +78,7 @@
         self.topVC = [vcStack lastObject];
 //        NSLog(@"当前最顶部的控制器%@",self.topVC);
     }else if(self.vcStack.count>0){
-        NSLog(@"有异常情况发生:控制器堆栈被筛选后为空");
+//        NSLog(@"有异常情况发生:控制器堆栈被筛选后为空");
     }
 }
 

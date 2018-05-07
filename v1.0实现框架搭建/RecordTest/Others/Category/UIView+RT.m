@@ -1,5 +1,6 @@
 
 #import "UIView+RT.h"
+#import <objc/runtime.h>
 
 static const int is_KVO;
 static const int is_NoNeedKVO;

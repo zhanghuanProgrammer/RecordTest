@@ -4,11 +4,11 @@
 #import "NSDictionary+ZH.h"
 
 #define N 1000 //图的顶点最多数
-const int INF=100000;
-int p[N][N],d[N],path[N];       //path数组用于记录路径
-int maxN = -1;
+static const int INF=100000;
+static int p[N][N],d[N],path[N];       //path数组用于记录路径
+static int maxN = -1;
 
-void dijkstra(int sec,int n){    //sec为出发节点，n表示图中节点总数
+static void dijkstra(int sec,int n){    //sec为出发节点，n表示图中节点总数
     int i,j,min,min_num=0;
     int vis[N]={0,};
     for(i=0;i<n;i++){
@@ -33,26 +33,26 @@ void dijkstra(int sec,int n){    //sec为出发节点，n表示图中节点总�
     }
 }
 
-void print(int sec,int n){       //sec为出发节点，n表示图中节点总数
-    int i,j;
-    NSMutableArray * q = [NSMutableArray array]; //由于记录的中途节点是倒序的，所以使用栈（先进后出），获得正序
-    for(i=0;i<n;i++){            //打印从出发节点到各节点的最短距离和经过的路径
-        j=i;
-        while(path[j]!=-1){      //如果j有中途节点
-            [q addObject:@(j)]; //将j压入堆
-            j=path[j];          //将j的前个中途节点赋给j
-        }
-        [q addObject:@(j)];
-        printf("%d=>%d, length:%d, path: %d ",sec,i,d[i],sec);
-        while(q.count>0){       //先进后出,获得正序
-            printf("%d ",[[q lastObject] intValue]);//打印堆的头节点
-            [q removeLastObject];            //将堆的头节点弹出
-        }
-        printf("\n");
-    }
-}
+//static void print(int sec,int n){       //sec为出发节点，n表示图中节点总数
+//    int i,j;
+//    NSMutableArray * q = [NSMutableArray array]; //由于记录的中途节点是倒序的，所以使用栈（先进后出），获得正序
+//    for(i=0;i<n;i++){            //打印从出发节点到各节点的最短距离和经过的路径
+//        j=i;
+//        while(path[j]!=-1){      //如果j有中途节点
+//            [q addObject:@(j)]; //将j压入堆
+//            j=path[j];          //将j的前个中途节点赋给j
+//        }
+//        [q addObject:@(j)];
+//        printf("%d=>%d, length:%d, path: %d ",sec,i,d[i],sec);
+//        while(q.count>0){       //先进后出,获得正序
+//            printf("%d ",[[q lastObject] intValue]);//打印堆的头节点
+//            [q removeLastObject];            //将堆的头节点弹出
+//        }
+//        printf("\n");
+//    }
+//}
 
-NSArray * allShortestPath(int sec){       //sec为出发节点，n表示图中节点总数
+static NSArray * allShortestPath(int sec){       //sec为出发节点，n表示图中节点总数
     NSMutableArray * q = [NSMutableArray array]; //由于记录的中途节点是倒序的，所以使用栈（先进后出），获得正序
     for(int i=0;i<maxN;i++){            //打印从出发节点到各节点的最短距离和经过的路径
         if (d[i]==0 || d[i]==INF) {
@@ -64,7 +64,7 @@ NSArray * allShortestPath(int sec){       //sec为出发节点，n表示图中�
     return q;
 }
 
-NSArray * shortestPath(int sec,int n){       //sec为出发节点，n表示目标节点
+static NSArray * shortestPath(int sec,int n){       //sec为出发节点，n表示目标节点
     int i=n,j;
     NSMutableArray * q = [NSMutableArray array];
     j=i;
@@ -81,7 +81,7 @@ NSArray * shortestPath(int sec,int n){       //sec为出发节点，n表示目�
     return q;
 }
 
-void initData(){
+static void initData(){
     memset(path,-1,sizeof(path));//将path数组初始化为-1
     int i,j,n=N;
     for(i=0;i<n;i++){

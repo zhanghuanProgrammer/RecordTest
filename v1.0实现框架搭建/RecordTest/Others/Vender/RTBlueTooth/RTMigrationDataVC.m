@@ -233,7 +233,7 @@ typedef NS_ENUM(NSUInteger, MigrationDataType) {
 }
 
 - (void)session:(MCSession *)session didReceiveData:(NSData *)data{
-    NSLog(@"正在接收data:%@",[ZHFileManager sizeOfByte:data.length]);
+//    NSLog(@"正在接收data:%@",[ZHFileManager sizeOfByte:data.length]);
     [RTMCTool sendMessage:@"command_datareceive" error:nil];
     [RTOperationImage addFileFromOtherDevice:self.filePath data:data];
     self.filePath = nil;

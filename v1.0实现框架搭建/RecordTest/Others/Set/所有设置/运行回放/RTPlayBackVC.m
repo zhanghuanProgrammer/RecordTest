@@ -4,6 +4,7 @@
 #import "RTPhotosViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "RTALAssetsLibrary.h"
+#import "TabBarAndNavagation.h"
 
 @interface RTPlayBackVC ()
 @property (nonatomic,strong)MPMoviePlayerViewController *moviePlayerController;

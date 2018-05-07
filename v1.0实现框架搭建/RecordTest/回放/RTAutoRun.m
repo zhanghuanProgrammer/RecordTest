@@ -28,7 +28,7 @@
             if (![RTAutoJump shareInstance].isJump && ![RTSearchVCPath shareInstance].isPopToRoot) {
                 RTIdentify *identify = self.autoRunQueue[self.index];
                 if ([identify.forVC isEqualToString:[RTTopVC shareInstance].topVC]) {
-                    NSLog(@"🔥%@",@"好了,终于可以执行命令了");
+//                    NSLog(@"🔥%@",@"好了,终于可以执行命令了");
                     self.index++;
                     [RTAutoJump shareInstance].canotJump = NO;
                     [[RTCommandList shareInstance] setOperationQueue:identify];
@@ -39,29 +39,29 @@
                 }else{
                     if ([[RTSearchVCPath shareInstance] popVC]) {
                         [[RTSearchVCPath shareInstance] popToRootVC];
-                        NSLog(@"🔥%@",@"先返回根目录");
+//                        NSLog(@"🔥%@",@"先返回根目录");
                     }else{
                         if ([RTAutoJump shareInstance].canotJump) {
                             self.index++;
                             [RTAutoJump shareInstance].canotJump = NO;
-                            NSLog(@"🔥%@",@"实在跳转到目标VC,还是执行下一个回放吧");
+//                            NSLog(@"🔥%@",@"实在跳转到目标VC,还是执行下一个回放吧");
                         }else{
                             //开始自动寻址并跳转
-                            NSLog(@"🔥%@",@"开始自动寻址并跳转");
+//                            NSLog(@"🔥%@",@"开始自动寻址并跳转");
                             [[RTAutoJump shareInstance] gotoVC:identify.forVC];
                         }
                     }
                 }
             }else{
                 if ([RTAutoJump shareInstance].isJump){
-                    NSLog(@"🔥%@",@"正在自动寻址并跳转....");
+//                    NSLog(@"🔥%@",@"正在自动寻址并跳转....");
                 }
                 if ([RTSearchVCPath shareInstance].isPopToRoot){
-                    NSLog(@"🔥%@",@"正在跳转到根目录...");
+//                    NSLog(@"🔥%@",@"正在跳转到根目录...");
                 }
             }
         }else{
-            NSLog(@"🔥%@",@"哦哦,停止了...");
+//            NSLog(@"🔥%@",@"哦哦,停止了...");
             [self stop];
         }
     }

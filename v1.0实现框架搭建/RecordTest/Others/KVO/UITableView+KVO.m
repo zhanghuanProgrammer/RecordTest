@@ -17,7 +17,7 @@
                 UITableView *tableView = args[0];
                 NSIndexPath *indexPath = args[1];
                 [RTOperationQueue addOperation:tableView type:(RTOperationQueueTypeTableViewCellTap) parameters:@[@(indexPath.section),@(indexPath.row)] repeat:YES];
-                NSLog(@"%@",@"👌tableView:didSelectRowAtIndexPath:");
+//                NSLog(@"%@",@"👌tableView:didSelectRowAtIndexPath:");
             } after:nil error:nil];
         }
     }

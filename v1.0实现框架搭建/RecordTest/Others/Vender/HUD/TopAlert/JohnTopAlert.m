@@ -1,6 +1,7 @@
 
 #import "JohnTopAlert.h"
 #import "UIView+RT.h"
+#import "UIColor+SDColor.h"
 
 @interface JohnTopAlert ()
 

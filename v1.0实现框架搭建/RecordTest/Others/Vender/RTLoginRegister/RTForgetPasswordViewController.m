@@ -2,7 +2,7 @@
 #import "RTForgetPasswordViewController.h"
 #import "RecordTestHeader.h"
 #import "RTCountDownButton.h"
-#import "ZHNSString.h"
+//#import "ZHNSString.h"
 
 @interface RTForgetPasswordViewController () {
     UIView* bgView;
@@ -20,19 +20,19 @@
 @implementation RTForgetPasswordViewController
 
 - (void)changePsw{
-    StringEmptyAlert(phone.text, @"手机号不能为空!");
-    StringEmptyAlert(code.text, @"密码不能为空!");
-    StringEmptyAlert(verificationCode.text, @"验证码不能为空!");
-    ConditionAlert([ZHNSString isValidateNumber:phone.text] == NO, @"手机号码不存在!");
-    [self changePswWith:phone.text password:code.text verCode:verificationCode.text];
+//    StringEmptyAlert(phone.text, @"手机号不能为空!");
+//    StringEmptyAlert(code.text, @"密码不能为空!");
+//    StringEmptyAlert(verificationCode.text, @"验证码不能为空!");
+//    ConditionAlert([ZHNSString isValidateNumber:phone.text] == NO, @"手机号码不存在!");
+//    [self changePswWith:phone.text password:code.text verCode:verificationCode.text];
 }
 
 - (void)getVerficationCodeAction{
-    StringEmptyAlert(phone.text, @"手机号不能为空!");
-    ConditionAlert([ZHNSString isValidateNumber:phone.text] == NO, @"手机号不存在!");
-
-    getVerficationCodeButton.enabled = YES;
-    getVerficationCodeButton.custom_acceptEventInterval = 1;
+//    StringEmptyAlert(phone.text, @"手机号不能为空!");
+//    ConditionAlert([ZHNSString isValidateNumber:phone.text] == NO, @"手机号不存在!");
+//
+//    getVerficationCodeButton.enabled = YES;
+//    getVerficationCodeButton.custom_acceptEventInterval = 1;
 
     //    NSString *urlMd5=[NSString stringWithFormat:@"http://dk.juyoux.cn/DKapi/SendVerification?UserPhone=%@&Types=%@&device=%@&version=%@&timestamp=%@",phone.text,@"1",[SDTool deviceID],[SDTool version],[NSString stringWithFormat:@"%lld",[DateTools getCurInterval]]];
     //    NSString *md5=[ZHNSString md5:urlMd5];

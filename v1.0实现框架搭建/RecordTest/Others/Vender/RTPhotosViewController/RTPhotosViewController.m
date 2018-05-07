@@ -1,6 +1,7 @@
 
 #import "RTPhotosViewController.h"
-#import "UIImageView+ZHImageViewValue.h"
+#import "AutoTestHeader.h"
+#import "ZHBlockSingleCategroy.h"
 
 typedef enum : NSUInteger {
     ZHPhotosTypeUnkown=-1,
@@ -314,14 +315,7 @@ typedef enum : NSUInteger {
     switch (self.dataType) {
         case ZHPhotosTypeImageName:
         {
-            [imageView imageWithURLString:self.dataArr[index] withCompleteBlock:^{
-                if (imageView.image==nil) {
-                    imageView.image=[UIImage imageNamed:@"jiazhang_msg_photofailure2"];
-                }
-                if (cell) {
-                    [cell adjustFrame];
-                }
-            }];
+            imageView.image=[UIImage imageNamed:self.dataArr[index]];
         }
             break;
         case ZHPhotosTypeImage:

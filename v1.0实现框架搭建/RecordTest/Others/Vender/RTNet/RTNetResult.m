@@ -1,6 +1,7 @@
 
 #import "RTNetResult.h"
 #import "RTURLProtocol.h"
+#import <objc/runtime.h>
 
 /**交换方法：交换父类方法*/
 static void rt_methodSwizzle(Class class, SEL originalSelector, SEL swizzledSelector, BOOL isInstanceMethod) {
