@@ -103,7 +103,6 @@ static void queryCallback(DNSServiceRef sdRef,
 }
 
 static void getCNAME(NSString *host,id obj) {
-    if (host.length>0) return;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         DNSServiceRef serviceRef;
         DNSServiceErrorType error;
@@ -292,6 +291,7 @@ static NSString *RNCachingURLHeader = @"bonreeNetwork";
     netResultModel.requestUrl = task.currentRequest.URL.absoluteString;//requestUrl 请求地址
     
     NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
+    self.netResultModel.errorId = @"200";
     if (response.statusCode != 200) self.netResultModel.errorId = [NSString stringWithFormat:@"%zd",response.statusCode];
     
     NSDictionary *requestHeader = task.currentRequest.allHTTPHeaderFields;
@@ -301,20 +301,18 @@ static NSString *RNCachingURLHeader = @"bonreeNetwork";
         netResultModel.requestDataSize = StringInt((int32_t)(task.countOfBytesSent + data.length + urlLenth));//requestHeader 请求数据大小
     }
     
-    if(response.statusCode > 400) {
-        NSMutableString *requestHeaderStrM = [NSMutableString string];
-        NSString *host = [NSString stringWithFormat:@"%@",task.currentRequest.URL.host];
-        NSString *sourcePath = [netResultModel.requestUrl substringFromIndex:[netResultModel.requestUrl rangeOfString:host].location + host.length];
-        [requestHeaderStrM appendFormat:@"%@ %@ %@\n",task.currentRequest.HTTPMethod,sourcePath,@"HTTP/1.1"];
-        [requestHeaderStrM appendFormat:@"Host: %@\n",host];
-        for(NSString *key in requestHeader){
-            NSString *value = requestHeader[key];
-            if(value.length>0){
-                [requestHeaderStrM appendFormat:@"%@: %@\n",key,value];
-            }
+    NSMutableString *requestHeaderStrM = [NSMutableString string];
+    NSString *host = [NSString stringWithFormat:@"%@",task.currentRequest.URL.host];
+    NSString *sourcePath = [netResultModel.requestUrl substringFromIndex:[netResultModel.requestUrl rangeOfString:host].location + host.length];
+    [requestHeaderStrM appendFormat:@"%@ %@ %@\n",task.currentRequest.HTTPMethod,sourcePath,@"HTTP/1.1"];
+    [requestHeaderStrM appendFormat:@"Host: %@",host];
+    for(NSString *key in requestHeader){
+        NSString *value = requestHeader[key];
+        if(value.length>0){
+            [requestHeaderStrM appendFormat:@"\n%@: %@",key,value];
         }
-        netResultModel.requestHeader = requestHeaderStrM;
     }
+    netResultModel.requestHeader = requestHeaderStrM;
     
     NSDictionary *responseHeader = [response allHeaderFields];
     if(responseHeader){
@@ -323,21 +321,18 @@ static NSString *RNCachingURLHeader = @"bonreeNetwork";
         netResultModel.mimetype = [(NSHTTPURLResponse *)task.response MIMEType];//mimetype (2015.11.3新增)
     }
     
-    
-    if(response.statusCode > 400) {
-        NSMutableString *responseHeaderStrM = [NSMutableString string];
-        //当响应码为200,表示请求正常,末尾不需要增加reason
-        NSString *reason = response.statusCode == 200?@"":[[NSHTTPURLResponse localizedStringForStatusCode:response.statusCode] uppercaseString];
-        [responseHeaderStrM appendFormat:@"%@ %zd %@",@"HTTP/1.1",response.statusCode,reason];
-        for(NSString *key in responseHeader){
-            NSString *value = responseHeader[key];
-            if(value.length>0){
-                [responseHeaderStrM appendFormat:@"\n%@: %@",key,value];
-                if ([key isEqualToString:@"Content-Type"]) self.netResultModel.mimetype = value;
-            }
+    NSMutableString *responseHeaderStrM = [NSMutableString string];
+    //当响应码为200,表示请求正常,末尾不需要增加reason
+    NSString *reason = response.statusCode == 200?@"":[[NSHTTPURLResponse localizedStringForStatusCode:response.statusCode] uppercaseString];
+    [responseHeaderStrM appendFormat:@"%@ %zd %@",@"HTTP/1.1",response.statusCode,reason];
+    for(NSString *key in responseHeader){
+        NSString *value = responseHeader[key];
+        if(value.length>0){
+            [responseHeaderStrM appendFormat:@"\n%@: %@",key,value];
+            if ([key isEqualToString:@"Content-Type"]) self.netResultModel.mimetype = value;
         }
-        netResultModel.responseHeader = responseHeaderStrM;
     }
+    netResultModel.responseHeader = responseHeaderStrM;
 
     if(task.currentRequest.URL.port){
         NSInteger port = [task.currentRequest.URL.port integerValue];
