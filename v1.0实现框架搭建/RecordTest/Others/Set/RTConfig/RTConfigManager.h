@@ -18,6 +18,8 @@
 @property (nonatomic,assign)BOOL isShowNetDelay; //是否显示网络延迟
 @property (nonatomic,assign)BOOL isShowFPS; //是否显示网络延迟
 
+@property (nonatomic,assign)CGFloat lagThreshold;//卡顿阀值
+
 + (RTConfigManager *)shareInstance;
 
 @end

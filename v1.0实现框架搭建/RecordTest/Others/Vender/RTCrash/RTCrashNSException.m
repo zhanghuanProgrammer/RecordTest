@@ -7,7 +7,7 @@
 #import "RTCrashLag.h"
 #import "RTOperationImage.h"
 #import "RTViewHierarchy.h"
-#import "ZHAlertAction.h"
+#import "RecordTestHeader.h"
 
 static NSUncaughtExceptionHandler * s_previousUncaughtExceptionHandle = NULL;//其他SDK注册过NSSetUncaughtExceptionHandler的回调函数
 
@@ -33,12 +33,16 @@ static void rt_NSExceptionhandler(NSException *exception) {
             RTCrashModel *model = [RTCrashModel new];
             model.crashStack = lagM.copy;
             model.imagePath = [RTOperationImage saveCrash:[[RTViewHierarchy new] snap:nil type:0]];
+            model.vcStack = [[RTVCLearn shareInstance] traceString];
+            model.operationStack = [[RTSearchVCPath shareInstance] traceOperation];
             [[RTCrashLag shareInstance] addCrash:model];
         });
     }else{
         RTCrashModel *model = [RTCrashModel new];
         model.crashStack = lagM.copy;
         model.imagePath = [RTOperationImage saveCrash:[[RTViewHierarchy new] snap:nil type:0]];
+        model.vcStack = [[RTVCLearn shareInstance] traceString];
+        model.operationStack = [[RTSearchVCPath shareInstance] traceOperation];
         [[RTCrashLag shareInstance] addCrash:model];
     }
     

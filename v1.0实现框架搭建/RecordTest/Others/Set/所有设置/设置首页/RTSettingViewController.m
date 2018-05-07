@@ -198,17 +198,56 @@
     group4.items = @[item4,item4_1,item4_2];
     [self.allGroups addObject:group4];
     
-    RTSettingItem *item5 = [RTSettingItem itemWithIcon:@"" title:@"退出登录" subTitle:nil type:ZFSettingItemTypeArrow];
-    item5.subTitleFontSize = 10;
-    item5.operation = ^{
+    
+    RTSettingItem *item5_1 = [RTSettingItem itemWithIcon:@"" title:@"是否显示CPU使用率" subTitle:@"显示在第1个球上方" type:ZFSettingItemTypeSwitch];
+    item5_1.on = [RTConfigManager shareInstance].isShowCpu;
+    item5_1.subTitleFontSize = 10;
+    //开关事件
+    item5_1.switchBlock = ^(BOOL on) {
+        weakSelf.isShowCpu = on;
+    };
+    
+    RTSettingItem *item5_2 = [RTSettingItem itemWithIcon:@"" title:@"是否显示内存使用" subTitle:@"显示在第2个球上方" type:ZFSettingItemTypeSwitch];
+    item5_2.on = [RTConfigManager shareInstance].isShowMemory;
+    item5_2.subTitleFontSize = 10;
+    //开关事件
+    item5_2.switchBlock = ^(BOOL on) {
+        weakSelf.isShowMemory = on;
+    };
+    
+    RTSettingItem *item5_3 = [RTSettingItem itemWithIcon:@"" title:@"是否显示网络延迟" subTitle:@"显示在第3个球上方" type:ZFSettingItemTypeSwitch];
+    item5_3.on = [RTConfigManager shareInstance].isShowNetDelay;
+    item5_3.subTitleFontSize = 10;
+    //开关事件
+    item5_3.switchBlock = ^(BOOL on) {
+        weakSelf.isShowNetDelay = on;
+    };
+    
+    RTSettingItem *item5_4 = [RTSettingItem itemWithIcon:@"" title:@"是否显示网络延迟" subTitle:@"显示在第4个球上方" type:ZFSettingItemTypeSwitch];
+    item5_4.on = [RTConfigManager shareInstance].isShowFPS;
+    item5_4.subTitleFontSize = 10;
+    //开关事件
+    item5_4.switchBlock = ^(BOOL on) {
+        weakSelf.isShowFPS = on;
+    };
+    
+    RTSettingGroup *group5 = [[RTSettingGroup alloc] init];
+    group5.header = @"性能展示";
+    group5.items = @[item5_1,item5_2,item5_3,item5_4];
+    [self.allGroups addObject:group5];
+    
+    RTSettingItem *item6 = [RTSettingItem itemWithIcon:@"" title:@"退出登录" subTitle:nil type:ZFSettingItemTypeArrow];
+    item6.subTitleFontSize = 10;
+    item6.operation = ^{
         RTLoginViewController *vc = [RTLoginViewController new];
         [self.navigationController pushViewController:vc animated:YES];
-//        [weakSelf.navigationController pushViewController:[RTFeedbackVC new] animated:YES];
+        //        [weakSelf.navigationController pushViewController:[RTFeedbackVC new] animated:YES];
     };
-    RTSettingGroup *group5 = [[RTSettingGroup alloc] init];
-    group5.header = @"账户";
-    group5.items = @[item5];
-    [self.allGroups addObject:group5];
+    
+    RTSettingGroup *group6 = [[RTSettingGroup alloc] init];
+    group6.header = @"账户";
+    group6.items = @[item6];
+    [self.allGroups addObject:group6];
 }
 
 - (void)setCompressionQuality:(CGFloat)compressionQuality{
@@ -237,6 +276,22 @@
 }
 - (void)setIsMigrationVideo:(BOOL)isMigrationVideo{
     [RTConfigManager shareInstance].isMigrationVideo = isMigrationVideo;
+}
+- (void)setIsShowCpu:(BOOL)isShowCpu{
+    [RTConfigManager shareInstance].isShowCpu = isShowCpu;
+    [[SuspendBall shareInstance] setBadge:@"" index:0];
+}
+- (void)setIsShowMemory:(BOOL)isShowMemory{
+    [RTConfigManager shareInstance].isShowMemory = isShowMemory;
+    [[SuspendBall shareInstance] setBadge:@"" index:1];
+}
+- (void)setIsShowNetDelay:(BOOL)isShowNetDelay{
+    [RTConfigManager shareInstance].isShowNetDelay = isShowNetDelay;
+    [[SuspendBall shareInstance] setBadge:@"" index:2];
+}
+- (void)setIsShowFPS:(BOOL)isShowFPS{
+    [RTConfigManager shareInstance].isShowFPS = isShowFPS;
+    [[SuspendBall shareInstance] setBadge:@"" index:3];
 }
 
 @end

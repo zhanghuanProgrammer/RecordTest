@@ -50,6 +50,10 @@
     return sharedInstance;
 }
 
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)applicationBecomeActive{
     if (self.isPaused) {
         [self resumeRecording];

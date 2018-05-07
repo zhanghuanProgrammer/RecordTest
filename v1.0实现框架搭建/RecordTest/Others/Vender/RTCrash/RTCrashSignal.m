@@ -8,6 +8,7 @@
 #import "RTCrashLag.h"
 #import "RTOperationImage.h"
 #import "RTViewHierarchy.h"
+#import "RecordTestHeader.h"
 
 static volatile sig_atomic_t g_installed = 0;
 static stack_t g_signalStack = {0};
@@ -122,12 +123,16 @@ static void rt_signalHandler(int sigNum,siginfo_t* signalInfo,void* userContext)
                 RTCrashModel *model = [RTCrashModel new];
                 model.crashStack = lagM.copy;
                 model.imagePath = [RTOperationImage saveCrash:[[RTViewHierarchy new] snap:nil type:0]];
+                model.vcStack = [[RTVCLearn shareInstance] traceString];
+                model.operationStack = [[RTSearchVCPath shareInstance] traceOperation];
                 [[RTCrashLag shareInstance] addCrash:model];
             });
         }else{
             RTCrashModel *model = [RTCrashModel new];
             model.crashStack = lagM.copy;
             model.imagePath = [RTOperationImage saveCrash:[[RTViewHierarchy new] snap:nil type:0]];
+            model.vcStack = [[RTVCLearn shareInstance] traceString];
+            model.operationStack = [[RTSearchVCPath shareInstance] traceOperation];
             [[RTCrashLag shareInstance] addCrash:model];
         }
         

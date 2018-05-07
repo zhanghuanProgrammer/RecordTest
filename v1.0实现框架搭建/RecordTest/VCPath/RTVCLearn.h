@@ -12,6 +12,7 @@
 
 - (NSArray *)unionVC;
 - (NSArray *)traceVC;
+- (NSString *)traceString;
 - (NSArray *)traceMemory;
 - (NSArray *)tracePerformance;
 

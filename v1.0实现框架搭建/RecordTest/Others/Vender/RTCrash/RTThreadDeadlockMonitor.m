@@ -7,6 +7,7 @@
 #import "ZHStatusBarNotification.h"
 #import "RTOperationImage.h"
 #import "RTViewHierarchy.h"
+#import "RecordTestHeader.h"
 
 typedef NS_ENUM(NSUInteger, RTThreadState) {
     NOT_STUCK,
@@ -16,6 +17,7 @@ typedef NS_ENUM(NSUInteger, RTThreadState) {
 static dispatch_semaphore_t mainThreadMonitorSemaphore;
 static CFRunLoopActivity runLoopActivity;
 static RTThreadState previousState;
+static BOOL isRuning;
 static uint64_t lastTrick = 0;
 
 static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void* info){
@@ -32,15 +34,36 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
     dispatch_once(&onceToken, ^{
         if (!threadMonitor) {
             threadMonitor = [[RTThreadDeadlockMonitor alloc] init];
+            isRuning = YES;
+            // app从后台进入前台都会调用这个方法
+            [[NSNotificationCenter defaultCenter] addObserver:threadMonitor selector:@selector(applicationBecomeActive) name:UIApplicationWillEnterForegroundNotification object:nil];
+            // 添加检测app进入后台的观察者
+            [[NSNotificationCenter defaultCenter] addObserver:threadMonitor selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];
         }
     });
     return threadMonitor;
 }
 
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)applicationBecomeActive{
+    if (!isRuning) {
+        isRuning = YES;
+    }
+}
+
+- (void)applicationEnterBackground{
+    if (isRuning) {
+        isRuning = NO;
+    }
+}
+
 - (void)startThreadMonitor{
 
     //卡顿阀值，默认为5s
-    float __block lagInterval = 5;
+//    float __block lagInterval = 5;
     //前一次卡顿检测状态
     previousState = NOT_STUCK;
     //非交互性卡顿
@@ -56,12 +79,12 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
             0,
             &runLoopObserverCallBack,
             &context);
-        CFRunLoopAddObserver(CFRunLoopGetMain(), runLoopObserver, kCFRunLoopDefaultMode);
+        CFRunLoopAddObserver(CFRunLoopGetMain(), runLoopObserver, kCFRunLoopCommonModes);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
             while (YES) {
                 //将卡顿判断阀值缩小0.01s，防止卡顿结束了才获取堆栈信息，此时堆栈信息不能准确的反映卡顿的方法调用情况
-                long hadStuck = dispatch_semaphore_wait(mainThreadMonitorSemaphore, dispatch_time(DISPATCH_TIME_NOW, (lagInterval - 0.01) * NSEC_PER_SEC));
+                long hadStuck = dispatch_semaphore_wait(mainThreadMonitorSemaphore, dispatch_time(DISPATCH_TIME_NOW, ([RTConfigManager shareInstance].lagThreshold - 0.01) * NSEC_PER_SEC));
                 uint64_t localLastTrick = lastTrick;
 
                 //卡顿时长达到阀值并且agent处于运行状态、app未处于crash状态，则收集卡顿信息，否则不收集
@@ -80,7 +103,7 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
                     }
 
                     //上一个状态处于未卡顿状态则收集数据，否则不收集，防止同一个卡顿收集并回传多次
-                    if ((runLoopActivity == kCFRunLoopBeforeSources || runLoopActivity == kCFRunLoopAfterWaiting || isNotEventStuck == YES) && previousState == NOT_STUCK) {
+                    if (isRuning && (runLoopActivity == kCFRunLoopBeforeSources || runLoopActivity == kCFRunLoopAfterWaiting || isNotEventStuck == YES) && previousState == NOT_STUCK) {
 
                         //设置卡顿状态
                         previousState = STUCK;
@@ -109,7 +132,9 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
                         dispatch_sync(dispatch_get_main_queue(), ^{
                             RTLagModel *model = [RTLagModel new];
                             model.lagStack = lagM.copy;
+                            model.vcStack = [[RTVCLearn shareInstance] traceString];
                             model.imagePath = [RTOperationImage saveLag:[[RTViewHierarchy new] snap:nil type:0]];
+                            model.operationStack = [[RTSearchVCPath shareInstance] traceOperation];
                             [[RTCrashLag shareInstance] addLag:model];
                         });
                         

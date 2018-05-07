@@ -56,5 +56,7 @@
 + (NSString *)imagePathWithLag:(NSString *)name;
 + (void)removeCrash:(NSString *)name;
 + (void)removeLag:(NSString *)name;
++ (void)deleteOverdueCrash;
++ (void)deleteOverdueLag;
 
 @end

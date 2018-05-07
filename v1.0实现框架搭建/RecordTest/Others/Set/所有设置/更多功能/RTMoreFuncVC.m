@@ -9,6 +9,8 @@
 #import "RTDeviceInfoVC.h"
 #import "RTLagVC.h"
 #import "RTCrashCollectionVC.h"
+#import "RTTextPreVC.h"
+#import "RTNetResult.h"
 
 @implementation RTMoreFuncVC
 
@@ -46,43 +48,27 @@
         [weakSelf.navigationController pushViewController:[RTUnionListVC new] animated:YES];
     };
     
-    RTSettingItem *item4_1 = [RTSettingItem itemWithIcon:@"" title:@"是否显示CPU使用率" subTitle:@"显示在第1个球上方" type:ZFSettingItemTypeSwitch];
-    item4_1.on = [RTConfigManager shareInstance].isShowCpu;
-    item4_1.subTitleFontSize = 10;
-    //开关事件
-    item4_1.switchBlock = ^(BOOL on) {
-        weakSelf.isShowCpu = on;
+    RTSettingItem *item4 = [RTSettingItem itemWithIcon:@"" title:@"操作轨迹" subTitle:nil type:ZFSettingItemTypeArrow];
+    item4.subTitleFontSize = 10;
+    item4.operation = ^{
+        RTTextPreVC *statck_vc = [RTTextPreVC new];
+        statck_vc.text = [[RTSearchVCPath shareInstance] traceOperation];
+        statck_vc.title = @"操作轨迹";
+        [weakSelf.navigationController pushViewController:statck_vc animated:YES];
     };
     
-    RTSettingItem *item4_2 = [RTSettingItem itemWithIcon:@"" title:@"是否显示内存使用" subTitle:@"显示在第2个球上方" type:ZFSettingItemTypeSwitch];
-    item4_2.on = [RTConfigManager shareInstance].isShowMemory;
-    item4_2.subTitleFontSize = 10;
-    //开关事件
-    item4_2.switchBlock = ^(BOOL on) {
-        weakSelf.isShowMemory = on;
-    };
-    
-    RTSettingItem *item4_3 = [RTSettingItem itemWithIcon:@"" title:@"是否显示网络延迟" subTitle:@"显示在第3个球上方" type:ZFSettingItemTypeSwitch];
-    item4_3.on = [RTConfigManager shareInstance].isShowNetDelay;
-    item4_3.subTitleFontSize = 10;
-    //开关事件
-    item4_3.switchBlock = ^(BOOL on) {
-        weakSelf.isShowNetDelay = on;
-    };
-    
-    RTSettingItem *item4_4 = [RTSettingItem itemWithIcon:@"" title:@"是否显示网络延迟" subTitle:@"显示在第4个球上方" type:ZFSettingItemTypeSwitch];
-    item4_4.on = [RTConfigManager shareInstance].isShowFPS;
-    item4_4.subTitleFontSize = 10;
-    //开关事件
-    item4_4.switchBlock = ^(BOOL on) {
-        weakSelf.isShowFPS = on;
-    };
-    
-    RTSettingItem *item5 = [RTSettingItem itemWithIcon:@"" title:@"性能数据收集展示" subTitle:nil type:ZFSettingItemTypeArrow];
-    item5.subTitleFontSize = 10;
-    item5.operation = ^{
-        [weakSelf.navigationController pushViewController:[RTPerformanceVC new] animated:YES];
-    };
+    NSMutableArray *items = [NSMutableArray array];
+    [items addObjectsFromArray:@[item1,item2,item3,item4]];
+    if ([RTConfigManager shareInstance].isShowCpu || [RTConfigManager shareInstance].isShowFPS ||
+        [RTConfigManager shareInstance].isShowMemory || [RTConfigManager shareInstance].isShowNetDelay
+        ) {
+        RTSettingItem *item5 = [RTSettingItem itemWithIcon:@"" title:@"性能数据收集展示" subTitle:nil type:ZFSettingItemTypeArrow];
+        item5.subTitleFontSize = 10;
+        item5.operation = ^{
+            [weakSelf.navigationController pushViewController:[RTPerformanceVC new] animated:YES];
+        };
+        [items addObject:item5];
+    }
     
     RTSettingItem *item6 = [RTSettingItem itemWithIcon:@"" title:@"页面性能分析" subTitle:nil type:ZFSettingItemTypeArrow];
     item6.subTitleFontSize = 10;
@@ -102,36 +88,27 @@
         [weakSelf.navigationController pushViewController:[RTCrashCollectionVC new] animated:YES];
     };
     
+    RTSettingItem *item6_3 = [RTSettingItem itemWithIcon:@"" title:@"网络性能" subTitle:nil type:ZFSettingItemTypeArrow];
+    item6_3.subTitleFontSize = 10;
+    item6_3.operation = ^{
+        RTTextPreVC *statck_vc = [RTTextPreVC new];
+        statck_vc.text = [[[RTNetResult shareInstance] getNetResultsAndClear] componentsJoinedByString:@"\n\n"];
+        statck_vc.title = @"网络性能";
+        [weakSelf.navigationController pushViewController:statck_vc animated:YES];
+    };
+    
     RTSettingItem *item7 = [RTSettingItem itemWithIcon:@"" title:@"手机设备信息" subTitle:nil type:ZFSettingItemTypeArrow];
     item7.subTitleFontSize = 10;
     item7.operation = ^{
         [weakSelf.navigationController pushViewController:[RTDeviceInfoVC new] animated:YES];
     };
     
+    [items addObjectsFromArray:@[item6,item6_1,item6_2,item6_3,item7]];
+    
     RTSettingGroup *group1 = [[RTSettingGroup alloc] init];
     group1.header = @"更多功能";
-    group1.items = @[item1,item2,item3,item4_1,item4_2,item4_3,item4_4,item5,item6,item6_1,item6_2,item7];
+    group1.items = items;
     [self.allGroups addObject:group1];
-}
-
-- (void)setIsShowCpu:(BOOL)isShowCpu{
-    [RTConfigManager shareInstance].isShowCpu = isShowCpu;
-    [[SuspendBall shareInstance] setBadge:@"" index:0];
-}
-
-- (void)setIsShowMemory:(BOOL)isShowMemory{
-    [RTConfigManager shareInstance].isShowMemory = isShowMemory;
-    [[SuspendBall shareInstance] setBadge:@"" index:1];
-}
-
-- (void)setIsShowNetDelay:(BOOL)isShowNetDelay{
-    [RTConfigManager shareInstance].isShowNetDelay = isShowNetDelay;
-    [[SuspendBall shareInstance] setBadge:@"" index:2];
-}
-
-- (void)setIsShowFPS:(BOOL)isShowFPS{
-    [RTConfigManager shareInstance].isShowFPS = isShowFPS;
-    [[SuspendBall shareInstance] setBadge:@"" index:3];
 }
 
 @end

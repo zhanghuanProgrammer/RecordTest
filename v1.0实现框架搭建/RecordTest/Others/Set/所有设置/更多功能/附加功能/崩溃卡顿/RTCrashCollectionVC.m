@@ -56,6 +56,8 @@
     detailVC.text = model.crashStack;
     detailVC.stamp = stamp;
     detailVC.imageName = model.imagePath;
+    detailVC.vcStack = model.vcStack;
+    detailVC.operationStack = model.operationStack;
     if (detailVC.text.length>0) {
         [self.navigationController pushViewController:detailVC animated:YES];
     }

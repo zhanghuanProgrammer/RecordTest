@@ -34,6 +34,7 @@
 #import "RTVCLearn.h"
 #import "RTAutoJump.h"
 #import "RTDeviceInfo.h"
+#import "RTCrashLag.h"
 
 #define Run 1
 

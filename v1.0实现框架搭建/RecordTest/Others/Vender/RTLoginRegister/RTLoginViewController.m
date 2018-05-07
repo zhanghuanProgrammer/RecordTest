@@ -42,7 +42,7 @@
 }
 
 - (void)loginWith:(NSString*)userName password:(NSString*)password{
-    [SDNetworking postIsShowProgress:NO WithUrl:[NSString stringWithFormat:@"http://172.20.10.4:8080/KBDAutoTest/Login"]
+    [SDNetworking postIsShowProgress:NO WithUrl:[NSString stringWithFormat:@"http://192.168.1.12:8080/KBDAutoTest/Login"]
         parameters:@{ @"username" : @"13077821373",
             @"password" : @"123456" }
         success:^(id json) {

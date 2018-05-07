@@ -61,6 +61,10 @@
         NSString *isShowFPS = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTIsShowFPS"];
         if(isShowFPS.length > 0) _sharedObject.isShowFPS = [isShowFPS boolValue];
         else _sharedObject.isShowFPS = NO;
+        
+        NSString *lagThreshold = [ZHSaveDataToFMDB selectDataWithIdentity:@"RTLagThreshold"];
+        if(lagThreshold.length > 0) _sharedObject.lagThreshold = [lagThreshold floatValue];
+        else _sharedObject.lagThreshold = 5;
     });
     return _sharedObject;
 }
@@ -128,6 +132,11 @@
 - (void)setIsShowFPS:(BOOL)isShowFPS{
     _isShowFPS = isShowFPS;
     [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%d",isShowFPS] WithIdentity:@"RTIsShowFPS"];
+}
+
+- (void)setLagThreshold:(CGFloat)lagThreshold{
+    _lagThreshold = lagThreshold;
+    [ZHSaveDataToFMDB insertDataWithData:[NSString stringWithFormat:@"%0.1f",lagThreshold] WithIdentity:@"RTLagThreshold"];
 }
 
 @end

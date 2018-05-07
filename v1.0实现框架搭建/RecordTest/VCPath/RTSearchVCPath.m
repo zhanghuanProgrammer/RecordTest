@@ -134,4 +134,19 @@
     return [RTVertex allShortestPath:[RTSearchVCPath shareInstance].operationQueue from:[RTTopVC shareInstance].topVC];
 }
 
+- (NSString *)traceOperation{
+    if (self.operationQueue.count>0) {
+        NSMutableArray *arrM = [NSMutableArray array];
+        for (RTOperationQueueModel *model in self.operationQueue) {
+            if (model.runResult == self.identity) {
+                [arrM addObject:model];
+            }
+        }
+        if (arrM.count>0) {
+            return [arrM componentsJoinedByString:@"\n"];
+        }
+    }
+    return @"没有记录操作路径";
+}
+
 @end

@@ -3,6 +3,7 @@
 #import "RecordTestHeader.h"
 #import "RTCrash.h"
 #import "RTThreadDeadlockMonitor.h"
+#import "RTNetResult.h"
 
 @implementation AutoRecordTest
 
@@ -26,10 +27,9 @@
     dispatch_once(&onceToken, ^{
         rt_installExceptionHandler();
         [[RTThreadDeadlockMonitor shareObj] startThreadMonitor];
+        [[RTNetResult shareInstance] startHttpHook];
     });
-    if (!Run) {
-        return;
-    }
+    if (!Run) return;
     [[KVOAllView new] kvoAllView];
     [[RTTopVC shareInstance] updateTopVC:NO];
     [[RTDeviceInfo shareInstance] showDeviceInfo];

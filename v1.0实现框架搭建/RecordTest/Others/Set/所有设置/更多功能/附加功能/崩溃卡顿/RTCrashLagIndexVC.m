@@ -24,9 +24,11 @@
     if (self.isCrash) {
         [[RTCrashLag shareInstance] removeCrash:self.stamp];
         [RTOperationImage removeCrash:self.imageName];
+        [RTOperationImage deleteOverdueCrash];
     }else{
         [[RTCrashLag shareInstance] removeLag:self.stamp];
         [RTOperationImage removeLag:self.imageName];
+        [RTOperationImage deleteOverdueLag];
     }
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -51,6 +53,22 @@
     image_vc.title = @"截图";
     [viewControllers addObject:image_vc];
     [self addChildViewController:image_vc];
+    
+    RTTextPreVC *vcstatck_vc = [RTTextPreVC new];
+    vcstatck_vc.isCrash = self.isCrash;
+    vcstatck_vc.text = self.vcStack;
+    vcstatck_vc.stamp = self.stamp;
+    vcstatck_vc.title = @"控制器轨迹";
+    [viewControllers addObject:vcstatck_vc];
+    [self addChildViewController:vcstatck_vc];
+    
+    RTTextPreVC *crashstatck_vc = [RTTextPreVC new];
+    crashstatck_vc.isCrash = self.isCrash;
+    crashstatck_vc.text = self.operationStack;
+    crashstatck_vc.stamp = self.stamp;
+    crashstatck_vc.title = @"操作轨迹";
+    [viewControllers addObject:crashstatck_vc];
+    [self addChildViewController:crashstatck_vc];
     
     _slideSwitch = [[RTSegmentedSlideSwitch alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 64)];
     _slideSwitch.backgroundColor = [UIColor whiteColor];

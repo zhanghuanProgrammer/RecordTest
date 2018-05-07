@@ -15,5 +15,6 @@
 - (void)popToRootVC;
 - (NSArray *)stepGoToVc:(NSString *)vc;
 - (NSArray *)allCanGotoVcs;
+- (NSString *)traceOperation;
 
 @end

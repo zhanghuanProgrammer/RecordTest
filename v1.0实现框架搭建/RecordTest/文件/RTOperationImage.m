@@ -420,6 +420,42 @@
     }
 }
 
++ (void)deleteOverdueCrash{
+    NSString *director = [self crashPath];
+    NSArray *subPathFilesArrInDirector = [self subPathFileArrInDirector:director];
+    NSMutableArray *allImages = [NSMutableArray array];
+    NSArray *crashs = [[[RTCrashLag shareInstance] crashs] allValues];
+    for (RTCrashModel *model in crashs) {
+        if (model.imagePath.length>0) {
+            [allImages addObject:model.imagePath];
+        }
+    }
+    for (NSString *filename in subPathFilesArrInDirector) {
+        if (![allImages containsObject:filename]) {
+            NSString *deletePath = [director stringByAppendingPathComponent:filename];
+            [[NSFileManager defaultManager] removeItemAtPath:deletePath error:nil];
+        }
+    }
+}
+
++ (void)deleteOverdueLag{
+    NSString *director = [self lagPath];
+    NSArray *subPathFilesArrInDirector = [self subPathFileArrInDirector:director];
+    NSMutableArray *allImages = [NSMutableArray array];
+    NSArray *lags = [[[RTCrashLag shareInstance] lags] allValues];
+    for (RTLagModel *model in lags) {
+        if (model.imagePath.length>0) {
+            [allImages addObject:model.imagePath];
+        }
+    }
+    for (NSString *filename in subPathFilesArrInDirector) {
+        if (![allImages containsObject:filename]) {
+            NSString *deletePath = [director stringByAppendingPathComponent:filename];
+            [[NSFileManager defaultManager] removeItemAtPath:deletePath error:nil];
+        }
+    }
+}
+
 + (NSArray *)subPathFileArrInDirector:(NSString *)DirectorPath{
     if (![[NSFileManager defaultManager]fileExistsAtPath:DirectorPath]) {
         return nil;

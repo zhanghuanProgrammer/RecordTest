@@ -73,6 +73,21 @@
     return traceVC;
 }
 
+- (NSString *)traceString{
+    NSArray *traceVC = [self traceVC];
+    NSMutableArray *items = [NSMutableArray array];
+    NSInteger index = 1;
+    NSString *lastVC = nil;
+    for (NSString *vc in traceVC) {
+        if ([RTVCLearn filter:vc]) continue;
+        if (lastVC && lastVC.length == vc.length && [lastVC isEqualToString:vc]) continue;
+        NSString *title = [NSString stringWithFormat:@"%zd : %@",index++,vc];
+        [items addObject:title];
+        lastVC = vc;
+    }
+    return [items componentsJoinedByString:@"\n"];
+}
+
 - (NSArray *)traceMemory{
     NSMutableArray *arrM = [NSMutableArray arrayWithArray:self.topologyMemory];
     NSString *memory = [NSString stringWithFormat:@"内存:%0.1fM",[RTDeviceInfo shareInstance].appMemory];

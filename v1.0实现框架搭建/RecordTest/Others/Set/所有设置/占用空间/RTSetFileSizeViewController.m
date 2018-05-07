@@ -53,7 +53,6 @@
     item4.subTitleFontSize = 12;
     RTSettingGroup *group4 = [[RTSettingGroup alloc] init];
     group4.header = @"所有运行回放视频的存储空间";
-    group4.footer = [NSString stringWithFormat:@"总占用空间: %@",@"计算中..."];
     group4.items = @[item4];
     [self.allGroups addObject:group4];
     
@@ -61,7 +60,6 @@
     item5.subTitleFontSize = 12;
     RTSettingGroup *group5 = [[RTSettingGroup alloc] init];
     group5.header = @"所有崩溃截图占用的存储空间";
-    group5.footer = [NSString stringWithFormat:@"总占用空间: %@",@"计算中..."];
     group5.items = @[item5];
     [self.allGroups addObject:group5];
     
@@ -88,7 +86,7 @@
         item5.subTitle = [NSString stringWithFormat:@"%@",[RTOperationImage crashFileSize]];
         item6.subTitle = [NSString stringWithFormat:@"%@",[RTOperationImage lagFileSize]];
         
-        group4.footer = [NSString stringWithFormat:@"总占用空间: %@",[RTOperationImage allSize]];
+        group6.footer = [NSString stringWithFormat:@"总占用空间: %@",[RTOperationImage allSize]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
@@ -107,6 +105,8 @@
     [RTOperationImage deleteOverdueVideo];
     [RTOperationImage deleteOverdueImage];
     [RTOperationImage deleteOverduePlayBackImage];
+    [RTOperationImage deleteOverdueCrash];
+    [RTOperationImage deleteOverdueLag];
     [TabBarAndNavagation setRightBarButtonItemTitle:@"" TintColor:[UIColor redColor] target:self action:nil];
     [self loadData];
 }
